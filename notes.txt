@@ -124,3 +124,14 @@ if its worse, then either their analysis assuming 1 component is invalid (and ma
 maybe have a look to see how minimisation is being done by the LTT 3780 papers
 
 fix normalisation
+
+
+
+---
+
+
+
+add residuals
+make nice plot of components with e.g. color being weight
+add jwsttargets class that includes the current literature belief for parameters
+look at lots of different targets, see if you can plot e.g. sunspots changing over time / rotation etc (long shot but worth trying)
