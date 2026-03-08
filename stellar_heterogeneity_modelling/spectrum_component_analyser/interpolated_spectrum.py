@@ -20,7 +20,7 @@ def get_interpolated_phoenix_spectrum(
         FeH : Quantity[u.dimensionless_unscaled],
         Log_g : Quantity[u.dimensionless_unscaled],
         star_name : str,
-        spec_grid : spectral_grid
+        spec_grid : spectral_grid,
     ) -> phoenix_spectrum:
 
     interp = RegularGridInterpolator(

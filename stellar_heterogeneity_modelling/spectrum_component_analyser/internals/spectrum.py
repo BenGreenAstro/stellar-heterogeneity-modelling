@@ -27,7 +27,8 @@ class spectrum:
 			observational_resolution : Quantity,
 			observational_wavelengths : np.ndarray,
 			temperature : Quantity[u.K],
-			name : str = None
+			name : str = None,
+			normalise : bool = False
 		):
 		"""
 		Flux is going to be stored in Janskys from now on
@@ -72,7 +73,8 @@ class spectrum:
 		
 		# if normalised_point != None and temperature != None:
 		# 	self.normalise_flux()
-		self.normalise_flux()
+		if normalise:
+			self.normalise_flux()
 
 		# sample onto a set of wavelengths (for an instrument at observational_resolution)
 		if observational_wavelengths != None:
