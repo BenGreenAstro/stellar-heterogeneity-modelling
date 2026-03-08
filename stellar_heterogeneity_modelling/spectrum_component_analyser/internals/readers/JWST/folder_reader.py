@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 import typer
 
-from spectrum_component_analyser.internals.readers.JWST.instruments import Instrument, NIRISS, NIRSPEC 
+from spectrum_component_analyser.internals.readers.JWST.instruments import Instrument, NIRISS, NIRSPECLower 
 from spectrum_component_analyser.internals.readers.JWST.file_reader import JWSTFileReader
 from spectrum_component_analyser.internals.spectrum import spectrum
 from internal_constants import *

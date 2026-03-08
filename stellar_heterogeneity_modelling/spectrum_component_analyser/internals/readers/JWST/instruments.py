@@ -31,10 +31,18 @@ NIRISS : Instrument = Instrument(
 )
 
 # higher wavelengths
-NIRSPEC : Instrument = Instrument(
+NIRSPECLower : Instrument = Instrument(
 	wavelength_units=u.um,
 	flux_units=u.MJy,
 	resolution=.001 * u.um, # not sure on this
 	extract_1d_hdu_index=2,
-    folder_path="NIRSPEC",
+    folder_path="NIRSPEC/lower",
+)
+
+NIRSPECHigher : Instrument = Instrument(
+	wavelength_units=u.um,
+	flux_units=u.MJy,
+	resolution=.001 * u.um, # not sure on this
+	extract_1d_hdu_index=2,
+    folder_path="NIRSPEC/higher",
 )
