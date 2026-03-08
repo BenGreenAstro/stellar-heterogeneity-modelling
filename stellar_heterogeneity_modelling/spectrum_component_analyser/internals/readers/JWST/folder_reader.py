@@ -11,7 +11,7 @@ from spectrum_component_analyser.internals.readers.JWST.file_reader import JWSTF
 from spectrum_component_analyser.internals.spectrum import spectrum
 from internal_constants import *
 
-from vanity.printing_colors import *
+import vanity
 
 class JWSTFolderReader():
 	@staticmethod
@@ -31,7 +31,7 @@ class JWSTFolderReader():
 
 		files = list(fits_directory.glob("*.fits"))
 
-		for path in tqdm(files, desc=f"Loading in JWST *.fits from {LIGHT_BLUE}{fits_directory}{RESET}"):
+		for path in tqdm(files, desc=f"Loading in JWST *.fits from {vanity.LIGHT_BLUE}{fits_directory}{vanity.RESET}"):
 			all_spectra.extend(
 				JWSTFileReader.get_all_spectra(
 					file_path=path,
