@@ -9,10 +9,10 @@ GRID : str = "PHOENIX-ACES-AGSS-COND-2011"
 from astropy.units import Quantity
 import astropy.units as u
 
-def get_file_name(lte : bool,
-				  T_eff : Quantity[u.K],
-				  log_g : float,
-				  FeH : float,
+def get_file_name(T_eff : Quantity[u.K],
+				  FeH : Quantity[u.dex],
+				  log_g : Quantity[u.dex],
+				  lte : bool,
 				  alphaM : float) -> str:
 	
 	### --- check for step and range validity --- ###

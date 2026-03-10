@@ -66,6 +66,10 @@ def get_phoenix_wavelengths() -> Sequence[Quantity]:
 
 	return wavelengths
 
+session = requests.Session()
+adapter = requests.adapters.HTTPAdapter(pool_connections=12, pool_maxsize=12)
+session.mount('https://', adapter)
+
 def download_spectrum(T_eff : Quantity[u.K],
 					  FeH : Quantity[u.dex],
 					  log_g : Quantity[u.dex],
@@ -94,36 +98,36 @@ def download_spectrum(T_eff : Quantity[u.K],
 		tqdm.write(f"[PHOENIX GRID CREATOR] : filename or urlname error: {e}. continuing onto next requested spectrum")
 		return
 	try:
-		response = requests.get(url)
-		response.raise_for_status()
+		with session.get(url, stream=True, timeout=20) as response:
+			response.raise_for_status()
+	
+			# the index of the header data unit the data we want is in (looks to be 0 being the spectra, and 1 being the abundances, and those are the only 2 HDUs in the .fits files)
+			SPECTRA_HDU_INDEX = 0
+
+			with fits.open(BytesIO(response.content)) as hdul:
+				# for some reason, the fits file is big-endian; pandas required little-endian
+				fluxes = hdul[SPECTRA_HDU_INDEX].data
+				fluxes = fluxes.byteswap().view(fluxes.dtype.newbyteorder())
+				fluxes *= PHOENIX_FLUX_UNITS
+
+				# interpolation onto observational // physical wavelengths is done by the internals.
+				spec = phoenix_spectrum(
+					wavelengths=phoenix_wavelengths,
+					fluxes=fluxes,
+					t_eff=T_eff,
+					feh=FeH,
+					log_g=log_g,
+					normalising_point=normalising_point,
+					observational_resolution=observational_resolution,
+					observational_wavelengths=observational_wavelengths,
+					name=name)
+
+				return spec
 	except requests.exceptions.HTTPError as e:
 		tqdm.write(f"[PHOENIX GRID CREATOR] : HTTPError raised with the following parameters:\nlte: {lte}\nT_eff={T_eff}\nlog_g={log_g}\nFeH={FeH}\nalphaM={alphaM}")
 		tqdm.write(f"attempted url = {url}")
 		tqdm.write("\n continuing with the next file...")
 		return
-	
-	# the index of the header data unit the data we want is in (looks to be 0 being the spectra, and 1 being the abundances, and those are the only 2 HDUs in the .fits files)
-	SPECTRA_HDU_INDEX = 0
-
-	with fits.open(BytesIO(response.content)) as hdul:
-		# for some reason, the fits file is big-endian; pandas required little-endian
-		fluxes = hdul[SPECTRA_HDU_INDEX].data
-		fluxes = fluxes.byteswap().view(fluxes.dtype.newbyteorder())
-		fluxes *= PHOENIX_FLUX_UNITS
-
-		# interpolation onto observational // physical wavelengths is done by the internals.
-		spec = phoenix_spectrum(
-			wavelengths=phoenix_wavelengths,
-			fluxes=fluxes,
-			t_eff=T_eff,
-			feh=FeH,
-			log_g=log_g,
-			normalising_point=normalising_point,
-			observational_resolution=observational_resolution,
-			observational_wavelengths=observational_wavelengths,
-			name=name)
-
-		return spec
 
 class spectral_grid():
 	"""
@@ -173,7 +177,7 @@ class spectral_grid():
 				   alphaM = 0,
 				   lte = True,
 				   regularised_temperatures : Sequence[Quantity] = None,
-				   parallelise : bool = False) -> Self:
+				   parallelise : bool = True) -> Self:
 		"""
 		Download the spectra for all combinations between T_effs, FeHs and log_gs from the internet, and wrap it into a nice class.
 
@@ -181,7 +185,6 @@ class spectral_grid():
 
 		Use this if you want a large number of spectra over a large parameter space.
 		"""
-
 		if regularised_temperatures != None:
 			raise NotImplementedError("regularising temperatures is not added into simpler spectral grid atm")
 		
@@ -347,3 +350,27 @@ class spectral_grid():
 
 # dev testing
 
+if __name__ == "__main__":
+	import cProfile
+	import pstats
+
+	profiler = cProfile.Profile()
+	
+	# We use a lambda or just call it inside 'runcall'
+	profiler.enable()
+	download_spectrum(
+		T_eff=2500 * u.K,
+		FeH=1.0 * u.dex,
+		log_g=1.0 * u.dex,
+		normalising_point=1.0 * u.um,
+		observational_resolution= .01 * u.um,
+		observational_wavelengths=np.linspace(1 * u.um, 2 * u.um, 1000),
+		name="test",
+		lte=True,
+		alphaM=0.0,
+		phoenix_wavelengths=get_phoenix_wavelengths()
+	)
+	profiler.disable()
+
+	stats = pstats.Stats(profiler).sort_stats('cumulative')
+	stats.print_stats(20) # Top 20 most expensive calls

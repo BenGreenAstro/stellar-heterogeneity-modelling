@@ -113,7 +113,7 @@ class spectrum:
 		# keep fluxes relative to the normalised_point of a blackbody at 3500 K (this is completely arbitrary but keeps the numbers from being like 10**21 and annoying)
 		self.Fluxes /= (models.BlackBody(temperature=3500 *u.K)(normalised_point) * 4 * np.pi * u.sr ).to(self.Fluxes.unit).value
 	
-	def regrid_flux(self, desired_resolution : Quantity) -> np.array:
+	def regrid_flux(self, desired_resolution : Quantity, extra_downsample : bool = True) -> np.array:
 		"""
 		Regrid the spectrum onto a uniform wavelength array of the input resolution. Uses a gaussian to simulate how real data would be recorded.
 
@@ -129,15 +129,17 @@ class spectrum:
 
 		# convert resolution to sigma (in array indices)
 		delta_lambda = wave_uniform[1] - wave_uniform[0]
-		sigma_pix = desired_resolution / (2 * np.sqrt(2 * np.log(2)) * delta_lambda)
+		sigma = desired_resolution / (2 * np.sqrt(2 * np.log(2)) * delta_lambda) # in pixel units
 
-		# takes ages!
-		print(flux_uniform)
-		flux_uniform = flux_uniform.value
-		print(len(flux_uniform))
-		print(sigma_pix.to(u.dimensionless_unscaled).value)
+		# downsample as we only need a few points per standard deviation to be accurate (i.e. remove details smaller than 1/10th of the standard deviation)
+		if extra_downsample:
+			points_per_standard_deviation : int = 5
+			downsample_factor = int(sigma / points_per_standard_deviation)
+			wave_uniform = wave_uniform[::downsample_factor]
+			flux_uniform = flux_uniform[::downsample_factor]
 		
-		convolved_flux = gaussian_filter1d(flux_uniform, sigma_pix.to(u.dimensionless_unscaled).value, mode="nearest")
+		# remove units
+		convolved_flux = gaussian_filter1d(flux_uniform.value, sigma.to(u.dimensionless_unscaled).value, mode="nearest")
 
 		# resample onto desired wavelengths
 		desired_number_of_wavelength_points = (self.Wavelengths.max() - self.Wavelengths.min()) / desired_resolution
@@ -145,7 +147,7 @@ class spectrum:
 		wave_desired_resolution = np.linspace(self.Wavelengths.min(), self.Wavelengths.max(), desired_number_of_wavelength_points)
 
 		new_flux = np.interp(wave_desired_resolution, wave_uniform, convolved_flux)
-		new_flux *= DEFAULT_FLUX_UNIT # units get removed (probably by np.interp); add them back in
+		new_flux *= DEFAULT_FLUX_UNIT # units get removed (probably by np.interp or gaussian_filter1d); add them back in
 
 		self.Wavelengths = wave_desired_resolution
 		self.Fluxes = new_flux
