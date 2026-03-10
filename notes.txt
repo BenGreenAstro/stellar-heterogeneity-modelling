@@ -148,3 +148,4 @@ potential fixes:
 - use nirspec
 - use other phoenix data (e.g. the data actually used in the papers on chi squared minimisation)
 - look at other stars
+- if still doesnt work then use simulated phoenix data and create a component-ed star // if still doesn't work, can just prove method on simulated data (and then try to show it works on other phoenix simulated datasets too)
