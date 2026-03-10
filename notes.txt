@@ -143,6 +143,7 @@ improvements:
 - maybe convert u.dimensionlessunscaled -> u.dex where appropriate
 - refactor normalisation
 - remove normalised_point etc
+- double check whether the downsampling-before-convolution is actually valid and doesn't mess up the data
 
 potential fixes:
 - use nirspec
