@@ -8,7 +8,7 @@ from spectrum_component_analyser.readers.JWST.target import TRAPPIST1, JWSTTarge
 from spectrum_component_analyser.readers.JWST.instruments import Instrument, NIRISS, NIRSPECLower 
 from spectrum_component_analyser.readers.JWST.file_reader import JWSTFileReader
 from spectrum_component_analyser.spectrum import spectrum
-from internal_constants import *
+from constants import *
 
 import vanity
 
