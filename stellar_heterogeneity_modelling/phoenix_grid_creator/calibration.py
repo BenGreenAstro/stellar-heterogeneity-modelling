@@ -11,10 +11,10 @@ from astropy import units as u
 from astropy.visualization import quantity_support
 quantity_support()
 
-from spectrum_component_analyser.internals.phoenix_spectrum import phoenix_spectrum
-from spectrum_component_analyser.internals.readers.JWST import JWST_NORMALISING_POINT, JWST_RESOLUTION, read_JWST_fits
-from spectrum_component_analyser.internals.spectral_grid import download_spectrum, get_wavelength_grid
-from spectrum_component_analyser.internals.spectrum import spectrum
+from spectrum_component_analyser.phoenix_spectrum import phoenix_spectrum
+from spectrum_component_analyser.readers.JWST import JWST_NORMALISING_POINT, JWST_RESOLUTION, read_JWST_fits
+from phoenix_grid_creator.spectral_grid import download_spectrum, get_wavelength_grid
+from spectrum_component_analyser.spectrum import spectrum
 
 jwst_spectrum_path : Path = (
     Path(__file__).resolve().parent / Path("../../observed_spectra/MAST_2025-10-26T11_57_04.058Z - LTT-3780/MAST_2025-10-26T11_57_04.058Z/JWST/jw03557004001_04101_00001-seg001_nis_x1dints.fits")

@@ -11,14 +11,14 @@ from matplotlib import pyplot as plt
 import numpy as np
 from scipy.interpolate import RegularGridInterpolator, interpn
 
-from spectrum_component_analyser.internals.phoenix_spectrum import phoenix_spectrum
-from spectrum_component_analyser.internals.readers.JWST.file_reader import JWST_NORMALISING_POINT
-from spectrum_component_analyser.internals.spectral_grid import spectral_grid
+from spectrum_component_analyser.phoenix_spectrum import phoenix_spectrum
+from spectrum_component_analyser.readers.JWST.file_reader import JWST_NORMALISING_POINT
+from phoenix_grid_creator.spectral_grid import spectral_grid
 
 def get_interpolated_phoenix_spectrum(
         T_eff : Quantity[u.K],
-        FeH : Quantity[u.dimensionless_unscaled],
-        Log_g : Quantity[u.dimensionless_unscaled],
+        FeH : Quantity[u.dex],
+        Log_g : Quantity[u.dex],
         star_name : str,
         spec_grid : spectral_grid,
     ) -> phoenix_spectrum:
@@ -58,8 +58,8 @@ def get_interpolated_phoenix_spectrum(
 
 def old_get_interpolated_phoenix_spectrum(
         T_eff : Quantity[u.K],
-        FeH : Quantity[u.dimensionless_unscaled],
-        Log_g : Quantity[u.dimensionless_unscaled],
+        FeH : Quantity[u.dex],
+        Log_g : Quantity[u.dex],
         star_name : str,
         spec_grid : spectral_grid
     ) -> phoenix_spectrum:
@@ -102,8 +102,8 @@ def old_get_interpolated_phoenix_spectrum(
 if __name__ == "__main__":
     # example values
     T_eff = 3358 * u.K
-    FeH = 0.06 * u.dimensionless_unscaled
-    Log_g = 4.85 * u.dimensionless_unscaled
+    FeH = 0.06 * u.dex
+    Log_g = 4.85 * u.dex
     star_name = "LTT-3780-from-Literature"
 
     get_interpolated_phoenix_spectrum(

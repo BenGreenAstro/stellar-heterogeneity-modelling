@@ -3,7 +3,7 @@ import numpy as np
 from astropy.units import Quantity
 import astropy.units as u
 
-from spectrum_component_analyser.internals.spectrum import spectrum
+from spectrum_component_analyser.spectrum import spectrum
 
 class phoenix_spectrum(spectrum):
 	def __init__(

@@ -1,6 +1,3 @@
-# ignore files used as examples (to understand their structure etc)
-example_files/**
-
 # ignore spectra & data files everywhere - they are big
 **/*.fits
 **/*.h5

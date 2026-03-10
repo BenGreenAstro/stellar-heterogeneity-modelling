@@ -2,13 +2,13 @@ from enum import Enum
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-from spectrum_component_analyser.internals.readers.JWST.target import TRAPPIST1, JWSTTarget
+from spectrum_component_analyser.readers.JWST.target import TRAPPIST1, JWSTTarget
 from tqdm import tqdm
 import typer
 
-from spectrum_component_analyser.internals.readers.JWST.instruments import Instrument, NIRISS, NIRSPECLower 
-from spectrum_component_analyser.internals.readers.JWST.file_reader import JWSTFileReader
-from spectrum_component_analyser.internals.spectrum import spectrum
+from spectrum_component_analyser.readers.JWST.instruments import Instrument, NIRISS, NIRSPECLower 
+from spectrum_component_analyser.readers.JWST.file_reader import JWSTFileReader
+from spectrum_component_analyser.spectrum import spectrum
 from internal_constants import *
 
 import vanity

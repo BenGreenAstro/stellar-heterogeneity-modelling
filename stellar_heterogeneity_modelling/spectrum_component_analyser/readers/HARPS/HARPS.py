@@ -5,7 +5,7 @@ from astropy.units import Unit
 from astropy.units import Quantity
 
 import numpy as np
-from spectrum_component_analyser.internals.spectrum import spectrum
+from spectrum_component_analyser.spectrum import spectrum
 
 HARPS_WAVELENGTH_UNITS : Unit = u.Angstrom
 HARPS_FLUX_UNITS : Unit = u.MJy

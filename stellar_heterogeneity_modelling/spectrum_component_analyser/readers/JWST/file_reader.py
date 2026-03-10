@@ -9,8 +9,8 @@ from astropy.io import fits
 from astropy.units import Unit, Quantity
 import numpy as np
 
-from spectrum_component_analyser.internals.readers.JWST.instruments import Instrument
-from spectrum_component_analyser.internals.spectrum import spectrum
+from spectrum_component_analyser.readers.JWST.instruments import Instrument
+from spectrum_component_analyser.spectrum import spectrum
 
 JWST_NORMALISING_POINT = 1.1 * u.um # believe this is unused
 
