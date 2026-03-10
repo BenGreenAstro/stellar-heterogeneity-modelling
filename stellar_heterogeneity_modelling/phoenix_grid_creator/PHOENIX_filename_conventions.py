@@ -18,7 +18,11 @@ def get_file_name(lte : bool,
 	### --- check for step and range validity --- ###
 	# when checking if values are multiplies of floats (e.g. 0.5); multiply by 10 to avoid float division issues
 
+	# I believe these don't affect the original object (I think python only modifies the local variable)
 	T_eff = int(T_eff.value)
+	FeH = FeH.value
+	log_g = log_g.value
+
 	if not ((2_300 <= T_eff <= 7_000 and T_eff % 100 == 0) or (7_000 <= T_eff <= 12000 and T_eff % 200 == 0)):
 		raise ValueError(f"T_eff = {T_eff} not in range or of incorrect step")
 	

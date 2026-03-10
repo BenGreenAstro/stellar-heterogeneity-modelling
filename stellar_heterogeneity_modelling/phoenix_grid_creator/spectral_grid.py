@@ -42,7 +42,7 @@ MAIN_GRID_NAME : str = "main_grid"
 USES_REGULARISED_WAVELENGTHS_METADATA_NAME : str = "includes interpolated wavelengths?"
 USES_REGULARISED_TEMPERATURES_METADATA_NAME : str = "includes interpolated temperatures?"
 
-def get_wavelength_grid() -> Sequence[Quantity]:
+def get_phoenix_wavelengths() -> Sequence[Quantity]:
 	"""
 	returns 1D array consisting of astropy Quantities of dimension length
 	"""
@@ -66,9 +66,9 @@ def get_wavelength_grid() -> Sequence[Quantity]:
 
 	return wavelengths
 
-def download_spectrum(T_eff,
-					  FeH,
-					  log_g,
+def download_spectrum(T_eff : Quantity[u.K],
+					  FeH : Quantity[u.dex],
+					  log_g : Quantity[u.dex],
 					  lte : bool,
 					  alphaM : float,
 					  phoenix_wavelengths : np.array,
@@ -82,7 +82,13 @@ def download_spectrum(T_eff,
 	if you want to use the original phoenix spectrum, just leave regularised_wavelengths as none
 	"""
 	try:
-		file = get_file_name(lte, T_eff, log_g, FeH, alphaM)
+		file = get_file_name(
+			lte=lte,
+			T_eff=T_eff,
+			FeH=FeH,
+			log_g=log_g,
+			alphaM=alphaM
+			)
 		url = get_url(file)
 	except ValueError as e:
 		tqdm.write(f"[PHOENIX GRID CREATOR] : filename or urlname error: {e}. continuing onto next requested spectrum")
@@ -179,10 +185,11 @@ class spectral_grid():
 		if regularised_temperatures != None:
 			raise NotImplementedError("regularising temperatures is not added into simpler spectral grid atm")
 		
-		phoenix_wavelengths = get_wavelength_grid()
+		phoenix_wavelengths = get_phoenix_wavelengths()
 		
 		def fetch_spectra_and_indices(i, j, k, T_eff, FeH, log_g) -> Tuple[int, int, int, Quantity[u.K], Quantity[u.dex], Quantity[u.dex]]:
-			spec : phoenix_spectrum = download_spectrum(T_eff,
+			spec : phoenix_spectrum = download_spectrum(
+											   T_eff,
 											   FeH,
 											   log_g,
 											   lte,
@@ -191,7 +198,8 @@ class spectral_grid():
 											   normalising_point=normalising_point,
 											   observational_resolution=observational_resolution,
 											   observational_wavelengths=observational_wavelengths,
-											   name=f"{name}_Teff-{T_eff}_FeH-{FeH}_logg-{log_g}")
+											   name=f"{name}_Teff-{T_eff}_FeH-{FeH}_logg-{log_g}"
+											   )
 			return i, j, k, spec
 		
 			
@@ -338,3 +346,4 @@ class spectral_grid():
 	
 
 # dev testing
+

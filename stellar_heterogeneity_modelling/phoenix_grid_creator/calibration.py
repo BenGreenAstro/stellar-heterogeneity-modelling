@@ -13,7 +13,7 @@ quantity_support()
 
 from spectrum_component_analyser.phoenix_spectrum import phoenix_spectrum
 from spectrum_component_analyser.readers.JWST import JWST_NORMALISING_POINT, JWST_RESOLUTION, read_JWST_fits
-from phoenix_grid_creator.spectral_grid import download_spectrum, get_wavelength_grid
+from phoenix_grid_creator.spectral_grid import download_spectrum, get_phoenix_wavelengths
 from spectrum_component_analyser.spectrum import spectrum
 
 jwst_spectrum_path : Path = (
@@ -22,7 +22,7 @@ jwst_spectrum_path : Path = (
 
 jwst_spectrum : spectrum = read_JWST_fits(jwst_spectrum_path, INTEGRATION_INDEX=10, name="LTT-3780")
 
-phoenix_wavelengths = get_wavelength_grid()
+phoenix_wavelengths = get_phoenix_wavelengths()
 # nearby as in: nearby in parameter space to the observed spectrum
 nearby_phoenix_spectrum : phoenix_spectrum = download_spectrum(
     3800 * u.K,

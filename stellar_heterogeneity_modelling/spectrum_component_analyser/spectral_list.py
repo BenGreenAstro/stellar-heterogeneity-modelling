@@ -6,7 +6,7 @@ from tqdm import tqdm
 from spectrum_component_analyser.phoenix_spectrum import phoenix_spectrum
 from spectrum_component_analyser.readers.JWST import JWST_NORMALISING_POINT, JWST_RESOLUTION
 from spectrum_component_analyser.spectral_component import spectral_component
-from phoenix_grid_creator.spectral_grid import download_spectrum, get_wavelength_grid
+from phoenix_grid_creator.spectral_grid import download_spectrum, get_phoenix_wavelengths
 
 class spectral_list():
 	"""
@@ -41,7 +41,7 @@ class spectral_list():
 		"""
 		phoenix_spectra : list[phoenix_spectrum] = []
 
-		phoenix_wavelengths = get_wavelength_grid()
+		phoenix_wavelengths = get_phoenix_wavelengths()
 		
 		component : spectral_component # yay for python
 		for component in tqdm(spectral_components):

@@ -142,7 +142,7 @@ improvements:
 - maybe make some parameter_set class for storing (weight, teff, feh, logg)
 - maybe convert u.dimensionlessunscaled -> u.dex where appropriate
 - refactor normalisation
-
+- remove normalised_point etc
 
 potential fixes:
 - use nirspec

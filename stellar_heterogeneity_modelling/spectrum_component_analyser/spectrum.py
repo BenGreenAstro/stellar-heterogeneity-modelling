@@ -131,7 +131,13 @@ class spectrum:
 		delta_lambda = wave_uniform[1] - wave_uniform[0]
 		sigma_pix = desired_resolution / (2 * np.sqrt(2 * np.log(2)) * delta_lambda)
 
-		convolved_flux = gaussian_filter1d(flux_uniform, sigma_pix, mode="nearest")
+		# takes ages!
+		print(flux_uniform)
+		flux_uniform = flux_uniform.value
+		print(len(flux_uniform))
+		print(sigma_pix.to(u.dimensionless_unscaled).value)
+		
+		convolved_flux = gaussian_filter1d(flux_uniform, sigma_pix.to(u.dimensionless_unscaled).value, mode="nearest")
 
 		# resample onto desired wavelengths
 		desired_number_of_wavelength_points = (self.Wavelengths.max() - self.Wavelengths.min()) / desired_resolution
