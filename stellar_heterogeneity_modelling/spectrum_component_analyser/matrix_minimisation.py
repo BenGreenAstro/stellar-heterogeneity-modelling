@@ -5,7 +5,7 @@ import pandas as pd
 import scipy as sp
 from astropy.visualization import quantity_support
 
-from spectrum_component_analyser.internals.spectral_list import spectral_list
+from spectrum_component_analyser.spectral_list import spectral_list
 from spectrum_component_analyser.interpolated_spectrum import get_interpolated_phoenix_spectrum
 
 quantity_support()
@@ -16,9 +16,9 @@ from joblib import Parallel, delayed
 from typing import Sequence, Tuple
 from scipy.optimize._optimize import OptimizeResult
 
-from spectrum_component_analyser.internals.spectrum import spectrum
-from spectrum_component_analyser.internals.spectral_grid import spectral_grid
-from spectrum_component_analyser.internals.spectral_component import spectral_component
+from spectrum_component_analyser.spectrum import spectrum
+from phoenix_grid_creator.spectral_grid import spectral_grid
+from spectrum_component_analyser.spectral_component import spectral_component
 
 # units should be stored in the astropy quantity anyway
 # changing these is fine, as long as a new spectral grid is created which uses these column names
@@ -115,7 +115,7 @@ def get_optimality(A, result, spectrum_to_decompose : spectrum):
 
 # # # plot some data # # #
 # dependent on the old spectrum_grid class, but its fine for now (and its just dependent on some arbitrary strings anyway)
-from spectrum_component_analyser.minimisation import TEFF_COLUMN, FEH_COLUMN, LOGG_COLUMN
+from spectrum_component_analyser.matrix_minimisation import TEFF_COLUMN, FEH_COLUMN, LOGG_COLUMN
 WEIGHT_COLUMN : str = "weight"
 PROPORTIONAL_WEIGHT_COLUMN : str = "proportional weight" # weight / np.sum(all weights)
 

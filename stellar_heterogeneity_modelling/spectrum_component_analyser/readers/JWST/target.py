@@ -9,9 +9,9 @@ from astropy.units import Quantity
 import astropy.units as u
 
 from matplotlib import pyplot as plt
-from spectrum_component_analyser.internals.phoenix_spectrum import phoenix_spectrum
+from spectrum_component_analyser.phoenix_spectrum import phoenix_spectrum
 from spectrum_component_analyser.interpolated_spectrum import get_interpolated_phoenix_spectrum
-from spectrum_component_analyser.internals.spectral_grid import spectral_grid
+from phoenix_grid_creator.spectral_grid import spectral_grid
 
 @dataclass(frozen=True)
 class JWSTTarget:

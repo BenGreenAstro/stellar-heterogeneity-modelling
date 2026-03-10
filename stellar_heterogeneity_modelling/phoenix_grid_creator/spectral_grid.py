@@ -23,9 +23,9 @@ __version__ = version("spots_and_faculae_model")
 
 # internal imports
 from phoenix_grid_creator.PHOENIX_filename_conventions import *
-from spectrum_component_analyser.internals.phoenix_spectrum import phoenix_spectrum
-from spectrum_component_analyser.internals.spectral_component import spectral_component
-from spectrum_component_analyser.internals.spectrum import DEFAULT_FLUX_UNIT
+from spectrum_component_analyser.phoenix_spectrum import phoenix_spectrum
+from spectrum_component_analyser.spectral_component import spectral_component
+from spectrum_component_analyser.spectrum import DEFAULT_FLUX_UNIT
 from internal_constants import *
 
 PHOENIX_FLUX_UNITS = u.erg / (u.s * u.cm**2 * u.cm)
