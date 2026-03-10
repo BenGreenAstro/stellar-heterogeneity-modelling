@@ -1,11 +1,10 @@
 from enum import Enum
 from pathlib import Path
-
 import matplotlib.pyplot as plt
-from spectrum_component_analyser.readers.JWST.target import TRAPPIST1, JWSTTarget
 from tqdm import tqdm
 import typer
 
+from spectrum_component_analyser.readers.JWST.target import TRAPPIST1, JWSTTarget
 from spectrum_component_analyser.readers.JWST.instruments import Instrument, NIRISS, NIRSPECLower 
 from spectrum_component_analyser.readers.JWST.file_reader import JWSTFileReader
 from spectrum_component_analyser.spectrum import spectrum
@@ -15,21 +14,29 @@ import vanity
 
 class JWSTFolderReader():
 	@staticmethod
-	def get_file_path(target : JWSTTarget, instrument : Instrument) -> Path:
+	def get_folder_path(target : JWSTTarget, instrument : Instrument) -> Path:
 		return Path(f"{package_path}/neater_observed_spectra_folder/{target.name}/{instrument.FolderPath}/")
+
+	@staticmethod
+	def get_file_paths(target : JWSTTarget, instrument : Instrument) -> list[Path]:
+		"""
+		return all *.fits file paths found for the target observed with the chosen instrument
+		"""
+		folder_path = JWSTFolderReader.get_folder_path(target, instrument)
+		fits_file_paths = list(folder_path.glob("*.fits"))
+		return fits_file_paths
+		
 	
 	@staticmethod
 	def get_all_spectra(target : JWSTTarget, instrument : Instrument) -> list[spectrum]:
 		"""
 		returns all spectra from all .fits files contained in fits_directory (specification is in get_file_path() and also a markdown file)
 		"""
-		fits_directory : Path = JWSTFolderReader.get_file_path(target, instrument)
-
-		print(fits_directory)
+		fits_directory : Path = JWSTFolderReader.get_folder_path(target, instrument)
 
 		all_spectra : list[spectrum] = []
 
-		files = list(fits_directory.glob("*.fits"))
+		files = JWSTFolderReader.get_file_paths(target, instrument)
 
 		for path in tqdm(files, desc=f"Loading in JWST *.fits from {vanity.LIGHT_BLUE}{fits_directory}{vanity.RESET}"):
 			all_spectra.extend(

@@ -49,8 +49,8 @@ def get_wavelength_grid() -> Sequence[Quantity]:
 	# read in the wavelength (1D) grid so we can save this into our mega-grid correctly
 
 	script_dir = Path(__file__).resolve().parent
-	WAVELENGTH_GRID_RELATIVE_PATH = Path("../../../calibration_files/WAVE_PHOENIX-ACES-AGSS-COND-2011.fits")
-	wavelength_grid_absolute_path = (script_dir / WAVELENGTH_GRID_RELATIVE_PATH).resolve()
+	WAVELENGTH_GRID_RELATIVE_PATH = Path("calibration_files/WAVE_PHOENIX-ACES-AGSS-COND-2011.fits")
+	wavelength_grid_absolute_path = (package_path / WAVELENGTH_GRID_RELATIVE_PATH).resolve()
 
 	if not wavelength_grid_absolute_path.exists():
 		raise FileNotFoundError(f"wavelength grid file not found at : {wavelength_grid_absolute_path}.")
@@ -65,7 +65,7 @@ def get_wavelength_grid() -> Sequence[Quantity]:
 		print("[PHOENIX GRID CREATOR] : phoenix wavelength grid found & loaded in")
 
 	return wavelengths
-		
+
 def download_spectrum(T_eff,
 					  FeH,
 					  log_g,
@@ -167,7 +167,7 @@ class spectral_grid():
 				   alphaM = 0,
 				   lte = True,
 				   regularised_temperatures : Sequence[Quantity] = None,
-				   parallelise : bool = True) -> Self:
+				   parallelise : bool = False) -> Self:
 		"""
 		Download the spectra for all combinations between T_effs, FeHs and log_gs from the internet, and wrap it into a nice class.
 
@@ -208,8 +208,7 @@ class spectral_grid():
 			)
 		else:
 			results = [
-				fetch_spectra_and_indices(*task)
-				for task in tqdm(tasks, desc="downloading spectra...")
+				fetch_spectra_and_indices(*task) for task in tqdm(tasks, desc="downloading spectra...")
 			]
 
 		_, _, _, example_spec = results[0]
@@ -336,3 +335,6 @@ class spectral_grid():
 			for j, FeH in enumerate(self.FeHs)
 			for k, log_g in enumerate(self.Log_gs)
 		}
+	
+
+# dev testing

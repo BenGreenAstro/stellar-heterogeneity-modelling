@@ -12,7 +12,7 @@ import numpy as np
 from scipy.interpolate import RegularGridInterpolator, interpn
 
 from spectrum_component_analyser.phoenix_spectrum import phoenix_spectrum
-from spectrum_component_analyser.readers.JWST.file_reader import JWST_NORMALISING_POINT
+from spectrum_component_analyser.readers import JWST_NORMALISING_POINT
 from phoenix_grid_creator.spectral_grid import spectral_grid
 
 def get_interpolated_phoenix_spectrum(

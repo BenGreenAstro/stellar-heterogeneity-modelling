@@ -4,15 +4,19 @@ this file should just be run once when you want to create the data grid, which i
 """
 
 # external imports
+from spectrum_component_analyser.readers.JWST.folder_reader import JWSTFolderReader
+import typer
 import numpy as np
 from astropy import units as u
 from pathlib import Path
 
 # internal imports
 from phoenix_grid_creator.spectral_grid import spectral_grid
+from spectrum_component_analyser.readers.JWST.instruments import NIRISS
+from spectrum_component_analyser.readers.JWST.target import K218, LTT3780
 from spectrum_component_analyser.spectrum import spectrum
-from spectrum_component_analyser.readers.JWST import read_JWST_fits, JWST_RESOLUTION, JWST_NORMALISING_POINT
-from spectrum_component_analyser.readers.HARPS.HARPS import read_HARPS_fits, HARPS_resolution, HARPS_normalising_point
+from spectrum_component_analyser.readers.JWST.file_reader import JWSTFileReader
+from spectrum_component_analyser.readers import JWST_NORMALISING_POINT
 
 SPECTRAL_GRID_FILENAME : Path = Path("test_JWST_not_oversmoothed.hdf5")
 
@@ -48,23 +52,22 @@ regularised_temperatures = np.arange(MIN_TEMPERATURE_KELVIN, MAX_TEMPERATURE_KEL
 # if REGULARISE_TEMPERATURE_GRID:
 # 	grid.regularise_temperatures(regularised_temperatures)
 
-if __name__ == "__main__":
+def main():
+	example_spectrum_files : list[Path] = JWSTFolderReader.get_file_paths(LTT3780, NIRISS)
 
-	# load in a spectrum and use that as the regularised wavelengths
-	external_spectrum_path = Path("../../observed_spectra/MAST_2025-10-26T08_10_09.071Z - K2-18/MAST_2025-10-26T08_10_09.071Z/JWST/jw02722003001_04101_00001-seg001_nis_x1dints.fits")
-	script_dir = Path(__file__).resolve().parent
-	wavelength_grid_absolute_path = (script_dir / external_spectrum_path).resolve()
-
-	spectrum_to_decompose : spectrum = read_JWST_fits(wavelength_grid_absolute_path)
+	spectrum_to_decompose : spectrum = JWSTFileReader.get_spectrum(example_spectrum_files[0], instrument=NIRISS, INTEGRATION_INDEX=0, name="example spectrum")
 
 	spec_grid : spectral_grid = spectral_grid.from_internet(T_effs=T_effs,
 														 FeHs=FeHs,
 														 log_gs=log_gs,
-														 normalising_point=JWST_NORMALISING_POINT,
-														 observational_resolution=JWST_RESOLUTION,
+														 normalising_point=JWST_NORMALISING_POINT, # believe this is unused atm
+														 observational_resolution=NIRISS.Resolution,
 														 observational_wavelengths=spectrum_to_decompose.Wavelengths,
 														 name="phoenix_data")
 
-	spec_grid.save(absolute_path=SPECTRAL_GRID_FILENAME, overwrite=True)
+	# spec_grid.save(absolute_path=SPECTRAL_GRID_FILENAME, overwrite=True)
 
 	test_read : spectral_grid = spectral_grid.from_hdf5(SPECTRAL_GRID_FILENAME)
+
+if __name__ == "__main__":
+	typer.run(main)
