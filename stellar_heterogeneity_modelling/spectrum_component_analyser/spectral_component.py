@@ -9,8 +9,8 @@ class spectral_component():
     """
     def __init__(self,
 			  t_eff : Quantity[u.K],
-              feh : Quantity[u.dimensionless_unscaled],
-              log_g : Quantity[u.dimensionless_unscaled]):
+              feh : Quantity[u.dex],
+              log_g : Quantity[u.dex]):
         self.T_eff = t_eff
         self.FeH = feh
         self.Log_g = log_g

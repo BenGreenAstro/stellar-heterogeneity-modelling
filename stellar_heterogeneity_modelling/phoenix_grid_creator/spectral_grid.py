@@ -128,8 +128,8 @@ class spectral_grid():
 	def __init__(self,
 			  wavelengths : Sequence[Quantity],
 			  t_effs : Sequence[Quantity[u.K]],
-			  fehs : Sequence[Quantity[u.dimensionless_unscaled]],
-			  log_gs : Sequence[Quantity[u.dimensionless_unscaled]],
+			  fehs : Sequence[Quantity[u.dex]],
+			  log_gs : Sequence[Quantity[u.dex]],
 			  fluxes : Sequence[Quantity], # this needs to be convertible to Janskys aka u.Jy (code will error if not)
 			  uses_regularised_wavelengths : bool,
 			  uses_regularised_temperatures : bool,
@@ -181,7 +181,7 @@ class spectral_grid():
 		
 		phoenix_wavelengths = get_wavelength_grid()
 		
-		def fetch_spectra_and_indices(i, j, k, T_eff, FeH, log_g) -> Tuple[int, int, int, Quantity[u.K], Quantity[u.dimensionless_unscaled], Quantity[u.dimensionless_unscaled]]:
+		def fetch_spectra_and_indices(i, j, k, T_eff, FeH, log_g) -> Tuple[int, int, int, Quantity[u.K], Quantity[u.dex], Quantity[u.dex]]:
 			spec : phoenix_spectrum = download_spectrum(T_eff,
 											   FeH,
 											   log_g,
@@ -268,10 +268,10 @@ class spectral_grid():
 			T_eff_dataset.attrs[UNIT_METADATA_NAME] = str(T_eff_unit)
 
 			FeH_dataset = group.create_dataset(FEH_DATASET_NAME, data=self.FeHs)
-			FeH_dataset.attrs[UNIT_METADATA_NAME] = str(u.dimensionless_unscaled)
+			FeH_dataset.attrs[UNIT_METADATA_NAME] = str(u.dex)
 
 			log_g_dataset = group.create_dataset(LOGG_DATASET_NAME, data=self.Log_gs)
-			log_g_dataset.attrs[UNIT_METADATA_NAME] = str(u.dimensionless_unscaled)
+			log_g_dataset.attrs[UNIT_METADATA_NAME] = str(u.dex)
 
 			flux_dataset = group.create_dataset(FLUX_DATASET_NAME, data=np.array(self.Fluxes))
 			flux_dataset.attrs[UNIT_METADATA_NAME] = str(flux_unit)

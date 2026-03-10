@@ -198,8 +198,8 @@ def plot_nicely(A, result, parameter_space, spec_grid : spectral_grid, spectrum_
 
     current_literature_belief = get_interpolated_phoenix_spectrum(
             T_eff=3358 * u.K,
-            FeH=0.06 * u.dimensionless_unscaled,
-            Log_g=4.85 * u.dimensionless_unscaled,
+            FeH=0.06 * u.dex,
+            Log_g=4.85 * u.dex,
             star_name=star_name)
 
     ax1.plot(

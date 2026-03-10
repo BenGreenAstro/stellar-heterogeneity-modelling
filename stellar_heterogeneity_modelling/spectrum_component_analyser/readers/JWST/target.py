@@ -17,8 +17,8 @@ from phoenix_grid_creator.spectral_grid import spectral_grid
 class JWSTTarget:
     name : str
     t_eff : Quantity[u.K]
-    feh : Quantity[u.dimensionless_unscaled]
-    log_g : Quantity[u.dimensionless_unscaled]
+    feh : Quantity[u.dex]
+    log_g : Quantity[u.dex]
 
     def plot(self, spec_grid : spectral_grid, clear : bool = True):
         interpolated : phoenix_spectrum = get_interpolated_phoenix_spectrum(
