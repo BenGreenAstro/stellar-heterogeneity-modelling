@@ -6,7 +6,10 @@ from astropy.units import Quantity
 import astropy.units as u
 from astropy.io import fits
 
+from phoenix_grid_creator.PHOENIX_filename_conventions import decode_filename, get_file_name, get_url
+from spectrum_component_analyser import spectral_component
 from spectrum_component_analyser.spectrum import spectrum
+from constants import *
 
 class phoenix_spectrum(spectrum):
 	def __init__(
@@ -43,18 +46,15 @@ class phoenix_spectrum(spectrum):
 	FLUX_UNITS : Quantity = u.erg / (u.s * u.cm**2 * u.cm)
 
 	@classmethod
-	def from_fits(cls, file : Path, phoenix_wavelengths : Sequence[Quantity]):
+	def from_fits(cls, T_eff : Quantity[u.K], FeH : Quantity[u.dex], log_g : Quantity[u.dex], phoenix_wavelengths : Sequence[Quantity]):
 		"""
-		file is relative to repo root
-
-		for fits files from https://phoenix.astro.physik.uni-goettingen.de/data/HiResFITS/
+		for local fits files mirrored from https://phoenix.astro.physik.uni-goettingen.de/data/HiResFITS/
 		"""
 		# the index of the header data unit the data we want is in (looks to be 0 being the spectra, and 1 being the abundances, and those are the only 2 HDUs in the .fits files)
 		SPECTRA_HDU_INDEX = 0
 
-		# decode filename
-
-		T_eff, FeH, log_g = decode_filename(file)
+		# get filename
+		file : Path = package_path / raw_phoenix_path / Path(get_file_name(T_eff, FeH, log_g, lte=True, alphaM=0))
 
 		with fits.open(file) as hdul:
 			# for some reason, the fits file is big-endian; pandas required little-endian

@@ -19,6 +19,7 @@ from spectrum_component_analyser.readers.JWST.file_reader import JWSTFileReader
 from spectrum_component_analyser.readers import JWST_NORMALISING_POINT
 from spectrum_component_analyser.readers.JWST.folder_reader import JWSTFolderReader
 from spectrum_component_analyser.readers.fakedata_csv import get_fake_spectrum
+from constants import *
 
 SPECTRAL_GRID_FILENAME : Path = Path("test_JWST_not_oversmoothed.hdf5")
 
@@ -53,11 +54,11 @@ def main():
 
 	spectrum_to_decompose : spectrum = get_fake_spectrum("Fake_dataset.csv")
 
-	spectral_grid.from_internet_raw(
-		T_effs=T_effs,
-		FeHs=FeHs,
-		log_gs=log_gs
-		)
+	# spectral_grid.from_internet_raw(
+	# 	T_effs=T_effs,
+	# 	FeHs=FeHs,
+	# 	log_gs=log_gs
+	# 	)
 	
 	# spec_grid : spectral_grid = spectral_grid.from_internet(
 	# 													 T_effs=T_effs,
@@ -72,7 +73,8 @@ def main():
 
 	# spec_grid.save(grid_name="spectral_grid_for_fakedata", overwrite=True)
 
-	# test_read : spectral_grid = spectral_grid.from_hdf5(grid_name="spectral_grid_for_fakedata")
+	fits_file_paths = list(Path(package_path / "raw_phoenix_spectra").rglob("*.fits"))
+	test_read : spectral_grid = spectral_grid.from_local_raw(fits_file_paths)
 
 	# test_read.get_spectrum(T_effs[0], FeHs[0], log_gs[0]).plot()
 	# plt.show()

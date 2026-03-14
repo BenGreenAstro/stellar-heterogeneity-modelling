@@ -6,8 +6,11 @@ this file defines the filename formats used by PHOENIX in a readable way
 
 GRID : str = "PHOENIX-ACES-AGSS-COND-2011"
 
+from pathlib import Path
+
 from astropy.units import Quantity
 import astropy.units as u
+from spectrum_component_analyser.spectral_component import spectral_component 
 
 def get_file_name(T_eff : Quantity[u.K],
 				  FeH : Quantity[u.dex],
@@ -76,3 +79,27 @@ def get_file_name(T_eff : Quantity[u.K],
 def get_url(file_name : str) -> str:
 	url = f"https://phoenix.astro.physik.uni-goettingen.de/data/HiResFITS/{file_name}"
 	return url
+
+def decode_filename(file_name : Path) -> spectral_component:
+	name = str(file_name).split('/')[-1].split('.PHOENIX')[0].replace("lte", "")
+	parts = name.replace('-', ' -').replace('+', ' +').split()
+
+	T_eff, log_g, FeH  = parts # note the backwards order in the PHOENIX filename convention compared to this codebase's convention
+
+	T_eff = float(T_eff)
+	FeH = float(FeH)
+	log_g = abs(float(log_g))
+
+	T_eff *= u.K
+	FeH *= u.dex
+	log_g *= u.dex
+
+	return spectral_component(T_eff, FeH, log_g)
+
+
+if __name__ == "__main__":
+	from constants import *
+	import re
+	fits_file_paths = list(Path(package_path / "raw_phoenix_spectra").rglob("*.fits"))
+	for f in fits_file_paths:
+		decode_filename(f)

@@ -87,6 +87,12 @@ https://phoenix.astro.physik.uni-goettingen.de/data/HiResFITS/PHOENIX-ACES-AGSS-
 - there appears to be 1,569,128 wavelength points in total in the PHOENIX fits files I've checked
 - JWST Stage 2 products are specified in vacuum wavelength [source](https://jwst-docs.stsci.edu/accessing-jwst-data/jwst-science-data-overview#gsc.tab=0:~:text=Note%20that%20spectroscopic%20data%20products%20have%20wavelengths%20given%20in%20the%20barycentric%20vacuum%20rest%20frame)
 
+# Models
+
+Here are some other spectra databases:
+- https://svo2.cab.inta-csic.es/theory/newov2/index.php
+- https://pollux.oreme.org/collections/ e.g. https://www.aanda.org/articles/aa/full_html/2012/08/aa19330-12/aa19330-12.html
+
 <!-- # Conventions
 
 ## Commit Types

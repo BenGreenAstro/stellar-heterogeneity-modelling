@@ -155,6 +155,30 @@ def download_spectrum(T_eff : Quantity[u.K],
 		tqdm.write("\n continuing with the next file...")
 		return
 
+def get_parameters(files : list[Path]) -> Tuple[
+	list[Quantity[u.K]], list[Quantity[u.dex]], list[Quantity[u.dex]]
+	]:
+
+	f : Path
+
+	T_effs = []
+	FeHs = []
+	Log_gs = []
+
+	for f in files:
+		sc : spectral_component = decode_filename(f)
+		T_effs.append(sc.T_eff)
+		FeHs.append(sc.FeH)
+		Log_gs.append(sc.Log_g)
+	
+	# keep only unique
+
+	T_effs = set(T_effs)
+	FeHs = set(FeHs)
+	Log_gs = set(Log_gs)
+
+	return T_effs, FeHs, Log_gs
+
 class spectral_grid():
 	"""
 	Recommended to not use this class manually, unless using the wrappers such as from_internet and from_hdf5.
@@ -214,16 +238,18 @@ class spectral_grid():
 
 		phoenix_wavelengths = get_phoenix_wavelengths()
 
+		# kinda backwards but it means the hypercube has as regular structure rather than guessing based off of folder structure
 		T_effs, FeHs, log_gs = get_parameters(files)
 		
-		def fetch_spectra_and_indices(i, j, k, file : Path) -> Tuple[int, int, int, Quantity[u.K], Quantity[u.dex], Quantity[u.dex]]:
-			spec : phoenix_spectrum = phoenix_spectrum.from_fits(file)
+		def fetch_spectra_and_indices(i, j, k, T_eff, FeH, log_g) -> Tuple[int, int, int, Quantity[u.K], Quantity[u.dex], Quantity[u.dex]]:
+			spec : phoenix_spectrum = phoenix_spectrum.from_fits(T_eff, FeH, log_g, phoenix_wavelengths)
 			return i, j, k, spec
-		
 			
 		tasks = [
-			(i, j, k, file)
-			for i, file in enumerate(files)
+			(i, j, k, t, f, g)
+			for i, t in enumerate(T_effs)
+			for j, f in enumerate(FeHs)
+			for k, g in enumerate(log_gs)
 		]
 
 		if parallelise:
@@ -237,15 +263,12 @@ class spectral_grid():
 
 		_, _, _, example_spec = results[0]
 		
-		# pre - allocate 4d flux array. assumes all spectra have the same wavelength array
 		fluxes = np.zeros((len(T_effs), len(FeHs), len(log_gs), len(example_spec.Wavelengths)))
 
 		spec : phoenix_spectrum
 		for i, j, k, spec in results:
-			# i think this removes units from fluxes silently - as this is some 4D array. maybe we can readd them somehow; doesnt rly matter for now though
 			fluxes[i, j, k, :] = spec.Fluxes
-
-		# assume all spectra have the same wavelengths
+		
 		return cls(spec.Wavelengths,
 			 T_effs,
 			 FeHs,
