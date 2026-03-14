@@ -13,10 +13,10 @@ class phoenix_spectrum(spectrum):
 			  t_eff : Quantity[u.K],
 			  feh,
 			  log_g,
-			  normalising_point : Quantity,
-			  observational_resolution : Quantity,
-			  observational_wavelengths : np.ndarray,
-			  name : str
+			  normalising_point : Quantity = None,
+			  observational_resolution : Quantity = None,
+			  observational_wavelengths : np.ndarray = None,
+			  name : str = ""
 			):
 			super().__init__(
 				wavelengths,

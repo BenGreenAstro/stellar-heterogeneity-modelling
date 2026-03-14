@@ -28,7 +28,7 @@ class spectrum:
 			observational_wavelengths : np.ndarray,
 			temperature : Quantity[u.K],
 			name : str = None,
-			normalise : bool = False
+			normalise : bool = True
 		):
 		"""
 		Flux is going to be stored in Janskys from now on

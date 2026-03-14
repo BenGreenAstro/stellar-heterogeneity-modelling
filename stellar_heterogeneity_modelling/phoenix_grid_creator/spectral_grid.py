@@ -1,4 +1,5 @@
 import datetime
+import itertools
 from pathlib import Path
 from typing import Self, Sequence, Tuple
 from astropy.units import Quantity
@@ -7,15 +8,17 @@ import astropy.units as u
 from io import BytesIO
 from joblib import Parallel, delayed
 import requests
+from requests.adapters import Retry
 from tqdm import tqdm
 import numpy as np
 from astropy.io import fits
 from astropy import units as u
 from pathlib import Path
 import datetime
-import scipy as sp
 import h5py
 from astropy.units import Unit
+import time
+import random
 
 # versioning - used to save correct version into the hdf5 file
 from importlib.metadata import version
@@ -24,11 +27,10 @@ __version__ = version("spots_and_faculae_model")
 # internal imports
 from phoenix_grid_creator.PHOENIX_filename_conventions import *
 from spectrum_component_analyser.phoenix_spectrum import phoenix_spectrum
-from spectrum_component_analyser.spectral_component import spectral_component
 from spectrum_component_analyser.spectrum import DEFAULT_FLUX_UNIT
 from constants import *
 
-PHOENIX_FLUX_UNITS = u.erg / (u.s * u.cm**2 * u.cm)
+PHOENIX_FLUX_UNITS : Quantity = u.erg / (u.s * u.cm**2 * u.cm)
 
 UNIT_METADATA_NAME : str = "units"
 WAVELENGTH_DATASET_NAME : str = "wavelengths"
@@ -66,9 +68,33 @@ def get_phoenix_wavelengths() -> Sequence[Quantity]:
 
 	return wavelengths
 
-session = requests.Session()
-adapter = requests.adapters.HTTPAdapter(pool_connections=12, pool_maxsize=12)
-session.mount('https://', adapter)
+def get_configured_session(number_of_workers : int = 4):
+	session = requests.Session()
+	retry_strategy = Retry(
+		total=5,
+		backoff_factor=2,
+		status_forcelist=[429, 500, 502, 503, 504]
+	)
+	adapter = requests.adapters.HTTPAdapter(pool_connections=number_of_workers, pool_maxsize=number_of_workers, max_retries=retry_strategy)
+	session.mount('https://', adapter)
+	session.headers.clear()
+	session.headers.update({
+		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+		"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+		"Accept-Encoding": "gzip, deflate, br",
+		"Accept-Language": "en-US,en;q=0.9",
+		"Cache-Control": "max-age=0",
+		"Sec-Ch-Ua": '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"',
+		"Sec-Ch-Ua-Mobile": "?0",
+		"Sec-Ch-Ua-Platform": '"Windows"',
+		"Upgrade-Insecure-Requests": "1"
+	})
+	return session
+
+MAX_WORKERS = 1
+TIMEOUT_SETTINGS = (10, 60) # (Connect timeout, Read timeout)
+
+shared_session = get_configured_session(MAX_WORKERS)
 
 def download_spectrum(T_eff : Quantity[u.K],
 					  FeH : Quantity[u.dex],
@@ -85,6 +111,7 @@ def download_spectrum(T_eff : Quantity[u.K],
 
 	if you want to use the original phoenix spectrum, just leave regularised_wavelengths as none
 	"""
+	time.sleep(random.uniform(1.0, 3.0)) # random jitter to not appear like abot
 	try:
 		file = get_file_name(
 			lte=lte,
@@ -98,7 +125,7 @@ def download_spectrum(T_eff : Quantity[u.K],
 		tqdm.write(f"[PHOENIX GRID CREATOR] : filename or urlname error: {e}. continuing onto next requested spectrum")
 		return
 	try:
-		with session.get(url, stream=True, timeout=20) as response:
+		with shared_session.get(url, stream=True, timeout=TIMEOUT_SETTINGS) as response:
 			response.raise_for_status()
 	
 			# the index of the header data unit the data we want is in (looks to be 0 being the spectra, and 1 being the abundances, and those are the only 2 HDUs in the .fits files)
@@ -128,6 +155,55 @@ def download_spectrum(T_eff : Quantity[u.K],
 		tqdm.write(f"attempted url = {url}")
 		tqdm.write("\n continuing with the next file...")
 		return
+
+import subprocess
+
+def download_raw_spectrum(
+					  T_eff : Quantity[u.K],
+					  FeH : Quantity[u.dex],
+					  log_g : Quantity[u.dex],
+					  lte : bool,
+					  alphaM : float) -> phoenix_spectrum:
+	"""
+	we'll use this function to parallelise getting the spectra
+
+	if you want to use the original phoenix spectrum, just leave regularised_wavelengths as none
+	"""
+	file = get_file_name(
+		lte=lte,
+		T_eff=T_eff,
+		FeH=FeH,
+		log_g=log_g,
+		alphaM=alphaM
+		)
+	url = get_url(file)
+
+	output_path : Path = package_path / Path("new_raw_phoenix_spectra") / Path(file)
+
+	output_path.parent.mkdir(parents=True, exist_ok=True)
+	
+	if output_path.exists():
+		if output_path.stat().st_size < 1000000:
+			output_path.unlink()
+			print("fits file too small: assumed its probably a corrupted error page or something. deleting file and re-downloading")
+		else:
+			print(f"{output_path} already exists: skipping")
+			return
+	
+	wait_time = random.uniform(0.1, .3)
+	tqdm.write(f"waiting for {round(wait_time, 2)}s")
+	time.sleep(wait_time) # random jitter to not appear like abot
+
+	subprocess.run(
+		[
+			"curl",
+			"--limit-rate", "2000k",
+			"-L",
+			"-A", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+			"-o",
+			str(output_path),
+			url
+		], check=True)
 
 class spectral_grid():
 	"""
@@ -165,13 +241,24 @@ class spectral_grid():
 
 		self.LookupTable = self.to_lookup_table()
 
+	@staticmethod
+	def from_internet_raw(
+				   T_effs,
+				   FeHs,
+				   log_gs,
+				   lte = True,
+				   alphaM = 0,
+	):
+		for t, f, l in tqdm(itertools.product(T_effs, FeHs, log_gs)):
+			download_raw_spectrum(t, f, l, lte, alphaM)
+		
 	@classmethod
 	def from_internet(cls,
 				   T_effs,
 				   FeHs,
 				   log_gs,
-				   normalising_point : Quantity,
-				   observational_resolution : Quantity,
+				   normalising_point : Quantity["length"],
+				   observational_resolution : Quantity["length"],
 				   observational_wavelengths : np.ndarray,
 				   name : str,
 				   alphaM = 0,
@@ -241,12 +328,26 @@ class spectral_grid():
 			 observational_wavelengths != None,
 			 regularised_temperatures != None,
 			 _internal=True)
+	
+	@staticmethod
+	def get_file_name(grid_name : str):
+		if not grid_name.endswith(".hdf5"):
+			grid_name = grid_name.split('.')[0] + ".hdf5"
+		return grid_name
 
-	def save(self, absolute_path : Path, overwrite : bool):
-		if absolute_path.exists() and not overwrite:
-			raise FileExistsError(f"specified path already exists; and overwrite is set to false. Change the file name or turn on overwrite. (File path: {absolute_path})")
+	def save(self, grid_name : str, overwrite : bool):
+		"""
+		saves to Path("spectral_grids_path / grid_name")
+		"""
+
+		file_name = spectral_grid.get_file_name(grid_name)
 		
-		with h5py.File(absolute_path, "w") as file:
+		grid_path = Path(spectral_grids_path / file_name)
+
+		if grid_path.exists() and not overwrite:
+			raise FileExistsError(f"specified path already exists; and overwrite is set to false. Change the file name or turn on overwrite. (File path: {grid_path})")
+		
+		with h5py.File(grid_path, "w") as file:
 			file.attrs["creator"] = "Ben Green"
 			file.attrs["description"] = "Collection of synthetic spectra from PHOENIX dataset"
 			file.attrs["github url"] = "https://github.com/Part-III-Project-48/stellar-heterogeneity-modelling"
@@ -296,7 +397,10 @@ class spectral_grid():
 		grid_name
 			name of the file to be loaded in from the spectral_grids folder
 		"""
-		with h5py.File((spectral_grids_path / grid_name).resolve(), "r") as f:
+		
+		file_name = spectral_grid.get_file_name(grid_name)
+		
+		with h5py.File((spectral_grids_path / file_name).resolve(), "r") as f:
 			main_grid = f[MAIN_GRID_NAME]
 
 			wavelengths = main_grid[WAVELENGTH_DATASET_NAME]
