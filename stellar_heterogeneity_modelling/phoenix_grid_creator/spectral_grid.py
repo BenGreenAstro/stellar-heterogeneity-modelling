@@ -2,11 +2,12 @@ import datetime
 import itertools
 from pathlib import Path
 from typing import Self, Sequence, Tuple
-from astropy.units import Quantity
+from astropy.units import Quantity, Unit
 import numpy as np
 import astropy.units as u
 from io import BytesIO
 from joblib import Parallel, delayed
+from phoenix_grid_creator.raw_PHOENIX_data_loader import download_raw_spectrum
 import requests
 from requests.adapters import Retry
 from tqdm import tqdm
@@ -16,9 +17,9 @@ from astropy import units as u
 from pathlib import Path
 import datetime
 import h5py
-from astropy.units import Unit
 import time
 import random
+import subprocess
 
 # versioning - used to save correct version into the hdf5 file
 from importlib.metadata import version
@@ -29,8 +30,6 @@ from phoenix_grid_creator.PHOENIX_filename_conventions import *
 from spectrum_component_analyser.phoenix_spectrum import phoenix_spectrum
 from spectrum_component_analyser.spectrum import DEFAULT_FLUX_UNIT
 from constants import *
-
-PHOENIX_FLUX_UNITS : Quantity = u.erg / (u.s * u.cm**2 * u.cm)
 
 UNIT_METADATA_NAME : str = "units"
 WAVELENGTH_DATASET_NAME : str = "wavelengths"
@@ -135,9 +134,9 @@ def download_spectrum(T_eff : Quantity[u.K],
 				# for some reason, the fits file is big-endian; pandas required little-endian
 				fluxes = hdul[SPECTRA_HDU_INDEX].data
 				fluxes = fluxes.byteswap().view(fluxes.dtype.newbyteorder())
-				fluxes *= PHOENIX_FLUX_UNITS
+				fluxes *= phoenix_spectrum.FLUX_UNITS
 
-				# interpolation onto observational // physical wavelengths is done by the internals.
+				# interpolation onto observational // physical wavelengths is done by the internals aka not done here
 				spec = phoenix_spectrum(
 					wavelengths=phoenix_wavelengths,
 					fluxes=fluxes,
@@ -155,55 +154,6 @@ def download_spectrum(T_eff : Quantity[u.K],
 		tqdm.write(f"attempted url = {url}")
 		tqdm.write("\n continuing with the next file...")
 		return
-
-import subprocess
-
-def download_raw_spectrum(
-					  T_eff : Quantity[u.K],
-					  FeH : Quantity[u.dex],
-					  log_g : Quantity[u.dex],
-					  lte : bool,
-					  alphaM : float) -> phoenix_spectrum:
-	"""
-	we'll use this function to parallelise getting the spectra
-
-	if you want to use the original phoenix spectrum, just leave regularised_wavelengths as none
-	"""
-	file = get_file_name(
-		lte=lte,
-		T_eff=T_eff,
-		FeH=FeH,
-		log_g=log_g,
-		alphaM=alphaM
-		)
-	url = get_url(file)
-
-	output_path : Path = package_path / Path("new_raw_phoenix_spectra") / Path(file)
-
-	output_path.parent.mkdir(parents=True, exist_ok=True)
-	
-	if output_path.exists():
-		if output_path.stat().st_size < 1000000:
-			output_path.unlink()
-			print("fits file too small: assumed its probably a corrupted error page or something. deleting file and re-downloading")
-		else:
-			print(f"{output_path} already exists: skipping")
-			return
-	
-	wait_time = random.uniform(0.1, .3)
-	tqdm.write(f"waiting for {round(wait_time, 2)}s")
-	time.sleep(wait_time) # random jitter to not appear like abot
-
-	subprocess.run(
-		[
-			"curl",
-			"--limit-rate", "2000k",
-			"-L",
-			"-A", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-			"-o",
-			str(output_path),
-			url
-		], check=True)
 
 class spectral_grid():
 	"""
@@ -249,9 +199,62 @@ class spectral_grid():
 				   lte = True,
 				   alphaM = 0,
 	):
+		"""
+		downloads all spectra using curl
+		be careful with this as the server can time you out for doing too many requests (although they don't actually have any zip files for HiRes spectra so if you want all the spectra locally you have to do this or `wget -m` etc)
+		"""
 		for t, f, l in tqdm(itertools.product(T_effs, FeHs, log_gs)):
 			download_raw_spectrum(t, f, l, lte, alphaM)
+
+	@classmethod
+	def from_local_raw(cls, files : list[Path], parallelise : bool = True) -> Self:
+		"""
+		Load in directly from a list of .fits files that align to the naming convention for the urls given in PHOENIX_filename_conventions.py
+		"""
+
+		phoenix_wavelengths = get_phoenix_wavelengths()
+
+		T_effs, FeHs, log_gs = get_parameters(files)
 		
+		def fetch_spectra_and_indices(i, j, k, file : Path) -> Tuple[int, int, int, Quantity[u.K], Quantity[u.dex], Quantity[u.dex]]:
+			spec : phoenix_spectrum = phoenix_spectrum.from_fits(file)
+			return i, j, k, spec
+		
+			
+		tasks = [
+			(i, j, k, file)
+			for i, file in enumerate(files)
+		]
+
+		if parallelise:
+			results = Parallel(n_jobs=-1, prefer="threads")(
+				delayed(fetch_spectra_and_indices)(*task) for task in tqdm(tasks, desc="loading in spectra...")
+			)
+		else:
+			results = [
+				fetch_spectra_and_indices(*task) for task in tqdm(tasks, desc="loading in spectra...")
+			]
+
+		_, _, _, example_spec = results[0]
+		
+		# pre - allocate 4d flux array. assumes all spectra have the same wavelength array
+		fluxes = np.zeros((len(T_effs), len(FeHs), len(log_gs), len(example_spec.Wavelengths)))
+
+		spec : phoenix_spectrum
+		for i, j, k, spec in results:
+			# i think this removes units from fluxes silently - as this is some 4D array. maybe we can readd them somehow; doesnt rly matter for now though
+			fluxes[i, j, k, :] = spec.Fluxes
+
+		# assume all spectra have the same wavelengths
+		return cls(spec.Wavelengths,
+			 T_effs,
+			 FeHs,
+			 log_gs,
+			 fluxes,
+			 False,
+			 False,
+			 _internal=True)
+
 	@classmethod
 	def from_internet(cls,
 				   T_effs,
@@ -335,7 +338,7 @@ class spectral_grid():
 			grid_name = grid_name.split('.')[0] + ".hdf5"
 		return grid_name
 
-	def save(self, grid_name : str, overwrite : bool):
+	def save(self, grid_name : str, overwrite : bool, description : str):
 		"""
 		saves to Path("spectral_grids_path / grid_name")
 		"""
@@ -349,7 +352,7 @@ class spectral_grid():
 		
 		with h5py.File(grid_path, "w") as file:
 			file.attrs["creator"] = "Ben Green"
-			file.attrs["description"] = "Collection of synthetic spectra from PHOENIX dataset"
+			file.attrs["description"] = f"Collection of synthetic spectra from PHOENIX dataset.\n{description}"
 			file.attrs["github url"] = "https://github.com/Part-III-Project-48/stellar-heterogeneity-modelling"
 			file.attrs["version"] = __version__
 			file.attrs["creation date (of this file)"] = str(datetime.datetime.now())

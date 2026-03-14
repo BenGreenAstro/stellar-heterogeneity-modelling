@@ -68,7 +68,7 @@ Then to create the HDF5 file, just run `spots_and_faculae_model/src/phoenix_grid
 
 # Downloading other .fits files
 
-The PHOENIX pages reference ftp links, but the files are actually now found here: https://phoenix.astro.physik.uni-goettingen.de/data/..
+The PHOENIX pages reference ftp links, but the files are actually now found here: https://phoenix.astro.physik.uni-goettingen.de/data/
 
 I believe that the "2011" in many of the file names actually corresponds to the year of the spectral model, rather than the year of upload (which is instead just marked in the server).
 
