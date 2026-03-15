@@ -54,11 +54,11 @@ def main():
 
 	spectrum_to_decompose : spectrum = get_fake_spectrum("Fake_dataset.csv")
 
-	# spectral_grid.from_internet_raw(
-	# 	T_effs=T_effs,
-	# 	FeHs=FeHs,
-	# 	log_gs=log_gs
-	# 	)
+	spectral_grid.from_internet_raw(
+		T_effs=T_effs,
+		FeHs=FeHs,
+		log_gs=log_gs
+		)
 	
 	# spec_grid : spectral_grid = spectral_grid.from_internet(
 	# 													 T_effs=T_effs,
@@ -73,8 +73,8 @@ def main():
 
 	# spec_grid.save(grid_name="spectral_grid_for_fakedata", overwrite=True)
 
-	fits_file_paths = list(Path(package_path / "raw_phoenix_spectra").rglob("*.fits"))
-	test_read : spectral_grid = spectral_grid.from_local_raw(fits_file_paths)
+	# fits_file_paths = list(Path(package_path / "raw_phoenix_spectra").rglob("*.fits"))
+	# test_read : spectral_grid = spectral_grid.from_local_raw(fits_file_paths)
 
 	# test_read.get_spectrum(T_effs[0], FeHs[0], log_gs[0]).plot()
 	# plt.show()

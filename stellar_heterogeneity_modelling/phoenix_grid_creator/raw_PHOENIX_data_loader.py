@@ -44,12 +44,12 @@ def download_raw_spectrum(T_eff : Quantity[u.K],
     
 	url = get_url(file)
 
-	output_path : Path = package_path / Path("new_raw_phoenix_spectra") / Path(file)
+	output_path : Path = package_path / Path("raw_phoenix_spectra") / Path(file)
 
 	output_path.parent.mkdir(parents=True, exist_ok=True)
 	
 	if output_path.exists():
-		if output_path.stat().st_size < 1000000:
+		if output_path.stat().st_size < 2_000_000: # they all look to be 6mb; this redownloads any below ~2mb
 			output_path.unlink()
 			print("fits file too small: assumed its probably a corrupted error page or something. deleting file and re-downloading")
 		else:

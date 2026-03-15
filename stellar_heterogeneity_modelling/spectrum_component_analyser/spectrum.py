@@ -24,9 +24,9 @@ class spectrum:
 			wavelengths : np.array,
 			fluxes : np.array,
 			normalised_point : Quantity,
-			observational_resolution : Quantity,
-			observational_wavelengths : np.ndarray,
-			temperature : Quantity[u.K],
+			observational_resolution : Quantity = None,
+			observational_wavelengths : np.ndarray = None,
+			temperature : Quantity[u.K] = None,
 			name : str = None,
 			normalise : bool = True
 		):
@@ -135,8 +135,12 @@ class spectrum:
 		if extra_downsample:
 			points_per_standard_deviation : int = 5
 			downsample_factor = int(sigma / points_per_standard_deviation)
-			wave_uniform = wave_uniform[::downsample_factor]
-			flux_uniform = flux_uniform[::downsample_factor]
+
+			if downsample_factor > 1:
+				wave_uniform = wave_uniform[::downsample_factor]
+				flux_uniform = flux_uniform[::downsample_factor]
+
+				sigma /= downsample_factor # sigma is in pixels, not a physical dimensional value. so we need to divide it by the downsample factor for it to still represent the physical FWHM / resolution length
 		
 		# remove units
 		convolved_flux = gaussian_filter1d(flux_uniform.value, sigma.to(u.dimensionless_unscaled).value, mode="nearest")

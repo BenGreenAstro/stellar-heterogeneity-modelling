@@ -23,7 +23,7 @@ import subprocess
 
 # versioning - used to save correct version into the hdf5 file
 from importlib.metadata import version
-__version__ = version("spots_and_faculae_model")
+__version__ = version("stellar_heterogeneity_modelling")
 
 # internal imports
 from phoenix_grid_creator.PHOENIX_filename_conventions import *
@@ -167,15 +167,17 @@ def get_parameters(files : list[Path]) -> Tuple[
 
 	for f in files:
 		sc : spectral_component = decode_filename(f)
-		T_effs.append(sc.T_eff)
-		FeHs.append(sc.FeH)
-		Log_gs.append(sc.Log_g)
+		T_effs.append(sc.T_eff.value)
+		FeHs.append(sc.FeH.value)
+		Log_gs.append(sc.Log_g.value)
 	
-	# keep only unique
+	# keep only unique - but make sure they are sorted ascending in a list structure afterwards
 
-	T_effs = set(T_effs)
-	FeHs = set(FeHs)
-	Log_gs = set(Log_gs)
+	T_effs = sorted(list(set(T_effs))) * u.K
+	FeHs = sorted(list(set(FeHs))) * u.dex
+	Log_gs = sorted(list(set(Log_gs))) * u.dex
+
+	print(T_effs)
 
 	return T_effs, FeHs, Log_gs
 
@@ -231,7 +233,7 @@ class spectral_grid():
 			download_raw_spectrum(t, f, l, lte, alphaM)
 
 	@classmethod
-	def from_local_raw(cls, files : list[Path], parallelise : bool = True) -> Self:
+	def from_local_raw(cls, files : list[Path], resolution : Quantity[u.um], parallelise : bool = True) -> Self:
 		"""
 		Load in directly from a list of .fits files that align to the naming convention for the urls given in PHOENIX_filename_conventions.py
 		"""
@@ -243,6 +245,9 @@ class spectral_grid():
 		
 		def fetch_spectra_and_indices(i, j, k, T_eff, FeH, log_g) -> Tuple[int, int, int, Quantity[u.K], Quantity[u.dex], Quantity[u.dex]]:
 			spec : phoenix_spectrum = phoenix_spectrum.from_fits(T_eff, FeH, log_g, phoenix_wavelengths)
+			spec.regrid_flux(resolution)
+			mask = (0.8 * u.um < spec.Wavelengths) & (spec.Wavelengths < 5.3 * u.um)
+			spec = spec[mask]
 			return i, j, k, spec
 			
 		tasks = [
@@ -253,7 +258,7 @@ class spectral_grid():
 		]
 
 		if parallelise:
-			results = Parallel(n_jobs=-1, prefer="threads")(
+			results = Parallel(n_jobs=6, prefer="threads")(
 				delayed(fetch_spectra_and_indices)(*task) for task in tqdm(tasks, desc="loading in spectra...")
 			)
 		else:
@@ -450,14 +455,17 @@ class spectral_grid():
 			
 		return cls(wavelengths, T_effs, FeHs, log_gs, fluxes, uses_regularised_wavelengths, uses_regularised_temperatures, _internal=True)
 	
-	def get_spectrum(self, T_eff : Quantity[u.K], FeH, log_g) -> phoenix_spectrum:
+	def get_spectrum(self, T_eff : Quantity[u.K], FeH, log_g, name : str = "") -> phoenix_spectrum:
 		i = np.where(self.T_effs == T_eff)[0][0]
 		j = np.where(self.FeHs   == FeH)[0][0]
 		k = np.where(self.Log_gs == log_g)[0][0]
 
-		spec : phoenix_spectrum = phoenix_spectrum(self.Wavelengths, self.Fluxes[i, j, k, :], T_eff, FeH, log_g)
+		spec : phoenix_spectrum = phoenix_spectrum(self.Wavelengths, self.Fluxes[i, j, k, :], T_eff, FeH, log_g, name=name)
 
 		return spec
+
+	def get_spectrum_from_sc(self, sc : spectral_component, name : str = "") -> phoenix_spectrum:
+		return self.get_spectrum(sc.T_eff, sc.FeH, sc.Log_g, name)
 	
 	def to_lookup_table(self) -> Sequence[Quantity]:
 		"""

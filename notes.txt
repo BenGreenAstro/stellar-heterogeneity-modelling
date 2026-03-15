@@ -160,7 +160,7 @@ potential fixes:
 ----
 
 14th march
-- create a full resolution spectral grid
+[DONE] - create a full resolution spectral grid
 - create simulated data using phoenix
 - create MCMC or whatever bayesian fitting
 - see what resolution you need for your spectral grid to be able to fit w/ matrix, chi-squared and MCMC bayesian
@@ -170,3 +170,8 @@ potential fixes:
 - apply bayesian MCMC or whatever model to the fake data csv
 
 - plot and neatly store all graphs needed for presentation
+
+- things we can try to find the conditions needed for a good component measurement: resolution & snr
+
+- what about if you fix one of the parameters is it better then
+- what about trying to plot the components over time from a transit spectrum
