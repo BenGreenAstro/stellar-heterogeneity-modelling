@@ -24,11 +24,11 @@ class spectrum:
 			wavelengths : np.array,
 			fluxes : np.array,
 			normalised_point : Quantity,
-			observational_resolution : Quantity,
-			observational_wavelengths : np.ndarray,
-			temperature : Quantity[u.K],
+			observational_resolution : Quantity = None,
+			observational_wavelengths : np.ndarray = None,
+			temperature : Quantity[u.K] = None,
 			name : str = None,
-			normalise : bool = False
+			normalise : bool = True
 		):
 		"""
 		Flux is going to be stored in Janskys from now on
@@ -78,11 +78,14 @@ class spectrum:
 
 		# sample onto a set of wavelengths (for an instrument at observational_resolution)
 		if observational_wavelengths != None:
-			self.Fluxes = np.interp(observational_wavelengths, self.Wavelengths, self.Fluxes) # new y = np.interp(new x | old x | old y)
-			self.Wavelengths = observational_wavelengths
+			self.regrid_flux_onto(observational_wavelengths)
 		
 		self.Normalised_Point = normalised_point
 		self.Desired_Resolution = observational_resolution
+	
+	def regrid_flux_onto(self, observational_wavelengths : np.ndarray[Quantity[u.um]]) -> None:
+		self.Fluxes = np.interp(observational_wavelengths, self.Wavelengths, self.Fluxes) # new y = np.interp(new x | old x | old y)
+		self.Wavelengths = observational_wavelengths
 	
 	def normalise_flux(self) -> None:
 		"""
@@ -135,8 +138,12 @@ class spectrum:
 		if extra_downsample:
 			points_per_standard_deviation : int = 5
 			downsample_factor = int(sigma / points_per_standard_deviation)
-			wave_uniform = wave_uniform[::downsample_factor]
-			flux_uniform = flux_uniform[::downsample_factor]
+
+			if downsample_factor > 1:
+				wave_uniform = wave_uniform[::downsample_factor]
+				flux_uniform = flux_uniform[::downsample_factor]
+
+				sigma /= downsample_factor # sigma is in pixels, not a physical dimensional value. so we need to divide it by the downsample factor for it to still represent the physical FWHM / resolution length
 		
 		# remove units
 		convolved_flux = gaussian_filter1d(flux_uniform.value, sigma.to(u.dimensionless_unscaled).value, mode="nearest")

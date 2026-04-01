@@ -29,6 +29,10 @@ class spectral_component():
         yield self.Log_g
         yield self.Weight
 
+    @staticmethod
+    def return_default_table() -> rich.table.Table:
+        return Table("Weight", "T_eff", "[FeH]", "log g", box=box.MINIMAL)
+
     def pretty_print_singular(self, header : bool = True):
         table = Table("Weight", "T_eff", "[FeH]", "log g", box=box.MINIMAL)
         table.add_row(str(self.Weight), str(self.T_eff), str(self.FeH), str(self.Log_g))

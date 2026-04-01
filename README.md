@@ -68,9 +68,9 @@ Then to create the HDF5 file, just run `spots_and_faculae_model/src/phoenix_grid
 
 # Downloading other .fits files
 
-The PHOENIX paper and page talk about ftp (which is now deprecated). The files are actually found (and can be browsed) here: https://phoenix.astro.physik.uni-goettingen.de/data/. (even the http server has a welcome message which calls itself an FTP server!).
+The PHOENIX pages reference ftp links, but the files are actually now found here: https://phoenix.astro.physik.uni-goettingen.de/data/
 
-I believe (rather confusingly) that the "2011" in many of the file names actually corresponds to the year of the spectral model, rather than the year of upload (which is instead just marked in the server). But the paper doesn't actually state the reasons behind their filenaming so I don't know for sure.
+I believe that the "2011" in many of the file names actually corresponds to the year of the spectral model, rather than the year of upload (which is instead just marked in the server).
 
 We are using the 'HiResFITS' files currently.
 
@@ -86,6 +86,12 @@ https://phoenix.astro.physik.uni-goettingen.de/data/HiResFITS/PHOENIX-ACES-AGSS-
 - the only wavelength grid I can find is WAVE (not the AWAV) which is specified as VACUUM wavelengths. astropy specutils can be used to convert from vacuum to air wavelength if needed (this apparently has a low error)
 - there appears to be 1,569,128 wavelength points in total in the PHOENIX fits files I've checked
 - JWST Stage 2 products are specified in vacuum wavelength [source](https://jwst-docs.stsci.edu/accessing-jwst-data/jwst-science-data-overview#gsc.tab=0:~:text=Note%20that%20spectroscopic%20data%20products%20have%20wavelengths%20given%20in%20the%20barycentric%20vacuum%20rest%20frame)
+
+# Models
+
+Here are some other spectra databases:
+- https://svo2.cab.inta-csic.es/theory/newov2/index.php
+- https://pollux.oreme.org/collections/ e.g. https://www.aanda.org/articles/aa/full_html/2012/08/aa19330-12/aa19330-12.html
 
 <!-- # Conventions
 
@@ -126,3 +132,5 @@ chore: remove .vscode folder from git tracking (cache)
 This project follows the [Conventional Commits specification v1.0.0](https://www.conventionalcommits.org/en/v1.0.0/#summary).
 
 Some of the commit types listed above are from the [Angular Commit Message Guidelines](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines). That link also gives some general guidelines for message formatting that I think are nice. -->
+
+wget -m --limit-rate=200k --wait=3 --random-wait ftp://phoenix.astro.physik.uni-goettingen.de/HiResFITS/

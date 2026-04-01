@@ -145,8 +145,33 @@ improvements:
 - remove normalised_point etc
 - double check whether the downsampling-before-convolution is actually valid and doesn't mess up the data
 
+- also can make downloaders for other fits files on the server
+- maybe can just download some stuff at full res now its sped up a bit? might be less annoying than having to redownload data all the time
+- if we do this then we can plot like degeneracy amount vs resolution
+
+okay i dont want to be dependent on this server. lets just download everything and zip it and save it locally & to gdrive and/or github releases
+
 potential fixes:
 - use nirspec
 - use other phoenix data (e.g. the data actually used in the papers on chi squared minimisation)
 - look at other stars
 - if still doesnt work then use simulated phoenix data and create a component-ed star // if still doesn't work, can just prove method on simulated data (and then try to show it works on other phoenix simulated datasets too)
+
+----
+
+14th march
+[DONE] - create a full resolution spectral grid
+- create simulated data using phoenix
+- create MCMC or whatever bayesian fitting
+- see what resolution you need for your spectral grid to be able to fit w/ matrix, chi-squared and MCMC bayesian
+-- as in, plot the amount of degeneracy and/or the "size" of the minima for these methods 
+
+- create new spectral grid for the fake data csv (i.e. a spectral grid that now includes all 700 points instead of just 473 points) and see if its any better
+- apply bayesian MCMC or whatever model to the fake data csv
+
+- plot and neatly store all graphs needed for presentation
+
+- things we can try to find the conditions needed for a good component measurement: resolution & snr
+
+- what about if you fix one of the parameters is it better then
+- what about trying to plot the components over time from a transit spectrum

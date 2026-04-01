@@ -1,34 +1,35 @@
 import datetime
+import itertools
 from pathlib import Path
 from typing import Self, Sequence, Tuple
-from astropy.units import Quantity
+from astropy.units import Quantity, Unit
 import numpy as np
 import astropy.units as u
 from io import BytesIO
 from joblib import Parallel, delayed
+from phoenix_grid_creator.raw_PHOENIX_data_loader import download_raw_spectrum
 import requests
+from requests.adapters import Retry
 from tqdm import tqdm
 import numpy as np
 from astropy.io import fits
 from astropy import units as u
 from pathlib import Path
 import datetime
-import scipy as sp
 import h5py
-from astropy.units import Unit
+import time
+import random
+import subprocess
 
 # versioning - used to save correct version into the hdf5 file
 from importlib.metadata import version
-__version__ = version("spots_and_faculae_model")
+__version__ = version("stellar_heterogeneity_modelling")
 
 # internal imports
 from phoenix_grid_creator.PHOENIX_filename_conventions import *
 from spectrum_component_analyser.phoenix_spectrum import phoenix_spectrum
-from spectrum_component_analyser.spectral_component import spectral_component
 from spectrum_component_analyser.spectrum import DEFAULT_FLUX_UNIT
 from constants import *
-
-PHOENIX_FLUX_UNITS = u.erg / (u.s * u.cm**2 * u.cm)
 
 UNIT_METADATA_NAME : str = "units"
 WAVELENGTH_DATASET_NAME : str = "wavelengths"
@@ -66,9 +67,33 @@ def get_phoenix_wavelengths() -> Sequence[Quantity]:
 
 	return wavelengths
 
-session = requests.Session()
-adapter = requests.adapters.HTTPAdapter(pool_connections=12, pool_maxsize=12)
-session.mount('https://', adapter)
+def get_configured_session(number_of_workers : int = 4):
+	session = requests.Session()
+	retry_strategy = Retry(
+		total=5,
+		backoff_factor=2,
+		status_forcelist=[429, 500, 502, 503, 504]
+	)
+	adapter = requests.adapters.HTTPAdapter(pool_connections=number_of_workers, pool_maxsize=number_of_workers, max_retries=retry_strategy)
+	session.mount('https://', adapter)
+	session.headers.clear()
+	session.headers.update({
+		"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+		"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+		"Accept-Encoding": "gzip, deflate, br",
+		"Accept-Language": "en-US,en;q=0.9",
+		"Cache-Control": "max-age=0",
+		"Sec-Ch-Ua": '"Not A(Brand";v="99", "Google Chrome";v="121", "Chromium";v="121"',
+		"Sec-Ch-Ua-Mobile": "?0",
+		"Sec-Ch-Ua-Platform": '"Windows"',
+		"Upgrade-Insecure-Requests": "1"
+	})
+	return session
+
+MAX_WORKERS = 1
+TIMEOUT_SETTINGS = (10, 60) # (Connect timeout, Read timeout)
+
+shared_session = get_configured_session(MAX_WORKERS)
 
 def download_spectrum(T_eff : Quantity[u.K],
 					  FeH : Quantity[u.dex],
@@ -85,6 +110,7 @@ def download_spectrum(T_eff : Quantity[u.K],
 
 	if you want to use the original phoenix spectrum, just leave regularised_wavelengths as none
 	"""
+	time.sleep(random.uniform(1.0, 3.0)) # random jitter to not appear like abot
 	try:
 		file = get_file_name(
 			lte=lte,
@@ -98,7 +124,7 @@ def download_spectrum(T_eff : Quantity[u.K],
 		tqdm.write(f"[PHOENIX GRID CREATOR] : filename or urlname error: {e}. continuing onto next requested spectrum")
 		return
 	try:
-		with session.get(url, stream=True, timeout=20) as response:
+		with shared_session.get(url, stream=True, timeout=TIMEOUT_SETTINGS) as response:
 			response.raise_for_status()
 	
 			# the index of the header data unit the data we want is in (looks to be 0 being the spectra, and 1 being the abundances, and those are the only 2 HDUs in the .fits files)
@@ -108,9 +134,9 @@ def download_spectrum(T_eff : Quantity[u.K],
 				# for some reason, the fits file is big-endian; pandas required little-endian
 				fluxes = hdul[SPECTRA_HDU_INDEX].data
 				fluxes = fluxes.byteswap().view(fluxes.dtype.newbyteorder())
-				fluxes *= PHOENIX_FLUX_UNITS
+				fluxes *= phoenix_spectrum.FLUX_UNITS
 
-				# interpolation onto observational // physical wavelengths is done by the internals.
+				# interpolation onto observational // physical wavelengths is done by the internals aka not done here
 				spec = phoenix_spectrum(
 					wavelengths=phoenix_wavelengths,
 					fluxes=fluxes,
@@ -128,6 +154,32 @@ def download_spectrum(T_eff : Quantity[u.K],
 		tqdm.write(f"attempted url = {url}")
 		tqdm.write("\n continuing with the next file...")
 		return
+
+def get_parameters(files : list[Path]) -> Tuple[
+	list[Quantity[u.K]], list[Quantity[u.dex]], list[Quantity[u.dex]]
+	]:
+
+	f : Path
+
+	T_effs = []
+	FeHs = []
+	Log_gs = []
+
+	for f in files:
+		sc : spectral_component = decode_filename(f)
+		T_effs.append(sc.T_eff.value)
+		FeHs.append(sc.FeH.value)
+		Log_gs.append(sc.Log_g.value)
+	
+	# keep only unique - but make sure they are sorted ascending in a list structure afterwards
+
+	T_effs = sorted(list(set(T_effs))) * u.K
+	FeHs = sorted(list(set(FeHs))) * u.dex
+	Log_gs = sorted(list(set(Log_gs))) * u.dex
+
+	print(T_effs)
+
+	return T_effs, FeHs, Log_gs
 
 class spectral_grid():
 	"""
@@ -165,13 +217,86 @@ class spectral_grid():
 
 		self.LookupTable = self.to_lookup_table()
 
+	@staticmethod
+	def from_internet_raw(
+				   T_effs,
+				   FeHs,
+				   log_gs,
+				   lte = True,
+				   alphaM = 0,
+	):
+		"""
+		downloads all spectra using curl
+		be careful with this as the server can time you out for doing too many requests (although they don't actually have any zip files for HiRes spectra so if you want all the spectra locally you have to do this or `wget -m` etc)
+		"""
+		for t, f, l in tqdm(itertools.product(T_effs, FeHs, log_gs)):
+			download_raw_spectrum(t, f, l, lte, alphaM)
+
+	@classmethod
+	def from_local_raw(
+					cls,
+					files : list[Path],
+					resolution : Quantity[u.um],
+					parallelise : bool = True,
+					observational_wavelengths : np.ndarray[Quantity[u.um]] = None) -> Self:
+		"""
+		Load in directly from a list of .fits files that align to the naming convention for the urls given in PHOENIX_filename_conventions.py
+		"""
+
+		phoenix_wavelengths = get_phoenix_wavelengths()
+
+		# kinda backwards but it means the hypercube has as regular structure rather than guessing based off of folder structure
+		T_effs, FeHs, log_gs = get_parameters(files)
+		
+		def fetch_spectra_and_indices(i, j, k, T_eff, FeH, log_g) -> Tuple[int, int, int, Quantity[u.K], Quantity[u.dex], Quantity[u.dex]]:
+			spec : phoenix_spectrum = phoenix_spectrum.from_fits(T_eff, FeH, log_g, phoenix_wavelengths)
+			spec.regrid_flux(resolution)
+			mask = (0.8 * u.um < spec.Wavelengths) & (spec.Wavelengths < 5.3 * u.um)
+			spec = spec[mask]
+			if observational_wavelengths != None:
+				spec.regrid_flux_onto(observational_wavelengths=observational_wavelengths)
+			return i, j, k, spec
+			
+		tasks = [
+			(i, j, k, t, f, g)
+			for i, t in enumerate(T_effs)
+			for j, f in enumerate(FeHs)
+			for k, g in enumerate(log_gs)
+		]
+
+		if parallelise:
+			results = Parallel(n_jobs=6, prefer="threads")(
+				delayed(fetch_spectra_and_indices)(*task) for task in tqdm(tasks, desc="loading in spectra...")
+			)
+		else:
+			results = [
+				fetch_spectra_and_indices(*task) for task in tqdm(tasks, desc="loading in spectra...")
+			]
+
+		_, _, _, example_spec = results[0]
+		
+		fluxes = np.zeros((len(T_effs), len(FeHs), len(log_gs), len(example_spec.Wavelengths)))
+
+		spec : phoenix_spectrum
+		for i, j, k, spec in results:
+			fluxes[i, j, k, :] = spec.Fluxes
+		
+		return cls(spec.Wavelengths,
+			 T_effs,
+			 FeHs,
+			 log_gs,
+			 fluxes,
+			 False,
+			 False,
+			 _internal=True)
+
 	@classmethod
 	def from_internet(cls,
 				   T_effs,
 				   FeHs,
 				   log_gs,
-				   normalising_point : Quantity,
-				   observational_resolution : Quantity,
+				   normalising_point : Quantity["length"],
+				   observational_resolution : Quantity["length"],
 				   observational_wavelengths : np.ndarray,
 				   name : str,
 				   alphaM = 0,
@@ -241,14 +366,28 @@ class spectral_grid():
 			 observational_wavelengths != None,
 			 regularised_temperatures != None,
 			 _internal=True)
+	
+	@staticmethod
+	def get_file_name(grid_name : str):
+		if not grid_name.endswith(".hdf5"):
+			grid_name = grid_name.split('.')[0] + ".hdf5"
+		return grid_name
 
-	def save(self, absolute_path : Path, overwrite : bool):
-		if absolute_path.exists() and not overwrite:
-			raise FileExistsError(f"specified path already exists; and overwrite is set to false. Change the file name or turn on overwrite. (File path: {absolute_path})")
+	def save(self, grid_name : str, overwrite : bool, description : str):
+		"""
+		saves to Path("spectral_grids_path / grid_name")
+		"""
+
+		file_name = spectral_grid.get_file_name(grid_name)
 		
-		with h5py.File(absolute_path, "w") as file:
+		grid_path = Path(spectral_grids_path / file_name)
+
+		if grid_path.exists() and not overwrite:
+			raise FileExistsError(f"specified path already exists; and overwrite is set to false. Change the file name or turn on overwrite. (File path: {grid_path})")
+		
+		with h5py.File(grid_path, "w") as file:
 			file.attrs["creator"] = "Ben Green"
-			file.attrs["description"] = "Collection of synthetic spectra from PHOENIX dataset"
+			file.attrs["description"] = f"Collection of synthetic spectra from PHOENIX dataset.\n{description}"
 			file.attrs["github url"] = "https://github.com/Part-III-Project-48/stellar-heterogeneity-modelling"
 			file.attrs["version"] = __version__
 			file.attrs["creation date (of this file)"] = str(datetime.datetime.now())
@@ -296,7 +435,10 @@ class spectral_grid():
 		grid_name
 			name of the file to be loaded in from the spectral_grids folder
 		"""
-		with h5py.File((spectral_grids_path / grid_name).resolve(), "r") as f:
+		
+		file_name = spectral_grid.get_file_name(grid_name)
+		
+		with h5py.File((spectral_grids_path / file_name).resolve(), "r") as f:
 			main_grid = f[MAIN_GRID_NAME]
 
 			wavelengths = main_grid[WAVELENGTH_DATASET_NAME]
@@ -320,14 +462,17 @@ class spectral_grid():
 			
 		return cls(wavelengths, T_effs, FeHs, log_gs, fluxes, uses_regularised_wavelengths, uses_regularised_temperatures, _internal=True)
 	
-	def get_spectrum(self, T_eff : Quantity[u.K], FeH, log_g) -> phoenix_spectrum:
+	def get_spectrum(self, T_eff : Quantity[u.K], FeH, log_g, name : str = "") -> phoenix_spectrum:
 		i = np.where(self.T_effs == T_eff)[0][0]
 		j = np.where(self.FeHs   == FeH)[0][0]
 		k = np.where(self.Log_gs == log_g)[0][0]
 
-		spec : phoenix_spectrum = phoenix_spectrum(self.Wavelengths, self.Fluxes[i, j, k, :], T_eff, FeH, log_g)
+		spec : phoenix_spectrum = phoenix_spectrum(self.Wavelengths, self.Fluxes[i, j, k, :], T_eff, FeH, log_g, name=name)
 
 		return spec
+
+	def get_spectrum_from_sc(self, sc : spectral_component, name : str = "") -> phoenix_spectrum:
+		return self.get_spectrum(sc.T_eff, sc.FeH, sc.Log_g, name)
 	
 	def to_lookup_table(self) -> Sequence[Quantity]:
 		"""

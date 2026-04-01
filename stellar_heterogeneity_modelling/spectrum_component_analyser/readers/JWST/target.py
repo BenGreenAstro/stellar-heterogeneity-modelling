@@ -57,3 +57,10 @@ TRAPPIST1 : JWSTTarget = JWSTTarget(
     feh=0.0520 * u.dex,
     log_g = 5.2396 * u.dex
 )
+
+GJ486 : JWSTTarget = JWSTTarget(
+    name="GJ 486",
+    t_eff=3317 * u.K,
+    feh=-0.15 * u.dex,
+    log_g=4.91 * u.dex
+)
