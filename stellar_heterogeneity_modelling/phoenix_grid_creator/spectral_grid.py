@@ -233,7 +233,12 @@ class spectral_grid():
 			download_raw_spectrum(t, f, l, lte, alphaM)
 
 	@classmethod
-	def from_local_raw(cls, files : list[Path], resolution : Quantity[u.um], parallelise : bool = True) -> Self:
+	def from_local_raw(
+					cls,
+					files : list[Path],
+					resolution : Quantity[u.um],
+					parallelise : bool = True,
+					observational_wavelengths : np.ndarray[Quantity[u.um]] = None) -> Self:
 		"""
 		Load in directly from a list of .fits files that align to the naming convention for the urls given in PHOENIX_filename_conventions.py
 		"""
@@ -248,6 +253,8 @@ class spectral_grid():
 			spec.regrid_flux(resolution)
 			mask = (0.8 * u.um < spec.Wavelengths) & (spec.Wavelengths < 5.3 * u.um)
 			spec = spec[mask]
+			if observational_wavelengths != None:
+				spec.regrid_flux_onto(observational_wavelengths=observational_wavelengths)
 			return i, j, k, spec
 			
 		tasks = [

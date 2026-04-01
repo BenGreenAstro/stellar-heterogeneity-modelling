@@ -78,11 +78,14 @@ class spectrum:
 
 		# sample onto a set of wavelengths (for an instrument at observational_resolution)
 		if observational_wavelengths != None:
-			self.Fluxes = np.interp(observational_wavelengths, self.Wavelengths, self.Fluxes) # new y = np.interp(new x | old x | old y)
-			self.Wavelengths = observational_wavelengths
+			self.regrid_flux_onto(observational_wavelengths)
 		
 		self.Normalised_Point = normalised_point
 		self.Desired_Resolution = observational_resolution
+	
+	def regrid_flux_onto(self, observational_wavelengths : np.ndarray[Quantity[u.um]]) -> None:
+		self.Fluxes = np.interp(observational_wavelengths, self.Wavelengths, self.Fluxes) # new y = np.interp(new x | old x | old y)
+		self.Wavelengths = observational_wavelengths
 	
 	def normalise_flux(self) -> None:
 		"""

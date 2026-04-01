@@ -73,21 +73,32 @@ class MCMCHelper():
             labels += [f"W {i+1}", f"T_eff {i+1}", f"Fe/H {i+1}", f"logg {i+1}"]
 
         true_params = []
-        for c in true_components:
-            print(c.Weight)
-            true_params += [c.Weight, c.T_eff.value, c.FeH.value, c.Log_g.value]
 
-        true_params = np.array(true_params, dtype=float)
+        if true_components != None:
+            for c in true_components:
+                print(c.Weight)
+                true_params += [c.Weight, c.T_eff.value, c.FeH.value, c.Log_g.value]
 
-        # 2. Create the corner plot
-        fig = corner.corner(
-            samples, 
-            labels=labels, 
-            truths=true_params,            # Overplot the true params
-            quantiles=[0.16, 0.5, 0.84], # Show median and 1-sigma uncertainties
-            show_titles=True, 
-            title_kwargs={"fontsize": 12}
-        )
+            true_params = np.array(true_params, dtype=float)
+
+            # 2. Create the corner plot
+            fig = corner.corner(
+                samples, 
+                labels=labels, 
+                truths=true_params,            # Overplot the true params
+                quantiles=[0.16, 0.5, 0.84], # Show median and 1-sigma uncertainties
+                show_titles=True, 
+                title_kwargs={"fontsize": 12}
+            )
+        else:
+            fig = corner.corner(
+                samples, 
+                labels=labels, 
+                truths=None,            # Overplot the true params
+                quantiles=[0.16, 0.5, 0.84], # Show median and 1-sigma uncertainties
+                show_titles=True, 
+                title_kwargs={"fontsize": 12}
+            )
 
         plt.show()
 
@@ -206,7 +217,6 @@ class MCMCHelper():
             f = params[idx + 2] * u.dex
             l = params[idx + 3] * u.dex
             
-            # Note: Optimization usually benefits from caching these lookups
             spec = get_interpolated_phoenix_spectrum(t, f, l, star_name="sim", spec_grid=self.spec_grid)
             simulated += weight * spec.Fluxes.value
 

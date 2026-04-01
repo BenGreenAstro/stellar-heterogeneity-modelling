@@ -24,7 +24,7 @@ from constants import *
 SPECTRAL_GRID_FILENAME : Path = Path("test_JWST_not_oversmoothed.hdf5")
 
 # data to request (these numbers have to be included in the PHOENIX dataset; view PHOENIX_filename_conventions.py for which are allowed)
-T_effs = np.arange(2300, 4001, 100) * u.K
+T_effs = np.arange(2300, 4600, 100) * u.K
 FeHs = np.array([-4, -3, -2, -1.5, -1, -0.5, 0, 0.5, 1]) * u.dex
 log_gs = np.arange(0, 6.1, 0.5) * u.dex
 

@@ -66,6 +66,10 @@ class JWSTFileReader():
 			for integration_index in range(len(data["WAVELENGTH"])):
 				if (np.all(data["FLUX"][integration_index] == np.nan)):
 					print(f"[JWST READER] : integration index {integration_index} contains all nan fluxes")
+					continue
+				
+				if np.any(data["FLUX"][integration_index]) < 0:
+					continue
 				
 				# these column name strings are unique to JWST 1D 
 				spec : spectrum = spectrum(wavelengths = data["WAVELENGTH"][integration_index] * instrument.WavelengthUnits,
@@ -74,7 +78,8 @@ class JWSTFileReader():
 						temperature=None,
 						observational_resolution=None,
 						observational_wavelengths=None,
-						name=name)
+						name=name,
+						normalise=False)
 				
 				spectra.append(spec)
 		
