@@ -84,7 +84,7 @@ class ConstrainedMCMCHelper():
             if not (w_bounds[0] <= w <= w_bounds[1]): return -np.inf
             if not (t_bounds[0] <= t <= t_bounds[1]): return -np.inf
             
-        # Check shared FeH and logg (last two elements)
+        # Constrain shared FeH and logg
         if not (f_bounds[0] <= params[-2] <= f_bounds[1]): return -np.inf
         if not (l_bounds[0] <= params[-1] <= l_bounds[1]): return -np.inf
         
