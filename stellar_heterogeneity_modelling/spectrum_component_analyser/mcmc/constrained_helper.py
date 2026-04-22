@@ -6,8 +6,9 @@ import scipy as sp
 from tqdm import tqdm
 import matplotlib.pyplot as plt
 from astropy import units as u
+import rich
 
-# Assuming these are imported from your custom modules
+from spectrum_component_analyser.spectral_component import spectral_component
 from phoenix_grid_creator.spectral_grid import spectral_grid
 from spectrum_component_analyser.interpolated_spectrum import get_interpolated_phoenix_spectrum
 from spectrum_component_analyser.spectral_component import spectral_component
@@ -165,11 +166,6 @@ class ConstrainedMCMCHelper():
         plt.show()
 
     def print_parameters(self, samples: np.ndarray):
-        import numpy as np
-        import rich
-        from astropy.units import Quantity
-        from spectrum_component_analyser.spectral_component import spectral_component
-
         # 1. Calculate the 16th, 50th, and 84th percentiles
         percentiles = np.percentile(samples, [16, 50, 84], axis=0)
 

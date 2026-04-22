@@ -161,11 +161,6 @@ class MCMCHelper():
             display_teff   = f"{teff_med:.2f} ± {teff_err:.2f} K"
             display_feh    = f"{feh_med:.2f} ± {feh_err:.2f} dex"
             display_logg   = f"{logg_med:.2f} ± {logg_err:.2f} dex"
-
-            # NOTE: If your pretty_print() method strictly requires Floats/Quantities,
-            # you may need to modify it to accept these strings or add a custom row manually.
-            # Here, we instantiate the component with medians for logic, 
-            # but we'll print the row with uncertainties.
             
             recovered_component : spectral_component = spectral_component(
                 teff_med * u.K, 
@@ -189,7 +184,6 @@ class MCMCHelper():
         print("\n[MCMC RECOVERED PARAMETERS WITH 1-SIGMA ERRORS]")
         rich.print(results_table)
 
-    # 1. Define the Log-Prior
     def log_prior(self, params):
         """Checks if parameters are within the physical bounds of your grid."""
         # Expand bounds to match the full parameter vector
@@ -201,7 +195,6 @@ class MCMCHelper():
                 return -np.inf  # Probability is zero outside bounds
         return 0.0
 
-    # 2. Define the Log-Likelihood
     def log_likelihood(self, params):
         """
         Equivalent to -0.5 * chi_square.
@@ -225,7 +218,6 @@ class MCMCHelper():
         chi2 = np.sum(((observed - simulated) ** 2) / sigma**2)
         return -0.5 * chi2
 
-    # 3. Combine into the Log-Posterior
     def log_probability(self, params):
         lp = self.log_prior(params)
         if not np.isfinite(lp):
@@ -296,15 +288,13 @@ class MCMCHelper():
             temperature=None
         )
 
-        # 5. Normalization & Comparison
-        # Assuming we normalise to the mean for a stable residual
+        # 5. Normalization & Comparison. Assuming we normalise to the mean for a stable residual
         obs_flux_norm = self.ObservedSpectrum.Fluxes
         fit_flux_norm = my_result.Fluxes
 
         ax1.plot(self.ObservedSpectrum.Wavelengths, obs_flux_norm, label="Fake Data", color="black", linewidth=1.5)
         ax1.plot(my_result.Wavelengths, fit_flux_norm, label="MCMC Fit", color="orange", linewidth=2)
-
-        # 6. Residuals (Dimensionless)
+        
         my_residuals = (fit_flux_norm - obs_flux_norm) / obs_flux_norm
 
         ax2.plot(self.ObservedSpectrum.Wavelengths, my_residuals.value, color="blue", alpha=0.7)
