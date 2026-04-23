@@ -7,3 +7,7 @@
 **/*.pyc
 
 notes/
+
+# ignore report for now
+*.typ
+*.pdf

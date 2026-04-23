@@ -4,6 +4,7 @@ from astropy.units import Quantity
 from matplotlib import pyplot as plt
 import numpy as np
 import rich
+from spectrum_component_analyser.interpolated_spectrum import get_interpolated_phoenix_spectrum
 from spectrum_component_analyser.spectral_component import spectral_component
 from spectrum_component_analyser.spectrum import spectrum
 from constants import *
@@ -81,7 +82,9 @@ def get_simulated_spectra(spec_grid : spectral_grid, components : list[spectral_
     for c in components:
         total_weight_left -= c.Weight
 
-        spec : phoenix_spectrum = spec_grid.get_spectrum_from_sc(c, name=f"component")
+        spec : phoenix_spectrum = get_interpolated_phoenix_spectrum(c.T_eff, c.FeH, c.Log_g, name=f"component", spec_grid=spec_grid)
+        # spec : phoenix_spectrum = spec_grid.get_spectrum_from_sc(c, name=f"component")
+        
         spec.Fluxes *= c.Weight
 
         component_spectra.append(spec)
