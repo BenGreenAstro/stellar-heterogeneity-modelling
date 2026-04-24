@@ -1,7 +1,7 @@
 #import "layout.typ": report_layout
 
 #set page(paper: "a4", margin: 2cm)
-#set text(font: "New Computer Modern", size: 12pt)
+#set text(font: "STIX Two Text", size: 11pt)
 
 #include("sections/title_page.typ")
 
@@ -10,5 +10,5 @@
 #show: report_layout
 
 #include("sections/introduction.typ")
-
+#include("sections/methodology.typ")
 
