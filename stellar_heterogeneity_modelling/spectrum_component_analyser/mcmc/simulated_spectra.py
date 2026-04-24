@@ -82,7 +82,7 @@ def get_simulated_spectra(spec_grid : spectral_grid, components : list[spectral_
     for c in components:
         total_weight_left -= c.Weight
 
-        spec : phoenix_spectrum = get_interpolated_phoenix_spectrum(c.T_eff, c.FeH, c.Log_g, name=f"component", spec_grid=spec_grid)
+        spec : phoenix_spectrum = get_interpolated_phoenix_spectrum(c.T_eff, c.FeH, c.Log_g, star_name=f"component", spec_grid=spec_grid)
         # spec : phoenix_spectrum = spec_grid.get_spectrum_from_sc(c, name=f"component")
         
         spec.Fluxes *= c.Weight
@@ -111,11 +111,12 @@ def get_simulated_spectra(spec_grid : spectral_grid, components : list[spectral_
     noise = np.random.normal(0, noise_sigma, combined_spectrum.Fluxes.shape) * combined_spectrum.Fluxes.unit
     combined_spectrum.Fluxes += noise
 
-    combined_spectrum.plot()
-    for s in component_spectra:
-        s.plot(False)
-    plt.legend()
-    plt.title("Components and their sum")
-    plt.show()
+    # optional plotting
+    # combined_spectrum.plot()
+    # for s in component_spectra:
+    #     s.plot(False)
+    # plt.legend()
+    # plt.title("Components and their sum")
+    # plt.show()
 
     return components, component_spectra, combined_spectrum

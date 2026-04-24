@@ -134,7 +134,7 @@ class spectrum:
 		delta_lambda = wave_uniform[1] - wave_uniform[0]
 		sigma = desired_resolution / (2 * np.sqrt(2 * np.log(2)) * delta_lambda) # in pixel units
 
-		# downsample as we only need a few points per standard deviation to be accurate (i.e. remove details smaller than 1/10th of the standard deviation)
+		# downsample as we only need a few points per standard deviation to be accurate (i.e. remove details smaller than 1/5th of the standard deviation)
 		if extra_downsample:
 			points_per_standard_deviation : int = 5
 			downsample_factor = int(sigma / points_per_standard_deviation)
