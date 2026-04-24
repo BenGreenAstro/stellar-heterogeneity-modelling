@@ -8,6 +8,5 @@
 
 notes/
 
-# ignore report for now
-*.typ
+# ignore built report for now
 *.pdf

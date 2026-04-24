@@ -1,0 +1,13 @@
+= Introduction
+The study of exoplanetary atmospheres is a key component in progressing our understanding of habitability. Transit spectroscopy as proven itself as an important method for determining information on the conditions, including any biosignatures, found on an exoplanet. The recent launch of JWST has provided several promising candidates, and upcoming surveys such as PLATO and ARIEL evidence significant research interest.
+
+[to add: overview / one sentence of why M dwarves (which is then expanded in the theory section)]
+
+One challenge in determining accurate exoplanet transmission spectra is stellar variability. Stellar surfaces can be dotted with regions of lower or higher temperature, called faculae and spots respectively. [footnote to our convention on just calling everything spots] M dwarfs can be very variable, often with between 10 and 50% of the stellar surface being at a different temperature than the disc-integrated average [insert refs, maybe expand a little on variability].
+
+The reason this heterogeneity is an issue is the transit light source effect [Rackham 2018]. Usually, the pre-transit disc integrated spectrum is assumed to be the light source of the exoplanet during transit. However, if a non-negligible portion of the star is covered by spots, the true illuminating spectrum that passes through the exoplanet's atmosphere might be significantly different to our assumption. This can lead to multiple problems when investigating a spectrum, including incorrect spectral features (maybe say: see TRAPPIST 1 [ref paper that says how TRAPPIST-1 water features are consistent with stellar variability]) or errors in derived properties such as density. To add to the complexity, simulated data shows that these biases can exist even when \<1% of the stellar surface is covered by heterogeneities.
+
+Rackham et al. (2023) describes current research needs identified by NASA’s Exoplanet Exploration Program Study Analysis Group 21. These would facilitate improved under- standing and analysis of transmission spectra from HST and JWST. Points relevant to the analytical pipeline include placing observational constraints on exoplanet hosts to use as feedback for stellar models, and establishing best practices for incorporating stellar
+heterogeneity into transit studies and atmospheric retrievals.
+
+Creating computational methods to determine the extent of variability from a given input spectra, and ideally constrain the parameter of any spots or faculae present, has the potential to improve exoplanet transmission spectra accuracy. This is a key step needed within the analysis pipeline to enable differentiation between false spectral features and real molecular signals more easily.
