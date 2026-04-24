@@ -10,5 +10,5 @@
 #show: report_layout
 
 #include("sections/introduction.typ")
+#include("sections/theory.typ")
 #include("sections/methodology.typ")
-

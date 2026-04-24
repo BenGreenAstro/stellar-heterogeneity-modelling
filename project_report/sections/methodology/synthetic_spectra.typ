@@ -1,6 +1,14 @@
 == PHOENIX
 
+PHOENIX is a stellar atmosphere code that can reproduce spectra for many astrophysical bodies, including cool and hot stars, planets, and supernovae. [https://www.cambridge.org/core/services/aop-cambridge-core/content/view/DD2793408B0BE18330C2F66C340CB6F8/S0074180900133212a.pdf/highlights-of-stellar-modeling-with-phoenix.pdf]. Since its development in the 1990s, it has seen significant use as a code for generating synthetic stellar spectra [insert refs for some uses]. The PHOENIX code solves the radiative transfer equation in spherical geometry, including the effects of relativity. [https://www.sciencedirect.com/science/article/pii/S0377042799001533#BIB1]
+
 == Gottingen Library
 
 === Overview
-Text
+There are multiple databases of synthetic spectra produced using the PHOENIX code available [insert some refs]. However, one which includes a large number of spectra which fully span the parameter space for M dwarfs is the Gottingen Spectral Library [https://arxiv.org/pdf/1303.5632]. Each spectrum is specified at a given T F L alpha/M LTE etc etc. [at some point we need to reason why we only care about T F L // only T]. Specifically, it covers effective temperatures from 2.3K to 12K (i.e. well above what we need for studying M dwarfs), metallicies from -4 to 1, and log g from 0.0 to 6.0. This range covers the vast majority of known M dwarfs [insert a ref to a paper which shows the dist of these parameters for stars]. The creators of this library note that a few spectra were unable to be computed, and were interpolated (along the T_eff axis only).
+
+Furthermore, the wavelength range of the spectra is [write 500Angstrom in um] to 5.5um, which is the same range as used by NIRISS [give range], NIRSPEC (give range), etc [list instruments]. Furthermore, the synthetic spectra have a resolution far higher than [insert JWST instruments] and comparable to [...] but lower than [...]. This allows us to use a wavelength range and resolution relevant to modern astronomy when simulating stellar component retrievals. Downsampling is done using a gaussian convolution at a given resolution [maybe move this to methodology, if this PHOENIX section isn't already within the methodology section]
+
+The resolution of the parameters T_eff, FeH and log g is given in [table …]. However, there are existing methods which use interpolation on these parameters to achieve a much higher resolution [ref the chi-squared minimisation paper, and make sure to note what their resolution actually was].
+=== Usage
+As much of the parameter space of this library is outside our M-dwarf scope, there is no need to download all of the provided spectra. In total, we used [2000 spectra or whatever] covering the parameter space given in [table …].

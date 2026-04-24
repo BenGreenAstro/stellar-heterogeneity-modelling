@@ -1,7 +1,7 @@
 = Introduction
 The study of exoplanetary atmospheres is a key component in progressing our understanding of habitability. Transit spectroscopy as proven itself as an important method for determining information on the conditions, including any biosignatures, found on an exoplanet. The recent launch of JWST has provided several promising candidates, and upcoming surveys such as PLATO and ARIEL evidence significant research interest.
 
-[to add: overview / one sentence of why M dwarves (which is then expanded in the theory section)]
+[to add: overview / one sentence of why M dwarfs (which is then expanded in the theory section)]
 
 One challenge in determining accurate exoplanet transmission spectra is stellar variability. Stellar surfaces can be dotted with regions of lower or higher temperature, called faculae and spots respectively. [footnote to our convention on just calling everything spots] M dwarfs can be very variable, often with between 10 and 50% of the stellar surface being at a different temperature than the disc-integrated average [insert refs, maybe expand a little on variability].
 
