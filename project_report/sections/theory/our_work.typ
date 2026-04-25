@@ -1,6 +1,8 @@
-== This Work
+// should this be in the methodology section? like is the theory that this work is contributing classed as theory or methodology?
 
-=== SPECTRAL COMPONENTS
+== Beyond the Disc-Integrated Spectrum
+
+=== Spectral Components
 
 To account for the variation in parameters such as T_eff log g and FeH across a stellar surface, we can approximate the stellar spectrum as being a sum of components F_tot:
 
@@ -10,9 +12,9 @@ where w_(T F L) is the weight of the (T F L) component and F_{T F L} (lambda) is
 
 [little explanation of the different approaches which are possible - can link back to the section on how this is all done for one-component]
 
-=== EFFECTS OF LIMB DARKENING
+=== Effects of Limb Darkening
 
-// https://iopscience.iop.org/article/10.3847/1538-4357/ad0369 - talks about reddening
+// https://iopscience.iop.org/article/10.3847/1538-4357/ad0369 - talks about reddening.
 
 [explain limb darkening]
 

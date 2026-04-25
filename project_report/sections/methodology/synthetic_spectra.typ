@@ -4,7 +4,7 @@
 
 === PHOENIX
 
-PHOENIX is a stellar atmosphere code that can reproduce spectra for many astrophysical bodies, including cool and hot stars, planets, and supernovae. [https://www.cambridge.org/core/services/aop-cambridge-core/content/view/DD2793408B0BE18330C2F66C340CB6F8/S0074180900133212a.pdf/highlights-of-stellar-modeling-with-phoenix.pdf]. Since its development in the 1990s, it has seen significant use as a code for generating synthetic stellar spectra [insert refs for some uses]. The PHOENIX code solves the radiative transfer equation in spherical geometry, including the effects of relativity. [https://www.sciencedirect.com/science/article/pii/S0377042799001533#BIB1]
+PHOENIX is a stellar atmosphere code that can reproduce spectra for many astrophysical bodies, including cool and hot stars, planets, and supernovae. @PHOENIXOverview Since its development in the 1990s, it has seen significant use as a code for generating synthetic stellar spectra [insert refs for some uses]. The PHOENIX code solves the radiative transfer equation in spherical geometry, including the effects of relativity. @HAUSCHILDT199941
 
 === Göttingen Library
 
@@ -15,18 +15,19 @@ https://www.aanda.org/articles/aa/full_html/2023/07/aa44249-22/F2.html
 https://academic.oup.com/mnras/article/389/2/585/972867
 ]
 
-[maybe state how each of these affects the spectum shape / lines]
-[define alpha/Fe] [at some point we need to reason why we only care about T F L / only T].
+[maybe state how each of these parameters affects the spectum shape / lines. Or maybe that should be in the theory section]
+[at some point we need to reason why we only care about T F L / only T & f]
+[define f (covering fraction)]
 
 Specifically, it covers effective temperatures from 2.3K to 12K (i.e. well above what we need for studying M dwarfs), metallicies from -4 to 1, and log g from 0.0 to 6.0. This range covers the vast majority of known M dwarfs [insert a ref to a paper which shows the dist of these parameters for stars]. The creators of this library note that a few spectra were unable to be computed, and were interpolated (along the T_eff axis only).
 
-Furthermore, the wavelength range of the spectra is [write 500Angstrom in um] to 5.5um, which is the same range as used by NIRISS [give range], NIRSPEC (give range), etc [list instruments]. Furthermore, the synthetic spectra have a resolution far higher than [insert JWST instruments] and comparable to [...] but lower than [...]. This allows us to use a wavelength range and resolution relevant to modern astronomy when simulating stellar component retrievals. Downsampling is done using a gaussian convolution at a given resolution [maybe move this to methodology, if this PHOENIX section isn't already within the methodology section]
+Furthermore, the wavelength range of the spectra spans $qty("0.05", "um")$ to $qty("5.5", "um")$, which is the same range as used by NIRISS [give range], NIRSPEC (give range), etc [list instruments]. Furthermore, the synthetic spectra have a resolution far higher than [insert JWST instruments] and comparable to [...] but lower than [...]. This allows us to use a wavelength range and resolution relevant to modern astronomy when simulating stellar component retrievals. Downsampling is done using a gaussian convolution at a given resolution [maybe move this to methodology, if this PHOENIX section isn't already within the methodology section]
 
 The resolution of the parameters T_eff, FeH and log g is given in [table …]. However, there are existing methods which use interpolation on these parameters to achieve a much higher resolution [ref the chi-squared minimisation paper, and make sure to note what their resolution actually was].
 
-==== Parameter Space
+=== Parameter Space
 
-As much of the parameter space of this library is outside our M dwarf scope, there is no need to download all of the provided spectra. In total, we used 2691 spectra, covering the ranges as given in @table-used-PHOENIX-ranges. This fully covers the M dwarf parameter space as [define M dwarf temps and metallicity etc].
+As much of the parameter space of the Göttingen library is outside our M dwarf scope, there is no need to download all of the provided spectra. In total, we used 2691 spectra, covering the ranges as given in @table-used-PHOENIX-ranges. This fully covers the M dwarf parameter space as [define M dwarf temps and metallicity etc].
 
 #figure(
   table(

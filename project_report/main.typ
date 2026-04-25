@@ -5,19 +5,25 @@
 #set math.equation(numbering: "(1)")
 
 #include("sections/title_page.typ")
-
 #pagebreak()
 
 #show: report_layout
 
+#include("sections/contents_page.typ")
+#pagebreak()
+
 #include("sections/introduction.typ")
 #pagebreak()
+
 #include("sections/theory.typ")
 #pagebreak()
+
 #include("sections/methodology.typ")
 #pagebreak()
+
 #include("sections/results.typ")
 #pagebreak()
+
 #include("sections/conclusions.typ")
 
 #pagebreak()

@@ -115,7 +115,10 @@ Interpolation can be used to improve the resolution of this method [chi squared 
 
 === Line depths
 
-Empirical relations have been determined which link the line depth ratio (LDR) between a given pair of absorption lines and the stellar parameters T_eff and log g. For example, [https://arxiv.org/pdf/2106.09995] describe pairs of Fe i–Fe ii, Ca i–Ca ii and Fe i–Fe i line pairs which can be used to determine Teff and log g to a resolution of 50K and 0.2 dex respectively. The downside of this approach is that it requires spectra of a much higher resolution than space-based telescopes, making it not suitable for analysing HST or JWST spectra. [maybe mention the actual required resolution of ~28k specified by that LDR article] [should i mention which telescopes can use this method? or is that just extraneous?]
+Empirical relations have been determined which link the line depth ratio (LDR) between a given pair of absorption lines and the stellar parameters T_eff and log g. For example, #cite(<Matsunaga_2021>, form: "prose") describe Fe i–Fe ii, Ca i–Ca ii and Fe i–Fe i line pairs which can be used to determine $T_"eff"$ and $log g$ to a resolution of #qty("50","K") and #num("0.2") dex respectively. The downside of this approach is that it requires spectra of a much higher resolution than space-based telescopes, making it not suitable for analysing HST or JWST spectra. 
+
+// [maybe mention the actual required resolution of ~28k specified by that LDR article]
+// [should i mention which telescopes can use this method? or is that just extraneous?]
 
 === ML
 
@@ -129,7 +132,7 @@ Empirical relations have been determined which link the line depth ratio (LDR) b
 [FeH variation]
 [include how much each of the parameters we are varying change]
 
-== THE TRANSIT LIGHT SOURCE EFFECT
+== The Transit Light Source Effect
 
 (maybe say: see TRAPPIST 1 [ref paper that says how TRAPPIST-1 water features are consistent with stellar variability])
 
@@ -137,13 +140,13 @@ The section of the stellar surface which illuminates the exoplanet's atmosphere 
 
 There are two broad cases of heterogeneities - occulted and unocculted spots - which are dealt with in different ways.
 
-=== OCCULTED HETEROGENEITIES
+=== Occulted Heterogeneities
 
 Perhaps paradoxically, spots which are contained within the transit chord and which directly contribute to the illuminating spectrum are typically easier to address [ref]. This is because, if the heterogeneity is of sufficient size [what size? if its smaller than this can it still affect the spectrum or at that point will it not affect it much?], the transit curve will appear asymmetrical. This provides a clear sign that a heterogeneity is present and must be removed, which differs from the case of unocculted spots.
 
-Furthermore, there is already a python package, starry, that can be used to infer properties of a heterogeneous stellar surface using spherical harmonics. [https://ui.adsabs.harvard.edu/abs/2019AJ....157...64L/abstract] This has been used in the literature to directly model starspots. [https://iopscience.iop.org/article/10.3847/1538-3881/adf72f/pdf]
+Furthermore, there is already a python package, starry, that can be used to infer properties of a heterogeneous stellar surface using spherical harmonics. @Luger_2019 This has been used in the literature to directly model starspots. @Tamburo2025
 
-=== UNOCCULTED HETEROGENEITIES
+=== Unocculted Heterogeneities
 
 Unocculted heterogeneities are usually harder to detect and more challenging to remove from the measured spectrum. An unocculted faculae (hotter region) increases the average surface temperature to be higher than the true illuminating spectrum of the exoplanet. Generally therefore, using the disc integrated spectrum will over-subtract at lower wavelengths, and under-subtract at higher wavelengths. Furthermore, the depth and presence of molecular features varies with temperature [ref]. Therefore, not using the true illuminating spectrum in your analysis can lead to falsely attributing stellar spectral features to the exoplanet.
 
