@@ -10,6 +10,11 @@ PHOENIX is a stellar atmosphere code that can reproduce spectra for many astroph
 
 There are multiple databases of synthetic spectra produced using the PHOENIX code available [insert some refs]. However, one which includes a large number of spectra which fully span the parameter space for M dwarfs is the Gottingen Spectral Library. @PHOENIX Each spectrum is specified at a given effective temperature $T_"eff"$, metallicity [[Fe\/H]], surface gravity $log g$ and alpha element abundance [$alpha$/Fe].#footnote[[$alpha$/Fe] represents the abundance of elements involved in the alpha-process. ]
 
+[ ref for teffs of m dwarfs:
+https://www.aanda.org/articles/aa/full_html/2023/07/aa44249-22/F2.html
+https://academic.oup.com/mnras/article/389/2/585/972867
+]
+
 [maybe state how each of these affects the spectum shape / lines]
 [define alpha/Fe] [at some point we need to reason why we only care about T F L / only T].
 

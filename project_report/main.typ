@@ -11,7 +11,9 @@
 #show: report_layout
 
 #include("sections/introduction.typ")
+#pagebreak()
 #include("sections/theory.typ")
+#pagebreak()
 #include("sections/methodology.typ")
 
 #pagebreak()

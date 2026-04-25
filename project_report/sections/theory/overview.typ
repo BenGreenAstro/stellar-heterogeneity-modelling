@@ -1,6 +1,8 @@
 #import "@preview/unify:0.8.0": qty, unit, num
 
-== Overview
+== Transmission Spectra
+
+=== Overview
 
 === Transit Depth
 
@@ -67,6 +69,7 @@ Furthermore, M dwarfs are the most numerous main-sequence stars in the Milky-Way
 
 [also need to explicitly state why IR]
 
+
 === Atmospheric Retrievals & Data Analysis
 
 Astronomical databases often provide calibrated spectra, which take into account the wavelength dependent sensitivity of the instrument, etc [expand on this & ref jwst docs]. , For example, JWST's stage 2 pipeline [maybe be more specific about which] deals with [list effects]. Since there are multiple ways [list them] to isolate the contribution from the exoplanet, this is not done by the instrument pipeline, and further steps must be taken before atmospheric analysis can be done. Since this project focuses on the JWST pipeline, we do not calibrate the spectra, although we need to be aware of any possible systematics in the data [list them. if we do a jwst section a discussion of any possible instrument systematics or errors might be nice].
@@ -123,6 +126,8 @@ Empirical relations have been determined which link the line depth ratio (LDR) b
 
 
 == THE TRANSIT LIGHT SOURCE EFFECT
+
+(maybe say: see TRAPPIST 1 [ref paper that says how TRAPPIST-1 water features are consistent with stellar variability])
 
 The section of the stellar surface which illuminates the exoplanet's atmosphere in the direction of our line of sight is only a circular region behind the planet. Over the course of a transit, the planet sweeps out a region called the transit chord, and it is only this region which affects the measured spectra. Therefore, if spots or faculae are present, the true illuminating spectrum will differ from the disc-integrated spectrum.
 
