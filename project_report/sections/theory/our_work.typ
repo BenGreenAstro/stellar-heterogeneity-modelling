@@ -1,4 +1,4 @@
-== Our Work
+== This Work
 
 === SPECTRAL COMPONENTS
 

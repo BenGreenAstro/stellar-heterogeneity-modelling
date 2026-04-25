@@ -8,6 +8,7 @@
   set text(
       font: "STIX Two Text", 
       size: 11pt,
+      lang: "en"
     )
 
   set heading(numbering: (..nums) => {
@@ -53,6 +54,15 @@
     it
     v(0.5em)
   }
+
+  set cite(style: "apa")
+  
+  // show cite: it => {
+  //     show "& others": "et al."
+  //     it
+  //   }
+
+  // show link: set text(fill: blue.darken(20%))
 
   doc
 }

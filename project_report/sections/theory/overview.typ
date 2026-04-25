@@ -1,38 +1,69 @@
+#import "@preview/unify:0.8.0": qty, unit, num
+
 == Overview
+
+=== Transit Depth
+
+[Give the transit depth formula for $Delta$]
 
 === Transmission Spectra
 
 [intro - what are transmission spectra, very brief note on their history e.g. how long has this been possible. maybe mention upcoming transit missions or one or two famous transit measurements - prove this field is relevant]
 
-A key component of habitability research is analysis of extrasolar planets, including their atmospheres. Transmission spectra are one method of determining the species present within an exoplanet's atmosphere, which gives hints to possible signs of life through biosignatures, as well as the planet's evolution and geological processes. [refs]
+A key component of habitability research is analysis of extrasolar planets, including their atmospheres. Transmission spectra are one method of determining the species present within an exoplanet's atmosphere, which gives valuable hints to signs of life through biosignatures, as well as the planet's evolutionary history and climate. @LauraExoplanetReview
 
-If an exoplanet crosses the line of sight between its host star and Earth, starlight will pass through its atmosphere. Various mechanisms [list them] will cause a wavelength-dependent absorption or amplification of this starlight as it interacts with the species present within the atmosphere. The intensity shift caused by the atmosphere is given by:
+If an exoplanet crosses the line of sight between its host star and Earth, starlight will pass through its atmosphere. Various mechanisms [list them] will cause a wavelength-dependent absorption or amplification of this starlight as it interacts with the species present within the atmosphere. The intensity shift caused by an atmosphere is given by:
 
-delta = 2 Rp H / R\*^2 (delta-equation)
+$ delta approx (2 H R_"p") / R_ast^2 $ <delta-equation>
 
-where H = NHsc = N k_b T / mu m_H g
+where $ H = N H_"sc" = (N k_B T) / (mu m_H g) $
 
-Rp is the planet radius, R\* is the stellar radius, N is a dimensionless factor describing the strength of the interaction, H_sc is the scale height of the atmosphere, mu is the molecular mass of the planet's atmosphere and g is the surface gravity of the planet. [refs for this formula]
+and $R_p$ is the planet radius, $R_*$ is the stellar radius, $N$ is a dimensionless factor describing the number of scale heights crossed at high opacity, $H_"sc"$ is the scale height of the atmosphere, $mu$ is the molecular mass of the planet's atmosphere and $g$ is the surface gravity of the planet. $N$ is wavelength-dependent and determines the spectrum of the exoplanet that is imprinted ontop of the stellar signal. @delta-equation assumes $R_p << R_*$. @LauraExoplanetReview
 
-Atmospheric retrievals can be used on the decontamined // cleaned spectra to determine the content of the atmosphere. [ref].
+Atmospheric retrievals can be used on the exoplanet signal to determine the content of the atmosphere. @MadhusudhanAtmosphericRetrievals
 
 === Why M dwarfs?
 
-[formula from lectures about why m dwarfs & then explain why m dwarfs]
-[give the formula for the actual signal. give typical orders of magnitudes of the parameters for different star-planet pairs, and compare this to current / future instrumentation]
-[insert table of exoplanet-star type pair, the parameters which define them and then an estimated order of magnitude of delta. then give the SNR needed by modern instrumentation to see this. then conclude that m dwarfs are good for reasons. use https://cambridgelectures.cloud.panopto.eu/Panopto/Pages/Viewer.aspx?id=d1acdc7e-9fd1-442c-8079-b3b700ed0a18 at 31:00 ish to help.]
+@delta-equation places constraints on the planet-star systems which are most favourable for atmospheric analysis. Ideally, we want to search for configurations which maximise the exoplanet signal $delta$, whilst staying in a regime where any detected planet could be habitable. @table-Mdwarf-signal shows the approximate signal strength for different systems. Since M dwarf hosts are dimmer, they place the atmospheric signal for an Earth-like planet within range of being detected by teh James Webb Space Telescope (JWST). One example of such a planet which has been characterised by JWST is LHS 475b, discovered in early 2023. @LustigYaeger2023 
 
-(delta-equation) places constraints on the planet-star systems which are most favourable for atmospheric analysis. Ideally, we want to search for configurations which maximise delta whilst keeping the planet habitable. [table ref] shows the approximate signal strength for different systems, and we can see…
+#figure(
+  table(
+    columns: (auto, auto, auto, auto),
+    inset: 7pt,
+    align: center,
+    stroke: none,
+    
+    // Toprule
+    table.hline(stroke: 1.5pt),
+    
+    // Header
+    [Host star], [Planet], [$Delta \/ "ppm"$], [$delta \/ "ppm"$],
+    
+    // Midrule
+    table.hline(y: 1, stroke: 0.5pt),
+    
+    [Sun-like], [Earth-like],  [100], [1],
+    [M dwarf], [Earth-like],  [1000], [10],
 
-[insert table with different configurations, inc earth-like around sun-like etc. maybe have another column of a real-life example of this configuration]
+    // Bottomrule
+    table.hline(stroke: 1.5pt),
+  ),
+  caption: [
+    Approximate transit depths and atmospheric signal strengths for an Earth-like planet around different stars. Late M-dwarfs have radii $#sym.tilde 0.25 R_dot.o$ @MDwarfSizes, leading to an order of magnitude increase in signal. Larger planets such as sub-Neptunes, with radii of $#sym.tilde 2.5 R_plus.o$0 @SuperEarthSizes, can increase the signal further. JWST can constrain atmospheric signals to \~50 ppm. @LustigYaeger2023
+  ],
+) <table-Mdwarf-signal>
 
-The signal-to-noise ratio (SNR) of a measurement is given by:
+// [maybe have another column of a real-life example of this configuration]
 
-SNR = delta / sigma
+The signal-to-noise ratio (SNR) of a transmission spectrum at a certain wavelength is given by:
 
-where sigma = ?
+$ "SNR" = delta / sigma $ <SNR-equation>
 
-Measuring an Earth-like planet around a sun-like star is of key interest to exoplanetary research [ref]. However, [table] shows that, even if such a system was detected, its delta signal would likely be below the minimum needed by space-based observations. If we wish to measure an Earth-like planet, then we must decrease R_s to increase our delta and our SNR. This corresponds to smaller stars, such as M dwarfs. This is one of the primary reasons why M dwarfs feature heavily in exoplanet surveys. [ref]
+where $sigma$ is the noise intensity. @Zhou2013.
+
+Measuring an Earth-like planet around a sun-like star is of key interest to exoplanetary research. @SunlikeAroundEarth However, [table] shows that, even if such a system was detected, its delta signal would likely be below the minimum needed by space-based observations. If we wish to measure an Earth-like planet, one appraoch is to look for hosts with a small $R_*$, increasing our measured $delta$, and in turn our SNR. This corresponds to smaller stars, such as M dwarfs. This is one of the primary reasons why M dwarfs feature heavily in exoplanet surveys: small planets around small stars are easier to detect and analyse. @SHIELDS20161
+
+Furthermore, M dwarfs are the most numerous main-sequence stars in the Milky-Way. Due to their low luminosity, their habitable zones (HZ) are closer in, meaning that any exoplanets in the HZ would have a more favourable orbit geometry and be more convenient to analyse with transit spectroscopy. @ExoplanetMDwarfStatistics
 
 [also need to explicitly state why IR]
 
@@ -46,15 +77,13 @@ Typically, the disc-integrated / average spectrum captured before transit is sub
 
 [maybe talk about sources of SNR?]
 
-=== Typical Pipelines // THE DISC-INTEGRATED SPECTRUM
+== Typical Pipelines & The Disc-Integrated Spectrum
 
-[discuss how this is done for one component only // how the disc-integrated spectrum is found]
+Typically, the average stellar spectrum pre-transit is measured, and assumed to be the illuminating spectrum during transit. @Rackham-2018 There are multiple methods used to determine the disc-integrated pre-transit spectrum. This involves determining the stellar parameters, such as $T_"eff"$ metallacity, and $log g$, that most closely reproduce the observed spectrum.
 
-There are multiple methods used in the literature to determine the disc-integrated pre-transit spectrum. This involves determining the stellar parameters, such as T F L, that most closely reproduce the observed spectrum.
+=== Chi Squared
 
-==== Chi Squared
-
-A Chi-squared method aims to minimise the residual between a simulated and observed spectrum by varying the simulated spectrum's input parameters. For example, [https://www.aanda.org/articles/aa/pdf/2018/07/aa32312-17.pdf] vary the T F L of spectra generated using the PHOENIX-ACES model. The residual is calculated using:
+$chi^2$ methods aim to minimise the residual between a simulated and observed spectrum by varying the simulated spectrum's input parameters. For example, #cite(<PasseggerCARMENES>, form: "prose") vary the $T_"eff", ["Fe"\/"H"] "and" log g$ of spectra generated using the PHOENIX-ACES model. The residual is calculated using:
 
 [insert formula for chi-squared]
 
@@ -64,23 +93,34 @@ Interpolation can be used to improve the resolution of this method [chi squared 
 
 [insert equation for photometric log g determination; would be cool to use this on some simulated or observational targets to see if it agrees with the mcmc fitted values. gives an extra graph]
 
-==== MCMC
+=== MCMC
 
-==== Line depths
+=== Line depths
 
 Empirical relations have been determined which link the line depth ratio (LDR) between a given pair of absorption lines and the stellar parameters T_eff and log g. For example, [https://arxiv.org/pdf/2106.09995] describe pairs of Fe i–Fe ii, Ca i–Ca ii and Fe i–Fe i line pairs which can be used to determine Teff and log g to a resolution of 50K and 0.2 dex respectively. The downside of this approach is that it requires spectra of a much higher resolution than space-based telescopes, making it not suitable for analysing HST or JWST spectra. [maybe mention the actual required resolution of ~28k specified by that LDR article] [should i mention which telescopes can use this method? or is that just extraneous?]
 
-==== ML
+=== ML
 
 [idk]
 
-=== Degeneracies
+== Degeneracies <Degeneracies>
 // [maybe move some / the bulk of the discussion of this to results? idk. also this should maybe be above the previous section as the previous section refs degeneracies implicitly]
 
 [probably good to put this here: can link back into the chi squared method and how that paper increased contrast // reduced the degenerate area.]
 [photometric log g]
 [FeH variation]
 [include how much each of the parameters we are varying change]
+
+== Stellar Heterogeneities
+
+=== Spots and Faculae
+
+[define them]
+
+[what leads to them]
+
+=== Why are M dwarfs more variable?
+
 
 == THE TRANSIT LIGHT SOURCE EFFECT
 
