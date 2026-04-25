@@ -1,32 +1,54 @@
 #import "@preview/unify:0.8.0": qty, unit, num
 
+== Stellar Heterogeneities
+
+=== Spots and Faculae
+
+[define them]
+
+[what leads to them]
+
+[say that we use spots to mean either spots or faculae for simplicity]
+
+=== Why are M dwarfs more variable?
+
 == Transmission Spectra
 
-=== Overview
+// === Overview
 
 === Transit Depth
 
-[Give the transit depth formula for $Delta$]
+If an exoplanet crosses the line of sight between its host star and Earth, it will block part of the starlight from reaching us, which we measure as a temporary drop in intensity. This is called a transit and the fractional drop in flux recieved is called the transit depth. The transit depth is given by:
 
-=== Transmission Spectra
+$ Delta = (R_p / R_ast)^2 $ 
 
-[intro - what are transmission spectra, very brief note on their history e.g. how long has this been possible. maybe mention upcoming transit missions or one or two famous transit measurements - prove this field is relevant]
+where $R_p$ is the planet radius and $R_ast$ is the host star's radius. @LauraExoplanetReview
+
+Plotting the transit depth as a function of time produces a transit curve or a light curve. // which can be used to determine parameters such as planetary radius and density. [maybe say what transit curves are used to determine. or maybe move that to talking about the transit light source affecting results derived from light curves]
+
+=== Atmospheric Signal
+
+// [maybe mention upcoming transit missions or one or two famous transit measurements - prove this field is relevant. maybe add the date of the first exoplanet transmission spectrum and the first jwst spectrum and evidence that this field is evolving rapidly]
 
 A key component of habitability research is analysis of extrasolar planets, including their atmospheres. Transmission spectra are one method of determining the species present within an exoplanet's atmosphere, which gives valuable hints to signs of life through biosignatures, as well as the planet's evolutionary history and climate. @LauraExoplanetReview
 
-If an exoplanet crosses the line of sight between its host star and Earth, starlight will pass through its atmosphere. Various mechanisms [list them] will cause a wavelength-dependent absorption or amplification of this starlight as it interacts with the species present within the atmosphere. The intensity shift caused by an atmosphere is given by:
+During an exoplanet's transit, starlight will pass through its atmosphere (if one is present). Any species present within the atmosphere will cause a wavelength-dependent absorption or amplification of this starlight, imprinting an exoplanetary signal ontop of the stellar signal. The total intensity shift is given by:
 
 $ delta approx (2 H R_"p") / R_ast^2 $ <delta-equation>
 
 where $ H = N H_"sc" = (N k_B T) / (mu m_H g) $
 
-and $R_p$ is the planet radius, $R_*$ is the stellar radius, $N$ is a dimensionless factor describing the number of scale heights crossed at high opacity, $H_"sc"$ is the scale height of the atmosphere, $mu$ is the molecular mass of the planet's atmosphere and $g$ is the surface gravity of the planet. $N$ is wavelength-dependent and determines the spectrum of the exoplanet that is imprinted ontop of the stellar signal. @delta-equation assumes $R_p << R_*$. @LauraExoplanetReview
+and  $N$ is a dimensionless factor describing the number of scale heights crossed at high opacity, $H_"sc"$ is the scale height of the atmosphere, $mu$ is the molecular mass of the planet's atmosphere and $g$ is the surface gravity of the planet. $N$ is wavelength-dependent and determines the spectrum of the exoplanet that is imprinted on top of the stellar signal. @delta-equation assumes $R_p << R_*$. @LauraExoplanetReview
 
-Atmospheric retrievals can be used on the exoplanet signal to determine the content of the atmosphere. @MadhusudhanAtmosphericRetrievals
+Atmospheric retrievals can be used on the extracted exoplanet signal to determine the content of the atmosphere. @MadhusudhanAtmosphericRetrievals
 
 === Why M dwarfs?
 
-@delta-equation places constraints on the planet-star systems which are most favourable for atmospheric analysis. Ideally, we want to search for configurations which maximise the exoplanet signal $delta$, whilst staying in a regime where any detected planet could be habitable. @table-Mdwarf-signal shows the approximate signal strength for different systems. Since M dwarf hosts are dimmer, they place the atmospheric signal for an Earth-like planet within range of being detected by teh James Webb Space Telescope (JWST). One example of such a planet which has been characterised by JWST is LHS 475b, discovered in early 2023. @LustigYaeger2023 
+Measuring an Earth-like planet around a sun-like star is of key interest to exoplanetary research. @SunlikeAroundEarth However, if such a system was detected, its transit signal would likely be below the minimum needed by space-based observations for detection or analysis. If we wish to measure an Earth-like planet, one approach is to look for hosts with a small $R_*$, increasing our measured $delta$ and signal-to-noise ratio (SNR). This corresponds to smaller stars, such as M dwarfs. This is one of the primary reasons why M dwarfs feature heavily in exoplanet surveys: small planets around small stars are easier to detect and analyse. @SHIELDS20161
+
+Furthermore, M dwarfs are the most numerous main-sequence stars in the Milky-Way. Due to their low luminosity, their habitable zones (HZ) are closer in, meaning that any exoplanets in the HZ would have a more favourable orbit geometry and be more convenient to analyse with transit spectroscopy. @ExoplanetMDwarfStatistics
+
+@delta-equation places constraints on the planet-star systems which are most favourable for atmospheric analysis. Ideally, we want to search for configurations which maximise the exoplanet signal $delta$, whilst staying in a regime where any detected planet could be habitable. @table-Mdwarf-signal shows the approximate signal strength for different systems. Since M dwarf hosts are smaller, they place the atmospheric signal for an Earth-like planet within range of being detected by space-based instruments such as the James Webb Space Telescope (JWST). One example of such a planet which has been characterised by JWST is LHS 475b, discovered in early 2023. @LustigYaeger2023
 
 #figure(
   table(
@@ -51,7 +73,7 @@ Atmospheric retrievals can be used on the exoplanet signal to determine the cont
     table.hline(stroke: 1.5pt),
   ),
   caption: [
-    Approximate transit depths and atmospheric signal strengths for an Earth-like planet around different stars. Late M-dwarfs have radii $#sym.tilde 0.25 R_dot.o$ @MDwarfSizes, leading to an order of magnitude increase in signal. Larger planets such as sub-Neptunes, with radii of $#sym.tilde 2.5 R_plus.o$0 @SuperEarthSizes, can increase the signal further. JWST can constrain atmospheric signals to \~50 ppm. @LustigYaeger2023
+    Approximate transit depths and atmospheric signal strengths for an Earth-like planet around different stars. Late M dwarfs have radii $#sym.tilde 0.25 R_dot.o$ @MDwarfSizes, leading to an order of magnitude increase in signal. Larger planets such as sub-Neptunes, with radii of $#sym.tilde 2.5 R_plus.o$0 @SuperEarthSizes, can increase the signal further. JWST can constrain atmospheric signals to \~50 ppm. @LustigYaeger2023
   ],
 ) <table-Mdwarf-signal>
 
@@ -61,20 +83,13 @@ The signal-to-noise ratio (SNR) of a transmission spectrum at a certain waveleng
 
 $ "SNR" = delta / sigma $ <SNR-equation>
 
-where $sigma$ is the noise intensity. @Zhou2013.
-
-Measuring an Earth-like planet around a sun-like star is of key interest to exoplanetary research. @SunlikeAroundEarth However, [table] shows that, even if such a system was detected, its delta signal would likely be below the minimum needed by space-based observations. If we wish to measure an Earth-like planet, one appraoch is to look for hosts with a small $R_*$, increasing our measured $delta$, and in turn our SNR. This corresponds to smaller stars, such as M dwarfs. This is one of the primary reasons why M dwarfs feature heavily in exoplanet surveys: small planets around small stars are easier to detect and analyse. @SHIELDS20161
-
-Furthermore, M dwarfs are the most numerous main-sequence stars in the Milky-Way. Due to their low luminosity, their habitable zones (HZ) are closer in, meaning that any exoplanets in the HZ would have a more favourable orbit geometry and be more convenient to analyse with transit spectroscopy. @ExoplanetMDwarfStatistics
-
-[also need to explicitly state why IR]
-
+where $sigma$ is the noise intensity. @Zhou2013 In order to maximise the SNR of our data, its necessary to measure near the peak of the exoplanet's spectrum. This corresponds to the near and mid infrared, motivating why many ground-based and space-based instruments target this range. @Encrenaz2014
 
 === Atmospheric Retrievals & Data Analysis
 
 Astronomical databases often provide calibrated spectra, which take into account the wavelength dependent sensitivity of the instrument, etc [expand on this & ref jwst docs]. , For example, JWST's stage 2 pipeline [maybe be more specific about which] deals with [list effects]. Since there are multiple ways [list them] to isolate the contribution from the exoplanet, this is not done by the instrument pipeline, and further steps must be taken before atmospheric analysis can be done. Since this project focuses on the JWST pipeline, we do not calibrate the spectra, although we need to be aware of any possible systematics in the data [list them. if we do a jwst section a discussion of any possible instrument systematics or errors might be nice].
 
-The total spectrum outputted by such a calibrated pipeline is the stellar signal, with the exoplanet's signal imprinted on top. In order to carry out an atmospheric retrieval [ref to a madhu paper on retrievals], we need an accurate spectrum produced by only the planet with the stellar signal removed. In theory, this would leave us with only the absorption or emission lines [is that valid? idk what an increase in amplitude is called here] produced by the planet, as given by (delta-equation). This can then be used to carry out analysis of the species present within the atmosphere, which is the main goal of transmission spectroscopy. [ref cos idk if there are any other purposes. but i think this is true?]
+The total spectrum outputted by such a calibrated pipeline is the stellar signal, with the exoplanet's signal imprinted on top. In order to carry out an atmospheric retrieval [ref to a madhu paper on retrievals], we need an accurate spectrum produced by the planet with the stellar signal removed. This leaves us with only the absorption or emission lines produced by the planet, as given by (delta-equation). This can then be used to carry out analysis of the species present within the atmosphere, which is the main goal of transmission spectroscopy. [ref cos idk if there are any other purposes. but i think this is true?]
 
 Typically, the disc-integrated / average spectrum captured before transit is subtracted from the total spectrum to give the exoplanet's contribution.[ref papers] However, this neglects any variability across the stellar surface, which leads to errors described by the transit light source effect (see section [insert link]). To increase the SNR, an average of multiple pre-transit measurements is usually taken.[ref(s) in the literature that do this / say that they do this / say that this reduces SNR]
 
@@ -113,17 +128,6 @@ Empirical relations have been determined which link the line depth ratio (LDR) b
 [photometric log g]
 [FeH variation]
 [include how much each of the parameters we are varying change]
-
-== Stellar Heterogeneities
-
-=== Spots and Faculae
-
-[define them]
-
-[what leads to them]
-
-=== Why are M dwarfs more variable?
-
 
 == THE TRANSIT LIGHT SOURCE EFFECT
 

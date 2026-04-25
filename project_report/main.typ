@@ -15,6 +15,10 @@
 #include("sections/theory.typ")
 #pagebreak()
 #include("sections/methodology.typ")
+#pagebreak()
+#include("sections/results.typ")
+#pagebreak()
+#include("sections/conclusions.typ")
 
 #pagebreak()
 #bibliography("references.bib", style: "apa")

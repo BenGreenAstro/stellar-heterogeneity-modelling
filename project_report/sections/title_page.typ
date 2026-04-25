@@ -2,7 +2,7 @@
 
 #let my-date(date) = nth(date.day()) + date.display(" [month repr:long] [year]")
 
-#let reporttitle = "Stellar Variability in Exoplanet Hosting M-Dwarf Spectra"
+#let reporttitle = "Stellar Variability in Exoplanet Hosting M Dwarf Spectra"
 #let reportsubtitle = ""
 #let reportauthor = "Benjamin Green"
 #let crsID = "bg462"

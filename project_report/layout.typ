@@ -56,6 +56,19 @@
   }
 
   set cite(style: "apa")
+
+  show figure: set block(spacing: 2.5em)
+
+  // force correct indents after headings and figures
+  show heading: it => {
+    it
+    par(text(size: 0pt, ""))
+  }
+
+  show figure: it => {
+    it
+    par(text(size: 0pt, ""))
+  }
   
   // show cite: it => {
   //     show "& others": "et al."

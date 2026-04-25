@@ -12,6 +12,8 @@ where w_(T F L) is the weight of the (T F L) component and F_{T F L} (lambda) is
 
 === EFFECTS OF LIMB DARKENING
 
+// https://iopscience.iop.org/article/10.3847/1538-4357/ad0369 - talks about reddening
+
 [explain limb darkening]
 
 Photons originating from different positions within a star travel on different paths through the stellar material to reach us. Since the effective temperature of the photosphere decreases with radius, the edges of a star appear redder than the center. [ref] Furthermore, optical depth decreases when viewing the star further from its center [ref], so the brightness at the edge of a star is lower than at the center. This is a wavelength dependent effect [is it? or is the reddenning part the wavelength dependent bit?] and is of order 10% [ref - maybe the diagram from pettinis notes (might be able to find a link in our chat with dylan) or the source of that diagram if its from a paper etc].

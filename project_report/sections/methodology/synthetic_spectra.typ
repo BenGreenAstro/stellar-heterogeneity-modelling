@@ -6,9 +6,9 @@
 
 PHOENIX is a stellar atmosphere code that can reproduce spectra for many astrophysical bodies, including cool and hot stars, planets, and supernovae. [https://www.cambridge.org/core/services/aop-cambridge-core/content/view/DD2793408B0BE18330C2F66C340CB6F8/S0074180900133212a.pdf/highlights-of-stellar-modeling-with-phoenix.pdf]. Since its development in the 1990s, it has seen significant use as a code for generating synthetic stellar spectra [insert refs for some uses]. The PHOENIX code solves the radiative transfer equation in spherical geometry, including the effects of relativity. [https://www.sciencedirect.com/science/article/pii/S0377042799001533#BIB1]
 
-=== Gottingen Library
+=== Göttingen Library
 
-There are multiple databases of synthetic spectra produced using the PHOENIX code available [insert some refs]. However, one which includes a large number of spectra which fully span the parameter space for M dwarfs is the Gottingen Spectral Library. @PHOENIX Each spectrum is specified at a given effective temperature $T_"eff"$, metallicity [[Fe\/H]], surface gravity $log g$ and alpha element abundance [$alpha$/Fe].#footnote[[$alpha$/Fe] represents the abundance of elements involved in the alpha-process. ]
+There are multiple databases of synthetic spectra produced using the PHOENIX code available [insert some refs]. However, one which includes a large number of spectra which fully span the parameter space for M dwarfs is the Göttingen Spectral Library. @PHOENIX Each spectrum is specified at a given effective temperature $T_"eff"$, metallicity [Fe\/H], surface gravity $log g$ and alpha element abundance [$alpha$/Fe].#footnote[[$alpha$/Fe] represents the abundance of elements involved in the alpha process.]
 
 [ ref for teffs of m dwarfs:
 https://www.aanda.org/articles/aa/full_html/2023/07/aa44249-22/F2.html
@@ -26,7 +26,7 @@ The resolution of the parameters T_eff, FeH and log g is given in [table …]. H
 
 ==== Parameter Space
 
-As much of the parameter space of this library is outside our M-dwarf scope, there is no need to download all of the provided spectra. In total, we used 2691 spectra, covering the ranges as given in @table-used-PHOENIX-ranges. This fully covers the M dwarf parameter space as [define M dwarf temps and metallicity etc].
+As much of the parameter space of this library is outside our M dwarf scope, there is no need to download all of the provided spectra. In total, we used 2691 spectra, covering the ranges as given in @table-used-PHOENIX-ranges. This fully covers the M dwarf parameter space as [define M dwarf temps and metallicity etc].
 
 #figure(
   table(
@@ -54,7 +54,7 @@ As much of the parameter space of this library is outside our M-dwarf scope, the
     table.hline(stroke: 1.5pt),
   ),
   caption: [
-    The range of parameters used to generate simulated spectra within our model. Only a small number of spectra in the Gottingen library with non-zero alpha element abundance [$alpha\/"Fe"$] are provided, so we use $[alpha\/"Fe"] = 0$ for simplicity. Given the degeneracies between the other 3 parameters (see @Degeneracies), including [$alpha\/"Fe"$] variation would add significantly more complexity. In total, this space contains $23 times 9 times 13=2691$ spectra.
+    The range of parameters used to generate simulated spectra within our model. Only a small number of spectra in the Göttingen library with non-zero alpha element abundance [$alpha\/"Fe"$] are provided, so we use $[alpha\/"Fe"] = 0$ for simplicity. Given the degeneracies between the other 3 parameters (see @Degeneracies), including [$alpha\/"Fe"$] variation would add significantly more complexity. In total, this space contains $23 times 9 times 13=2691$ spectra.
   ],
 ) <table-used-PHOENIX-ranges>
 
