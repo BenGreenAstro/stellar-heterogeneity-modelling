@@ -29,6 +29,8 @@ The resolution of the parameters T_eff, FeH and log g is given in [table …]. H
 
 As much of the parameter space of the Göttingen library is outside our M dwarf scope, there is no need to download all of the provided spectra. In total, we used 2691 spectra, covering the ranges as given in @table-used-PHOENIX-ranges. This fully covers the M dwarf parameter space as [define M dwarf temps and metallicity etc].
 
+// if m dwarfs only go up to 4k or whatevs, 
+
 #figure(
   table(
     columns: (auto, auto, auto),

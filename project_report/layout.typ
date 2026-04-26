@@ -11,6 +11,8 @@
       lang: "en"
     )
 
+  // set heading(numbering: "1.")
+
   set heading(numbering: (..nums) => {
     let levels = nums.pos()
     if levels.len() == 1 {

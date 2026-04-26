@@ -73,7 +73,7 @@ Furthermore, M dwarfs are the most numerous main-sequence stars in the Milky-Way
     table.hline(stroke: 1.5pt),
   ),
   caption: [
-    Approximate transit depths and atmospheric signal strengths for an Earth-like planet around different stars. Late M dwarfs have radii $#sym.tilde 0.25 R_dot.o$ @MDwarfSizes, leading to an order of magnitude increase in signal. Larger planets such as sub-Neptunes, with radii of $#sym.tilde 2.5 R_plus.o$0 @SuperEarthSizes, can increase the signal further. JWST can constrain atmospheric signals to \~50 ppm. @LustigYaeger2023
+    Approximate transit depths and atmospheric signal strengths for an Earth-like planet around different stars. Late M dwarfs have radii $#sym.tilde 0.25 R_dot.o$ @MDwarfSizes, leading to an order of magnitude increase in signal. Larger planets such as sub-Neptunes, with radii of $#sym.tilde 2.5 R_plus.o$ @SuperEarthSizes, can increase the signal further. JWST can constrain atmospheric signals to \~50 ppm. @LustigYaeger2023
   ],
 ) <table-Mdwarf-signal>
 
@@ -109,7 +109,7 @@ $chi^2$ methods aim to minimise the residual between a simulated and observed sp
 
 $ chi^2 = (|bold(F_"model") - bold(F_"observed")|^2) / bold(sigma)^2 $
 
-where $bold(F)$ is a vector containing the spectrum's intensity across the chosen wavelength range, and $bold(sigma)$ is a vector containing the noise intensities for the different wavelengths.
+where $bold(F)$ is a vector containing the spectrum's intensity across the chosen wavelength range, and $bold(sigma)$ contains the noise intensities.
 
 Specific bands or lines are chosen to be used in the minimisation, and then the parameter space is searched to ideally find a global minimum of $chi^2$. The parameters at this minimum, for example $T_"eff"$ $["Fe"\/"H"]$, and $log g$, are interpreted as the stellar parameters. In order to understand the degeneracy between the parameters, a brute force search can be done over a given range of parameters and a colourmap of the $chi^2$ value can be produced. This yields the shape and size of the minimum.
 
@@ -131,26 +131,7 @@ Empirical relations have been determined which link the line depth ratio (LDR) b
 
 === ML
 
-[idk]
-
-== Degeneracies <Degeneracies>
-
-=== Physical Basis
-
-// probably needs to be quite a large section
-
-=== Reducing Fitting Degeneracies
-
-// [maybe move some / the bulk of the discussion of this to results? idk. also this should maybe be above the previous section as the previous section refs degeneracies implicitly]
-
-Furthermore, some degeneracy between the parameters can be reduced [or removed?] by approximating log g with the photometric log g [https://www.aanda.org/articles/aa/pdf/2021/12/aa41584-21.pdf & https://arxiv.org/abs/2101.02242 & maybe ref the chi squared paper again] [do i need to explain this idk].
-
-[insert equation for photometric log g determination; would be cool to use this on some simulated or observational targets to see if it agrees with the mcmc fitted values. gives an extra graph]
-
-[probably good to put this here: can link back into the chi squared method and how that paper increased contrast // reduced the degenerate area.]
-[photometric log g]
-[FeH variation]
-[include how much each of the parameters we are varying change]
+// [idk]
 
 == The Transit Light Source Effect <TransitLightSourceEffect>
 
@@ -175,3 +156,30 @@ Unocculted heterogeneities are usually harder to detect and more challenging to 
 [maybe mention that not many papers deal with this effect? idk. maybe ref some recent ones that explicitly say they assume a disc integrated spectrum? or ref the few that are now beginning to do it - e.g.  Sarah E. Moran et al 2026 ApJL 948 L11 ? idk]
 
 The major issue presented by unocculted heterogeneities is that the false features they create can easily be mistaken as true molecular features [ref to trappist1 paper here: https://iopscience.iop.org/article/10.3847/1538-3881/aade4f, and maybe find some others]. [maybe say "determining this is therefore important" but idk if that should even be in a theory section - maybe it should be in the introduction - and maybe its just implicit / unnecessary anyway?]. Even when stellar variability is suspected of contaminating a spectrum, the features may be consistent with a large range of spot distributions (see section [section of our results that discusses degeneracies]), [ref papers which say "stellar variability is consistent with lots of range of parameters" - the rackham one about trappist 1 (above) and maybe some others]. This makes distinguishing molecular features from contamination in active stars, such as [maybe add a qualifier like young/old here] M dwarfs, more complex.
+
+== Degeneracies <Degeneracies>
+
+Degeneracies occur both in single-component models and in models which include spots and faculae. Variations in one stellar parameter can affect the spectrum in a way similar to variations in another parameter. This leads to a retrieval method from finding multiple degenerate solutions for a given input spectrum, which poses a major problem if we wish to accurately determine stellar parameters and correctly remove this from the total transit signal.
+
+Multi-component models, such as the one proposed in this work, inherently include more dimensions and hence are more vulnerable to large amounts of degeneracies. However, these degeneracies are still present within simpler one-component models and must be addressed in order to achieve high resolution, low uncertainty fitting.
+
+=== Physical Basis
+
+=== Reducing Fitting Degeneracies <ReducingDegeneracies>
+
+// [maybe move some / the bulk of the discussion of this to methodology? idk. also this should maybe be above the previous section as the previous section refs degeneracies implicitly]
+
+Degeneracies can lead to large, over-inflated minima which contain non-physical or nonsensical parameter values, which is a major problem for any form of minimisation method. The most common ways to prevent this can all be classified as attempts to constrain some of the parameters to physical values.
+
+// need to add ranges of these parameters to contextualise how big/small these dex and T changes are
+The metallicity [Fe/H] has been shown to vary by only $#sym.tilde 0.05$ dex within stellar spots. @MetallicityVariations Furthermore, we can expect the $log g$ to not change significantly within spots and faculae. Compare this to reasonable spot temperatures for M dwarfs, which could vary by $#sym.tilde #qty("500", "K")$ from the photospheric temperature and significantly modify the shape and structure of the spectrum. Hence one of the easiest ways to reduce degeneracies, and hence prevent non-physical minima, is to enforce a constant $log g$ and metallicity between the photospheric background and all spots or faculae. This allows us to focus on the most important variations and keep our results physical. This is the approach used in this work.
+
+// I don't have a reference for that statement about log g variation but I feel that I need to justify why were are keeping log g constant.
+
+Another method to alleviate degeneracies is to determine some of the parameters using an method independent from our minimisation procedure. For example, the stellar $log g$ can be approximated using the photometric $log g$.
+
+// [https://www.aanda.org/articles/aa/pdf/2021/12/aa41584-21.pdf & https://arxiv.org/abs/2101.02242 & maybe ref the chi squared paper again] [do i need to explain this idk].
+
+// [insert equation for photometric log g determination; would be cool to use this on some simulated or observational targets to see if it agrees with the mcmc fitted values. gives an extra graph]
+
+// probably good to put this here: can link back into the chi squared method and how that paper increased contrast / reduced the degenerate area.
