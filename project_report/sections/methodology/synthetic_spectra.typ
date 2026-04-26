@@ -59,6 +59,6 @@ As much of the parameter space of the Göttingen library is outside our M dwarf 
   ],
 ) <table-used-PHOENIX-ranges>
 
-==== Wavelength Downsampling
+=== Wavelength Downsampling
 
 [talk about downsampling using convolution & nyquist]

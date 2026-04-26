@@ -42,7 +42,7 @@ and  $N$ is a dimensionless factor describing the number of scale heights crosse
 
 Atmospheric retrievals can be used on the extracted exoplanet signal to determine the content of the atmosphere. @MadhusudhanAtmosphericRetrievals
 
-=== Why M dwarfs?
+=== Why study M dwarfs?
 
 Measuring an Earth-like planet around a sun-like star is of key interest to exoplanetary research. @SunlikeAroundEarth However, if such a system was detected, its transit signal would likely be below the minimum needed by space-based observations for detection or analysis. If we wish to measure an Earth-like planet, one approach is to look for hosts with a small $R_*$, increasing our measured $delta$ and signal-to-noise ratio (SNR). This corresponds to smaller stars, such as M dwarfs. This is one of the primary reasons why M dwarfs feature heavily in exoplanet surveys: small planets around small stars are easier to detect and analyse. @SHIELDS20161
 
@@ -85,37 +85,46 @@ $ "SNR" = delta / sigma $ <SNR-equation>
 
 where $sigma$ is the noise intensity. @Zhou2013 In order to maximise the SNR of our data, its necessary to measure near the peak of the exoplanet's spectrum. This corresponds to the near and mid infrared, motivating why many ground-based and space-based instruments target this range. @Encrenaz2014
 
-=== Atmospheric Retrievals & Data Analysis
+=== Atmospheric Retrievals & The Disc-Integrated Spectrum
 
-Astronomical databases often provide calibrated spectra, which take into account the wavelength dependent sensitivity of the instrument, etc [expand on this & ref jwst docs]. , For example, JWST's stage 2 pipeline [maybe be more specific about which] deals with [list effects]. Since there are multiple ways [list them] to isolate the contribution from the exoplanet, this is not done by the instrument pipeline, and further steps must be taken before atmospheric analysis can be done. Since this project focuses on the JWST pipeline, we do not calibrate the spectra, although we need to be aware of any possible systematics in the data [list them. if we do a jwst section a discussion of any possible instrument systematics or errors might be nice].
+Astronomical databases often provide calibrated spectra, which take into account the wavelength dependent sensitivity of the instrument, and any other necessary calibration steps, to produce data products which can be directly used for scientific analysis. For example, JWST's stage 2 & 3 pipelines provide science-ready 1 dimensional spectra. @StagesofJWSTDataProcessing2025 However, isolating the exoplanet signal from the total spectrum is not done by the JWST pipeline, and further steps must be taken before atmospheric analysis can be done. Since this project focuses on the JWST pipeline, we do not consider any steps related to calibrating the spectra.
 
-The total spectrum outputted by such a calibrated pipeline is the stellar signal, with the exoplanet's signal imprinted on top. In order to carry out an atmospheric retrieval [ref to a madhu paper on retrievals], we need an accurate spectrum produced by the planet with the stellar signal removed. This leaves us with only the absorption or emission lines produced by the planet, as given by (delta-equation). This can then be used to carry out analysis of the species present within the atmosphere, which is the main goal of transmission spectroscopy. [ref cos idk if there are any other purposes. but i think this is true?]
+// although we need to be aware of any possible systematics in the data [list them. if we do a jwst section a discussion of any possible instrument systematics or errors might be nice].
 
-Typically, the disc-integrated / average spectrum captured before transit is subtracted from the total spectrum to give the exoplanet's contribution.[ref papers] However, this neglects any variability across the stellar surface, which leads to errors described by the transit light source effect (see section [insert link]). To increase the SNR, an average of multiple pre-transit measurements is usually taken.[ref(s) in the literature that do this / say that they do this / say that this reduces SNR]
+The total spectrum outputted by such a calibrated pipeline is the stellar signal, with the exoplanet's signal imprinted on top. In order to carry out an atmospheric retrieval, we need an accurate spectrum produced by the planet with the stellar signal removed. This leaves us with only the absorption or emission lines produced by the planet, as given by @delta-equation. This can then be used to carry out analysis of the species present within the atmosphere.
 
-[maybe talk about sources of SNR?]
+The disc-integrated spectrum is a measurement of the total flux from a star, which ignores any spatial variation on its surface. The pre-transit stellar spectrum is measured, and the whole stellar surface is assumed to emit light according to this intensity distribution. In effect, the star is assumed to be spatially uniform. The most common and simplest way of isolating the exoplanetary signal is to subtract the disc-integrated spectrum from the total spectrum during transit to give the exoplanet's contribution. @Rackham-2018
 
-== Typical Pipelines & The Disc-Integrated Spectrum
+To increase the SNR of the disc-integrated spectrum, an average of multiple pre-transit measurements is usually taken.
 
-Typically, the average stellar spectrum pre-transit is measured, and assumed to be the illuminating spectrum during transit. @Rackham-2018 There are multiple methods used to determine the disc-integrated pre-transit spectrum. This involves determining the stellar parameters, such as $T_"eff"$ metallacity, and $log g$, that most closely reproduce the observed spectrum.
+// [maybe talk about sources of Noise?]
 
-=== Chi Squared
+== Typical Pipelines
 
-$chi^2$ methods aim to minimise the residual between a simulated and observed spectrum by varying the simulated spectrum's input parameters. For example, #cite(<PasseggerCARMENES>, form: "prose") vary the $T_"eff", ["Fe"\/"H"] "and" log g$ of spectra generated using the PHOENIX-ACES model. The residual is calculated using:
+There are multiple methods used to determine the disc-integrated pre-transit spectrum. This involves determining the stellar parameters, such as $T_"eff"$ metallacity, and $log g$, that most closely reproduce the observed spectrum.
 
-[insert formula for chi-squared]
+=== $chi^2$
 
-and a minimisation routine [which? even just give examples, maybe find some other papers that maybe do this with least squared instead of chi-squared, etc] is used to find the T F L values which minimises the error. In order to understand the degeneracy between the parameters, a brute force search can be done over a given range of parameters and a colourmap of the chisquared value can be produced. This yields the shape and size of the minimum.
+$chi^2$ methods aim to minimise the residual between a simulated and observed spectrum by varying the simulated spectrum's input parameters. For example, #cite(<PasseggerCARMENES>, form: "prose") vary the $T_"eff", ["Fe"\/"H"] "and" log g$ of spectra generated using the PHOENIX-ACES model. The $chi^2$ value is calculated using:
 
-Interpolation can be used to improve the resolution of this method [chi squared ref again]. Exhaustively simulating spectra at a resolution of ~[insert chi squared ref's resolution for all parameters] resolution would take too long [ref]. instead, [linearly?] interpolating spectra (along multiple dimensions) allows us to search the parameter space in finer detail. Furthermore, some degeneracy between the parameters can be reduced [or removed?] by approximating log g with the photometric log g [https://www.aanda.org/articles/aa/pdf/2021/12/aa41584-21.pdf & https://arxiv.org/abs/2101.02242 & maybe ref the chi squared paper again] [do i need to explain this idk].
+$ chi^2 = (|bold(F_"model") - bold(F_"observed")|^2) / bold(sigma)^2 $
 
-[insert equation for photometric log g determination; would be cool to use this on some simulated or observational targets to see if it agrees with the mcmc fitted values. gives an extra graph]
+where $bold(F)$ is a vector containing the spectrum's intensity across the chosen wavelength range, and $bold(sigma)$ is a vector containing the noise intensities for the different wavelengths.
 
-=== MCMC
+Specific bands or lines are chosen to be used in the minimisation, and then the parameter space is searched to ideally find a global minimum of $chi^2$. The parameters at this minimum, for example $T_"eff"$ $["Fe"\/"H"]$, and $log g$, are interpreted as the stellar parameters. In order to understand the degeneracy between the parameters, a brute force search can be done over a given range of parameters and a colourmap of the $chi^2$ value can be produced. This yields the shape and size of the minimum.
 
-=== Line depths
+Interpolation can be used to improve the resolution of this method. Using linear interpolation to search the parameter space in finer detail is much faster than exhaustively simulating spectra with parameter resolutions of $#sym.tilde #qty("10", "K")$ and $#sym.tilde #num("0.01")$ dex.
 
-Empirical relations have been determined which link the line depth ratio (LDR) between a given pair of absorption lines and the stellar parameters T_eff and log g. For example, #cite(<Matsunaga_2021>, form: "prose") describe Fe i–Fe ii, Ca i–Ca ii and Fe i–Fe i line pairs which can be used to determine $T_"eff"$ and $log g$ to a resolution of #qty("50","K") and #num("0.2") dex respectively. The downside of this approach is that it requires spectra of a much higher resolution than space-based telescopes, making it not suitable for analysing HST or JWST spectra. 
+=== Bayesian Inference
+
+Bayesian inference is a common method to produce posterior distributions of fitting parameters, and has seen recent use to analyse stellar contamination within systems such as LHS 1440b. @Cadieux2024 A prior is created which, similar to the $chi^2$ method, descibes the error between the fitted spectrum and ground truth. Markov-chain Monte Carlo (MCMC) provides a way to efficiency search the parameter space without the need for brute force.
+
+// maybe ref a conrer plot fig here when we say "corner plots concisely..."
+One major advantage of this method is it naturally produces a way to visualise the degeneracies between all of the varied parameters. Corner plots concisely show the shape and size of the global minimum, as well as the presence of any other nearby minima. The posteriors are visualised using histograms, and the uncertainty for each parameter is generated. These visualisations are of course possible with other minimisation methods, but Bayesian inference doesn't require a brute force search:  provides an accepted way to explore the search space efficiently instead.
+
+=== Line Depths
+
+Empirical relations have been determined which link the line depth ratio (LDR) between a given pair of absorption lines and the stellar parameters $T_"eff"$ and $log g$. For example, #cite(<Matsunaga_2021>, form: "prose") describe Fe i–Fe ii, Ca i–Ca ii and Fe i–Fe i line pairs which can be used to determine $T_"eff"$ and $log g$ to a resolution of #qty("50","K") and #num("0.2") dex respectively. The downside of this approach is that it requires spectra of a much higher resolution than space-based telescopes, making it not suitable for analysing space-based data, such as spectra produced by HST or JWST. 
 
 // [maybe mention the actual required resolution of ~28k specified by that LDR article]
 // [should i mention which telescopes can use this method? or is that just extraneous?]
@@ -125,14 +134,27 @@ Empirical relations have been determined which link the line depth ratio (LDR) b
 [idk]
 
 == Degeneracies <Degeneracies>
+
+=== Physical Basis
+
+// probably needs to be quite a large section
+
+=== Reducing Fitting Degeneracies
+
 // [maybe move some / the bulk of the discussion of this to results? idk. also this should maybe be above the previous section as the previous section refs degeneracies implicitly]
+
+Furthermore, some degeneracy between the parameters can be reduced [or removed?] by approximating log g with the photometric log g [https://www.aanda.org/articles/aa/pdf/2021/12/aa41584-21.pdf & https://arxiv.org/abs/2101.02242 & maybe ref the chi squared paper again] [do i need to explain this idk].
+
+[insert equation for photometric log g determination; would be cool to use this on some simulated or observational targets to see if it agrees with the mcmc fitted values. gives an extra graph]
 
 [probably good to put this here: can link back into the chi squared method and how that paper increased contrast // reduced the degenerate area.]
 [photometric log g]
 [FeH variation]
 [include how much each of the parameters we are varying change]
 
-== The Transit Light Source Effect
+== The Transit Light Source Effect <TransitLightSourceEffect>
+
+However, since this method neglects any variability across the stellar surface, this leads to errors described by the transit light source effect (see @TransitLightSourceEffect). This work provides a method that does not strictly require this assumption, and aims to provide a more accurate way of determining the stellar spectrum.
 
 (maybe say: see TRAPPIST 1 [ref paper that says how TRAPPIST-1 water features are consistent with stellar variability])
 
