@@ -2,6 +2,8 @@
 
 == Validation
 
+LARGE PINEAPPLE
+
 To validate...
 
 #figure(

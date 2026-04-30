@@ -2,6 +2,13 @@ Most commonly, the fitting methods described in @TypicalPipelines are used to fi
 
 This work builds on existing studies in this area by trying to find a more accurate fit for a given observed spectrum. In theory, this can be used to determine the presence of unocculted heterogeneities, helping to prevent stellar contamination within the exoplanet's signal.
 
+Our pipeline simulates an M star's output as measured at a given SNR and resolution, and then uses an MCMC model to decompose it back into the input components.
+
+// [just give an overall summary as to what your code does i.e.:
+//   [simulates m dwarf]
+//   [global optimiser]
+//   [MCMC]
+// }
 // as explained in <unocculted-heterogeneities-section>
 // , whilst ensuring our fitting parameters remain physical and explainable.
 

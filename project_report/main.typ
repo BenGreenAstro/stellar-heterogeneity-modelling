@@ -30,5 +30,4 @@
 #include("sections/appendix.typ")
 #pagebreak()
 
-#pagebreak()
-#bibliography("references.bib", style: "apa")
+#bibliography("references.bib", style: "american-physics-society")
