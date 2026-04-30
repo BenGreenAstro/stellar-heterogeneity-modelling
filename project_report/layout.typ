@@ -77,7 +77,7 @@
   //     it
   //   }
 
-  // show link: set text(fill: blue.darken(20%))
+  show link: set text(fill: blue.darken(20%))
 
   doc
 }

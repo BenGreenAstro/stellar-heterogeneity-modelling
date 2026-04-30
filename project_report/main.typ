@@ -25,6 +25,10 @@
 #pagebreak()
 
 #include("sections/conclusions.typ")
+#pagebreak()
+
+#include("sections/appendix.typ")
+#pagebreak()
 
 #pagebreak()
 #bibliography("references.bib", style: "apa")

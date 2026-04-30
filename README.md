@@ -133,4 +133,4 @@ This project follows the [Conventional Commits specification v1.0.0](https://www
 
 Some of the commit types listed above are from the [Angular Commit Message Guidelines](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#-commit-message-guidelines). That link also gives some general guidelines for message formatting that I think are nice. -->
 
-wget -m --limit-rate=200k --wait=3 --random-wait ftp://phoenix.astro.physik.uni-goettingen.de/HiResFITS/
+<!-- wget -m --limit-rate=200k --wait=3 --random-wait ftp://phoenix.astro.physik.uni-goettingen.de/HiResFITS/ -->
