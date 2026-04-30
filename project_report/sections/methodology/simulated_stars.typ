@@ -1,1 +1,3 @@
-== Simulating M dwarf spectra
+== Simulating M dwarfs
+
+PINEAPPLE

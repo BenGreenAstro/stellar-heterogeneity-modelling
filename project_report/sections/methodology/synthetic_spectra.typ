@@ -61,7 +61,9 @@ As much of the parameter space of the Göttingen library is outside our M dwarf 
 
 === Wavelength Downsampling
 
-// give range for these instruments
+// maybe give range for these instruments
 Furthermore, the wavelength range of the provided PHOENIX spectra spans $qty("0.05", "um")$ to $qty("5.5", "um")$, which overlaps with many of the spectroscopic instruments found on JWST, such as NIRISS, NIRSPEC and MIRI. The synthetic spectra have a resolution orders of magnitude larger than these instruments. This allows us to use a wavelength range and resolution relevant to modern astronomy when simulating stellar component retrievals. Downsampling is done using a Gaussian convolution at a given resolution.
 
 // [talk about downsampling using convolution & nyquist]
+
+PINEAPPLE

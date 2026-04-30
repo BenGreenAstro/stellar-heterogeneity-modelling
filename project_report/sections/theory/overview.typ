@@ -1,16 +1,17 @@
 #import "@preview/unify:0.8.0": qty, unit, num
 
-== Stellar Heterogeneities
+== M Dwarf Activity - Spots and Faculae
 
-=== Spots and Faculae
+Heterogeneities on the stellar surface, or photosphere, can be grouped into 2 categories. Spots are cooler regions, and faculae are hotter regions. These heterogeneities occur due to magnetic activity at the stellar surface @GouldingVariabilityThesis.
 
-[define them]
+The most obvious candidate for observing spots and faculae is our own sun, and a significant amount of research has been carried out in this field over the last two centuries. However, spot distributions on other stars have also been measured, both directly through interferometry, and indirectly through transit curves.
 
-[what leads to them]
+The majority of M dwarfs have been found to exhibit surface activity, often being variable over both long and short timescales @MDwarfActivity. This presents an extra challenge for transit spectroscopy in M dwarf systems, as significant activity can cause stellar contamination when analysing exoplanets (see @TransitLightSourceEffect).
 
-[say that we use spots to mean either spots or faculae for simplicity]
+// maybe ref this interferometry & direct imaging & transit curve observation fact
+// Sunspots consist of a cool central region called the umbra, surrounded by a larger and hotter region called the penumbra.
 
-=== Why are M dwarfs more variable?
+For simplicity, this report uses the term "spot" to mean any region of temperature variation, including both hotter and cooler regions (unless a distinction is required within a physical interpretation or discussion).
 
 == Transmission Spectra
 
@@ -83,7 +84,7 @@ The signal-to-noise ratio (SNR) of a transmission spectrum at a certain waveleng
 
 $ "SNR" = delta / sigma $ <SNR-equation>
 
-where $sigma$ is the noise intensity. To maximise the SNR of our data, it's necessary to measure near the peak of the exoplanet's spectrum. This corresponds to the near and mid infrared, motivating why many ground-based and space-based instruments target this range @Encrenaz2014.
+where $sigma$ is the noise intensity. To maximise the SNR of our data, it's necessary to measure near the peak of the exoplanet's spectrum. This corresponds to the near and mid infrared, motivating why many ground-based and space-based instruments target this range @Encrenaz2014. Furthermore, near infrared observations can reduce the effects of stellar contamination as the spectrum's shape becomes less temperature sensitive @SeagerMidIRContaminationMinimisation.
 
 === Atmospheric Retrievals & The Disc-Integrated Spectrum
 
@@ -107,7 +108,7 @@ There are multiple methods used to determine the disc-integrated pre-transit spe
 
 $chi^2$ methods aim to minimise the residual between a simulated and observed spectrum by varying the simulated spectrum's input parameters. For example, #cite(<PasseggerCARMENES>, form: "prose") vary the $T_"eff", ["Fe"\/"H"] "and" log g$ of spectra generated using the PHOENIX-ACES model. The $chi^2$ value is calculated using:
 
-$ chi^2 = (|bold(F_"model") - bold(F_"observed")|^2) / bold(sigma)^2 $
+$ chi^2 = (|bold(F_"model") - bold(F_"observed")|^2) / bold(sigma)^2 $ <ChiSquared>
 
 where $bold(F)$ is a vector containing the spectrum's intensity across the chosen wavelength range, and $bold(sigma)$ contains the noise intensities.
 
@@ -130,9 +131,7 @@ Empirical relations have been determined that link the line depth ratio (LDR) be
 // [maybe mention the actual required resolution of ~28k specified by that LDR article]
 // [should i mention which telescopes can use this method? or is that just extraneous?]
 
-=== ML
-
-// [idk]
+// === ML
 
 == The Transit Light Source Effect <TransitLightSourceEffect>
 
@@ -177,6 +176,8 @@ To add to the difficulty, even if stellar variability is suspected of contaminat
 Variations in one stellar parameter can affect the spectrum in a way similar to variations in another parameter. Multi-component models, such as the one proposed in this work, inherently include more dimensions and hence are more vulnerable to degeneracies. However, these degeneracies are still present within simpler 1 component models and must be addressed in order to achieve high resolution, low uncertainty fitting.
 
 === Physical Basis
+
+PINEAPPLE
 
 === Reducing Fitting Degeneracies <ReducingDegeneracies>
 
