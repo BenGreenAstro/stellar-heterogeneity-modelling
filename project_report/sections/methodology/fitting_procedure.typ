@@ -24,11 +24,15 @@ When fitting to a spectrum with 2 similar components, the model will often find 
 
 This issue can be largely fixed by constraining the components to go in order of decreasing temperature. For example, if the model tries to explore a region where $T_1 < T_2$ then a log likelihood of $-inf$ is returned, and the model will stop exploring that region of parameter space.
 
+PINEAPPLE
+
 This fix can be seen in [ref figure]. [figure x b)] shows the double minima being significantly decreased, although it is still present at [give resolutions, SNR, wavelength ranges where it is / isn't present].
 
 === Constraints
 
 As discussed in the #link(<ReducingDegeneracies>)[#text(fill: black)[degeneracies section]], constraining the [Fe/H] and $log g$ of all components to be the same is a physically reasonable step which prevents degeneracies. Without this step, we found the code to produce a large amount of degeneracy, which significantly decreased the usefulness of the model. An example can be seen in [ref figure].
+
+PINEAPPLE
 
 Therefore, all components share the same variable for [Fe/H] and $log g$. This means that the total number of dimensions in our model is
 

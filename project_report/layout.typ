@@ -1,15 +1,17 @@
 #let report_layout(doc) = {
   set page(
-    paper: "a4",
-    margin: (x: 2.5cm, y: 3cm),
+    // paper: "a4",
+    // margin: (x: 2.5cm, y: 3cm),
     numbering: "1",
   )
+
+  set math.equation(numbering: "(1)")
   
-  set text(
-      font: "STIX Two Text", 
-      size: 11pt,
-      lang: "en"
-    )
+  // set text(
+  //     font: "STIX Two Text", 
+  //     size: 11pt,
+  //     lang: "en"
+  //   )
 
   // set heading(numbering: "1.")
 

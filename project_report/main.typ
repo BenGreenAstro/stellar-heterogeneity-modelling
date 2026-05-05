@@ -2,7 +2,6 @@
 
 #set page(paper: "a4", margin: (x: 2.5cm, y: 3cm))
 #set text(font: "STIX Two Text", size: 11pt, lang: "en")
-#set math.equation(numbering: "(1)")
 
 #include("sections/title_page.typ")
 #pagebreak()

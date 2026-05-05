@@ -3,8 +3,11 @@
   strong(it)
 }
 
+// #show outline: set text(size: 9pt)
+
 // 3. The Table of Contents
 #outline(
   title: [CONTENTS], 
   indent: 2em,
+  depth: 2
 )

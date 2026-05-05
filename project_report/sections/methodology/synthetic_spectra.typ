@@ -66,4 +66,6 @@ Furthermore, the wavelength range of the provided PHOENIX spectra spans $qty("0.
 
 For example, JWST instruments have wavelength resolutions of order $R #sym.tilde 100 - 1000$ in the IR @JWSTNIRSpecResolution. Since this is orders of magnitude less than PHOENIX's resolution of $R = 100,000$, downsampling using a convolution has been very computationally heavy.
 
-Instead, we first directly downsample (without using a convolution), choosing ~5 pixels per resolution width. We then Guassian convolve only this subset to produce the final spectrum. As per Nyquist's theorem, the initial downsample only removes information on scales much less than the desired resolution, and the final convolution generates the same end result. 
+Instead, we first directly downsample (without using a convolution), choosing ~5 pixels per resolution width. We then Guassian convolve only this subset to produce the final spectrum. As per Nyquist's theorem, the initial downsample only removes information on scales much less than the desired resolution, and the final convolution generates the same end result.
+
+For simplicity, we assume a constant wavelength resolution over the desired wavelength range. In reality, the resolution of spectroscopic instruments is wavelength dependent.

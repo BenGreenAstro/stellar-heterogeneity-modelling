@@ -99,6 +99,30 @@ What does this mean for M dwarfs?
 
 == Real Spectra
 
+
+
+
+//  can use this - at SNR 20 and resolution of 0.01 um over 0.8 to 5.3 um
+// actually pretty good for 4 different components. it can still roughly find the involved temperatures, but the weights are heavily diluted
+// [ORIGINAL PARAMETERS]
+//          ╷          ╷         ╷          
+//   Weight │ T_eff    │ [FeH]   │ log g    
+// ╶────────┼──────────┼─────────┼─────────╴
+//   0.15   │ 4000.0 K │ 0.0 dex │ 4.5 dex  
+//   0.5    │ 3800.0 K │ 0.0 dex │ 4.5 dex  
+//   0.1    │ 3500.0 K │ 0.0 dex │ 4.5 dex  
+//   0.25   │ 3300.0 K │ 0.0 dex │ 4.5 dex  
+//          ╵          ╵         ╵          
+
+// [MCMC RECOVERED PARAMETERS (SHARED FEH/LOGG) WITH 1-SIGMA ERRORS]
+//               ╷                    ╷                  ╷                  
+//   Weight      │ T_eff              │ [FeH]            │ log g            
+// ╶─────────────┼────────────────────┼──────────────────┼─────────────────╴
+//   0.15 ± 0.16 │ 4085.57 ± 232.63 K │ -0.07 ± 0.24 dex │ 4.60 ± 0.21 dex  
+//   0.26 ± 0.23 │ 3813.04 ± 148.45 K │ -0.07 ± 0.24 dex │ 4.60 ± 0.21 dex  
+//   0.26 ± 0.25 │ 3573.68 ± 148.59 K │ -0.07 ± 0.24 dex │ 4.60 ± 0.21 dex  
+//   0.14 ± 0.17 │ 3261.26 ± 307.09 K │ -0.07 ± 0.24 dex │ 4.60 ± 0.21 dex  
+
 GJ 486, etc
 [1 component: v good]
 [2 components: doesn't agree with others]
