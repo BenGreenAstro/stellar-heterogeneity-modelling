@@ -32,6 +32,6 @@ As discussed in the #link(<ReducingDegeneracies>)[#text(fill: black)[degeneracie
 
 Therefore, all components share the same variable for [Fe/H] and $log g$. This means that the total number of dimensions in our model is
 
-$ N_"dim" = n * 2 + 2 $
+$ N_"dim" = 2n + 2 $
 
 where $n$ is the number of components. Each component has a weight $f$ and temperature $T$, and there are 2 global variables [Fe/H] and $log g$.

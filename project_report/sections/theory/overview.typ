@@ -177,7 +177,7 @@ Variations in one stellar parameter can affect the spectrum in a way similar to 
 
 === Physical Basis
 
-PINEAPPLE
+// PINEAPPLE
 
 === Reducing Fitting Degeneracies <ReducingDegeneracies>
 
