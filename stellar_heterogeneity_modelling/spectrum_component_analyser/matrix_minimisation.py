@@ -101,7 +101,6 @@ def get_optimality(A, result, spectrum_to_decompose : spectrum):
         spectrum_to_decompose.Wavelengths,
         A @ result.x,
         normalised_point=None, # carry out no normalisation or resampling on the determined spectrum (as this spectrum is a sum of spectra from PHOENIX which should already be formatted in this way)
-        observational_resolution=None,
         observational_wavelengths=None,
         temperature=None
     )
@@ -180,7 +179,6 @@ def plot_nicely(A, result, parameter_space, spec_grid : spectral_grid, spectrum_
         spectrum_to_decompose.Wavelengths,
         A @ result.x,
         normalised_point=None, # carry out no normalisation or resampling on the determined spectrum (as this spectrum is a sum of spectra from PHOENIX which should already be formatted in this way)
-        observational_resolution=None,
         observational_wavelengths=None,
         temperature=None
     )

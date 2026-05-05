@@ -20,7 +20,6 @@ class phoenix_spectrum(spectrum):
 			  feh,
 			  log_g,
 			  normalising_point : Quantity = None,
-			  observational_resolution : Quantity = None,
 			  observational_wavelengths : np.ndarray = None,
 			  name : str = ""
 			):
@@ -28,7 +27,6 @@ class phoenix_spectrum(spectrum):
 				wavelengths,
 				fluxes,
 				normalised_point=normalising_point,
-				observational_resolution=observational_resolution,
 				observational_wavelengths=observational_wavelengths,
 				temperature=t_eff,
 				name=name
@@ -69,6 +67,5 @@ class phoenix_spectrum(spectrum):
 				feh=FeH,
 				log_g=log_g,
 				normalising_point=None,
-				observational_resolution=None,
 				observational_wavelengths=None,
 				name="simulated spectrum from PHOENIX fits file")

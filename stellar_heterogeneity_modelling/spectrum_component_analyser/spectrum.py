@@ -15,6 +15,7 @@ from astropy.units import Quantity
 import warnings
 from scipy.ndimage import gaussian_filter1d
 from astropy.modeling import models
+import spectres
 
 DEFAULT_FLUX_UNIT = u.Jy
 
@@ -24,7 +25,6 @@ class spectrum:
 			wavelengths : np.array,
 			fluxes : np.array,
 			normalised_point : Quantity,
-			observational_resolution : Quantity = None,
 			observational_wavelengths : np.ndarray = None,
 			temperature : Quantity[u.K] = None,
 			name : str = None,
@@ -67,24 +67,22 @@ class spectrum:
 		self.Fluxes : np.array = fluxes_janskys[indices]
 		self.Name : str = name
 
-		# downsample to a given resolution using a gaussian convolution // filter
-		if observational_resolution != None:
-			self.regrid_flux(desired_resolution=observational_resolution)
 		
-		# if normalised_point != None and temperature != None:
-		# 	self.normalise_flux()
+
+		# Replace your interpolation step with:
+		# n
 		if normalise:
 			self.normalise_flux()
 
-		# sample onto a set of wavelengths (for an instrument at observational_resolution)
+		# sample onto a set of wavelengths (for an instrument with observational_wavelengths)
 		if observational_wavelengths != None:
-			self.regrid_flux_onto(observational_wavelengths)
+			self.regrid_flux(observational_wavelengths)
 		
 		self.Normalised_Point = normalised_point
-		self.Desired_Resolution = observational_resolution
-	
-	def regrid_flux_onto(self, observational_wavelengths : np.ndarray[Quantity[u.um]]) -> None:
-		self.Fluxes = np.interp(observational_wavelengths, self.Wavelengths, self.Fluxes) # new y = np.interp(new x | old x | old y)
+
+	def regrid_flux(self, observational_wavelengths : np.ndarray) -> None:
+		# spectres.spectres(new_wavs, spec_wavs, spec_fluxes, spec_errs=None, fill=None, verbose=True)
+		self.Fluxes = spectres.spectres(observational_wavelengths.value, self.Wavelengths.to(observational_wavelengths.unit).value, self.Fluxes.value) * self.Fluxes.unit
 		self.Wavelengths = observational_wavelengths
 	
 	def normalise_flux(self) -> None:
@@ -97,67 +95,6 @@ class spectrum:
 		average_flux : Quantity[u.Jy] = np.average(self.Fluxes[np.where(np.isfinite(self.Fluxes))])
 		self.Fluxes /= average_flux.value
 		return
-
-	def old_normalise_flux(self, normalised_point : Quantity, temperature : Quantity[u.K]) -> None:
-		"""
-		normalise fluxes so that at normalised point, the magnitude of the flux equals its black body value
-
-		normalised_point : an astropy quantity with dimension of length
-		temperature : an astropy quantity with units of Kelvin
-		"""
-		if (u.get_physical_type(self.Fluxes[0].unit) != u.get_physical_type(u.Jy)):
-			raise ValueError(f"fluxes are in units of {self.Fluxes.unit}. this is not in a unit convertible to janskys. no normalisation will be carried out.")
-
-		self.Fluxes /= self.Fluxes[(normalised_point <= self.Wavelengths)][0].value
-
-		bb = models.BlackBody(temperature=temperature)
-		self.Fluxes *= (bb(normalised_point) * 4 * np.pi * u.sr).to(self.Fluxes.unit).value
-
-		# keep fluxes relative to the normalised_point of a blackbody at 3500 K (this is completely arbitrary but keeps the numbers from being like 10**21 and annoying)
-		self.Fluxes /= (models.BlackBody(temperature=3500 *u.K)(normalised_point) * 4 * np.pi * u.sr ).to(self.Fluxes.unit).value
-	
-	def regrid_flux(self, desired_resolution : Quantity, extra_downsample : bool = True) -> np.array:
-		"""
-		Regrid the spectrum onto a uniform wavelength array of the input resolution. Uses a gaussian to simulate how real data would be recorded.
-
-		This method assumes that the desired resolution >> the current resolution of the spectrum when this function is called.
-		"""
-
-		if (u.get_physical_type(self.Fluxes[0].unit) != u.get_physical_type(u.Jy)):
-			raise ValueError(f"fluxes are in units of {self.Fluxes.unit}. this is not in a unit convertible to janskys. no normalisation will be carried out.")
-		
-		# interpolate onto a uniform wavelength grid - self.Wavelengths & self.Fluxes are assumed to currently be very high res
-		wave_uniform = np.linspace(self.Wavelengths.min(), self.Wavelengths.max(), len(self.Wavelengths))
-		flux_uniform = np.interp(wave_uniform, self.Wavelengths, self.Fluxes)
-
-		# convert resolution to sigma (in array indices)
-		delta_lambda = wave_uniform[1] - wave_uniform[0]
-		sigma = desired_resolution / (2 * np.sqrt(2 * np.log(2)) * delta_lambda) # in pixel units
-
-		# downsample as we only need a few points per standard deviation to be accurate (i.e. remove details smaller than 1/5th of the standard deviation)
-		if extra_downsample:
-			points_per_standard_deviation : int = 5
-			downsample_factor = int(sigma / points_per_standard_deviation)
-
-			if downsample_factor > 1:
-				wave_uniform = wave_uniform[::downsample_factor]
-				flux_uniform = flux_uniform[::downsample_factor]
-
-				sigma /= downsample_factor # sigma is in pixels, not a physical dimensional value. so we need to divide it by the downsample factor for it to still represent the physical FWHM / resolution length
-		
-		# remove units
-		convolved_flux = gaussian_filter1d(flux_uniform.value, sigma.to(u.dimensionless_unscaled).value, mode="nearest")
-
-		# resample onto desired wavelengths
-		desired_number_of_wavelength_points = (self.Wavelengths.max() - self.Wavelengths.min()) / desired_resolution
-		desired_number_of_wavelength_points = int(desired_number_of_wavelength_points.to(u.dimensionless_unscaled).value) # otherwise it prints as e.g. [number] angstrom / um. also need to convert it to an integer value for python
-		wave_desired_resolution = np.linspace(self.Wavelengths.min(), self.Wavelengths.max(), desired_number_of_wavelength_points)
-
-		new_flux = np.interp(wave_desired_resolution, wave_uniform, convolved_flux)
-		new_flux *= DEFAULT_FLUX_UNIT # units get removed (probably by np.interp or gaussian_filter1d); add them back in
-
-		self.Wavelengths = wave_desired_resolution
-		self.Fluxes = new_flux
 
 	def air_wavelengths(self, conversion_method : str = None): # use specutil default
 		"""
@@ -177,7 +114,6 @@ class spectrum:
 				  self.Fluxes[idx],
 				  name=self.Name,
 				  normalised_point=None, # no extra convolution or resampling is done on sliced spectra; we assume the fluxes and wavelengths are already as desired
-				  observational_resolution=None,
 				  observational_wavelengths=None,
 				  temperature=None)
 	def plot(self, clear : bool = True):

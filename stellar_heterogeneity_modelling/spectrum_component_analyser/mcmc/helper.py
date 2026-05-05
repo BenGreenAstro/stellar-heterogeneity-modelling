@@ -283,7 +283,6 @@ class MCMCHelper():
             normalised_point=None,
             name="MCMC Median Fit",
             normalise=False,
-            observational_resolution=None,
             observational_wavelengths=None,
             temperature=None
         )
