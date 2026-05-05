@@ -8,6 +8,8 @@
 
 #show: report_layout
 
+// PINEAPPLE: add an acknowledgements section
+
 #include("sections/contents_page.typ")
 #pagebreak()
 
@@ -27,6 +29,4 @@
 #pagebreak()
 
 #include("sections/appendix.typ")
-#pagebreak()
-
-#bibliography("references.bib", style: "american-physics-society")
+#bibliography("references.bib", style: "apa")

@@ -6,13 +6,16 @@
 #let reportsubtitle = ""
 #let reportauthor = "Benjamin Green"
 #let crsID = "bg462"
+#let crsID = ""
 #let supervisor = "Lalitha Sairam"
 #let uto = "Nikkhu Madhusudhan"
-#let myabstract = "This is the abstract text."
+#let myabstract = "" // PINEAPPLE
+
+// PINEAPPLE: change to the standard PhD format
 
 #align(center, [
   // Logo Section
-  #align(right, image("../aesthetics/cam.pdf", width: 5cm))
+  #align(center, image("../aesthetics/cam.pdf", width: 10cm))
   #v(0.5cm)
 
   // Heading Sections

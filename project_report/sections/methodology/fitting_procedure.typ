@@ -1,4 +1,4 @@
-== The Fitting Procedure
+== The Fitting Procedure <FittingProcedure>
 
 In order to fit a multicomponent model to our simulated stars, we use a Markov chain Monte Carlo method. The Python package `emcee` @emcee is used to efficiently explore stellar parameters, in order to find the 2 components that most accurately reproduce the input spectrum.
 
@@ -22,17 +22,20 @@ In order to explore the parameter space over a finer resolution than the input s
 
 When fitting to a spectrum with 2 similar components, the model will often find 2 minima for each parameter. One will correspond to the true parameters for the first component, and one for the second component. This significantly increases the degeneracy and prevents an accurate fit, as the minimisation process doesn't have a method to distinguish between the components.
 
-This issue can be largely fixed by constraining the components to go in order of decreasing temperature. For example, if the model tries to explore a region where $T_1 < T_2$ then a log likelihood of $-inf$ is returned, and the model will stop exploring that region of parameter space.
+This issue can be largely fixed by constraining the components to go in order of decreasing temperature. For example, if the model tries to explore a region where $T_1 < T_2$ then a log likelihood of $-infinity$ is returned, and the model will stop exploring that region of parameter space.
 
-PINEAPPLE
+// PINEAPPLE
 
-This fix can be seen in [ref figure]. [figure x b)] shows the double minima being significantly decreased, although it is still present at [give resolutions, SNR, wavelength ranges where it is / isn't present].
+// Maybe show a graph that uses this, and one without to show the fix. e.g.:
+// This fix can be seen in [ref figure]. [figure x b)] shows the double minima being significantly decreased, although it is still present at [give resolutions, SNR, wavelength ranges where it is / isn't present].
 
 === Constraints
 
-As discussed in the #link(<ReducingDegeneracies>)[#text(fill: black)[degeneracies section]], constraining the [Fe/H] and $log g$ of all components to be the same is a physically reasonable step which prevents degeneracies. Without this step, we found the code to produce a large amount of degeneracy, which significantly decreased the usefulness of the model. An example can be seen in [ref figure].
+As discussed in the #link(<ReducingDegeneracies>)[#text(fill: black)[degeneracies section]], constraining the [Fe/H] and $log g$ of all components to be the same is a physically reasonable step which prevents degeneracies. Without this step, we found the code to produce a large amount of degeneracy, which significantly decreased the usefulness of the model.
 
-PINEAPPLE
+// An example can be seen in [ref figure].
+
+// PINEAPPLE
 
 Therefore, all components share the same variable for [Fe/H] and $log g$. This means that the total number of dimensions in our model is
 

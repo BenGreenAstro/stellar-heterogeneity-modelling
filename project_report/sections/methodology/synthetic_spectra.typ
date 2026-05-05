@@ -23,7 +23,7 @@ Specifically, it covers $T_"eff"$ from 2300 to 12000 K, [Fe/H] from -4 to 1 dex,
 
 === Parameter Space
 
-As much of the parameter space of the Göttingen library is outside our M dwarf scope, there is no need to download all of the provided spectra. In total, we used 2691 spectra, covering the ranges as given in @table-used-PHOENIX-ranges. This subset covers the majority of known M dwarfs.
+As much of the parameter space of the Göttingen library is outside our M dwarf scope, there is no need to download all of the provided spectra. In total, we used 2691 spectra, covering the ranges as given in @table-used-PHOENIX-ranges. This subset covers the majority of known M dwarfs @MDwarfTemperatures @MDwarfMetallicities.
 // [need a reference here!]
 // [define M dwarf temps and metallicity etc].
 
@@ -62,10 +62,30 @@ As much of the parameter space of the Göttingen library is outside our M dwarf 
 === Wavelength Downsampling
 
 // maybe give range for these instruments
-Furthermore, the wavelength range of the provided PHOENIX spectra spans $qty("0.05", "um")$ to $qty("5.5", "um")$, which overlaps with many of the spectroscopic instruments found on JWST, such as NIRISS, NIRSPEC and MIRI. The synthetic spectra have a resolution orders of magnitude larger than these instruments. This allows us to use a wavelength range and resolution relevant to modern astronomy when simulating stellar component retrievals. Downsampling is done using a Gaussian convolution at a given resolution.
+The wavelength range of the provided PHOENIX spectra spans $qty("0.05", "um")$ to $qty("5.5", "um")$, which overlaps with many of the spectroscopic instruments found on JWST, such as NIRISS, NIRSPEC and MIRI. The synthetic spectra have a resolution orders of magnitude larger than these instruments. This allows us to use a wavelength range and resolution relevant to modern astronomy when simulating stellar component retrievals.
 
-For example, JWST instruments have wavelength resolutions of order $R #sym.tilde 100 - 1000$ in the IR @JWSTNIRSpecResolution. Since this is orders of magnitude less than PHOENIX's resolution of $R = 100,000$, downsampling using a convolution has been very computationally heavy.
+In order to simulate an instruments line spread function (LSF), we need to convolve the data with a normalised Guassian. This Gaussian's standard deviation acts as the effective resolution of the simulated instrument.  However, JWST instruments have wavelength resolutions $R #sym.tilde 100 - 1000$ in the IR @JWSTNIRSpecResolution, which is orders of magnitude less than PHOENIX's $R = 100,000$. This makes directly convolving the original data very computationally heavy and slow, as there are $#sym.tilde 100,000$ convolutions needed, which all span $#sym.tilde 1000$ data points.
 
-Instead, we first directly downsample (without using a convolution), choosing ~5 pixels per resolution width. We then Guassian convolve only this subset to produce the final spectrum. As per Nyquist's theorem, the initial downsample only removes information on scales much less than the desired resolution, and the final convolution generates the same end result.
+To speed this up, we can take advantage of Nyquist's theorem. We first directly downsample (without using a convolution) the original PHOENIX spectra to a wavelength grid which has ~5 points per resolution width. We _then_ convolve this with the Guassian LSF. Finally, we linearly interpolate this data onto the desired wavelength points.
 
-For simplicity, we assume a constant wavelength resolution over the desired wavelength range. In reality, the resolution of spectroscopic instruments is wavelength dependent.
+As per Nyquist's theorem, the initial downsample only removes information on scales much less than the desired resolution, and the final convolution generates the correct end result.
+
+For simplicity, we assume a constant wavelength resolution over the desired wavelength range. This means that the linear interpolation correctly rebins the fluxes onto the new wavelengths. In reality, the resolution of spectroscopic instruments is wavelength dependent.#footnote[In this case, the final rebinning step could be done using a code such as `SpectRes` @Spectres, which rebins fluxes correctly even over a non-uniform wavelength grid.]
+
+=== Normalisation
+
+// convolutions
+// convert to janskys
+// normalise - reason why this is a valid normalisation and have a good couple of sentences for why not: integrate and average & why not do everything after minusing out a black body spectrum.
+// [little explanation of the different approaches which are possible - can link back to the section on how this is all done for one-component]
+// need to say somewhere in methodology we are doing this on simulated stars
+
+In order for our $f_i$ factors to correctly represent the area-covering fraction of the components, we need to normalise both the simulated PHOENIX spectra and the observed spectrum. We normalise all spectra to have a mean flux of $1$.
+
+// this is wrong: to find an integral numerically, a uniform wavelength range doesnt really matter! still need simpsons rule or whatevs to get a better integral than just a riemann sum
+// Since we downsample the PHOENIX spectra to a uniform wavelength range, our numerical integral is equivalent to
+
+// $ integral F(lambda) "d"lambda = Delta lambda sum_lambda F(lambda) $
+
+// making it simple to carry out this normalisation.
+// A simple way to do this which is often used in literature is [okay idk].

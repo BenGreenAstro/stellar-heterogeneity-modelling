@@ -33,13 +33,13 @@ Plotting the transit depth as a function of time produces a transit curve or a l
 
 A key component of habitability research is analysis of extrasolar planets, including their atmospheres. Transmission spectra are one method of determining the species present within an exoplanet's atmosphere, which gives valuable hints to signs of life through biosignatures, as well as the planet's evolutionary history and climate @LauraExoplanetReview.
 
-During an exoplanet's transit, starlight will pass through its atmosphere (if one is present). Any species present within the atmosphere will cause a wavelength-dependent absorption or amplification of this starlight, imprinting an exoplanetary signal on top of the stellar signal. The total intensity shift is given by @LauraExoplanetReview
+During an exoplanet's transit, starlight will pass through its atmosphere (if one is present). Any species present within the atmosphere will cause a wavelength-dependent absorption or amplification of this starlight, imprinting an exoplanetary signal on top of the stellar signal. Assuming $R_p << R_*$, the total intensity shift is given by @LauraExoplanetReview
 
 $ delta approx (2 H R_"p") / R_ast^2 $ <delta-equation>
 
 where $ H = N H_"sc" = (N k_B T) / (mu m_H g) $
 
-and  $N$ is a dimensionless factor describing the number of scale heights crossed at high opacity, $H_"sc"$ is the scale height of the atmosphere, $mu$ is the molecular mass of the planet's atmosphere and $g$ is the surface gravity of the planet. $N$ is wavelength-dependent and determines the spectrum of the exoplanet that is imprinted on top of the stellar signal. @delta-equation assumes $R_p << R_*$.
+and  $N$ is a dimensionless factor describing the number of scale heights crossed at high opacity, $H_"sc"$ is the scale height of the atmosphere, $mu$ is the molecular mass of the planet's atmosphere and $g$ is the surface gravity of the planet. $N$ is wavelength-dependent and determines the spectrum of the exoplanet that is imprinted on top of the stellar signal.
 
 Atmospheric retrievals can be used on the extracted exoplanet signal to determine the content of the atmosphere @MadhusudhanAtmosphericRetrievals.
 
@@ -112,7 +112,7 @@ $ chi^2 = (|bold(F_"model") - bold(F_"observed")|^2) / bold(sigma)^2 $ <ChiSquar
 
 where $bold(F)$ is a vector containing the spectrum's intensity across the chosen wavelength range, and $bold(sigma)$ contains the noise intensities.
 
-Specific bands or lines are chosen to be used in the minimisation, and then the parameter space is searched to ideally find a global minimum of $chi^2$. The parameters at this minimum, for example $T_"eff"$ $["Fe"\/"H"]$, and $log g$, are interpreted as the stellar parameters. In order to understand the degeneracy between the parameters, a brute force search can be done over a given range of parameters and a colourmap of the $chi^2$ value can be produced. This yields the shape and size of the minimum.
+Specific bands or lines are chosen to be used in the minimisation, and then the parameter space is searched to find the global minimum of $chi^2$. The parameters at this minimum, for example $T_"eff"$ $["Fe"\/"H"]$, and $log g$, are interpreted as the best fitting stellar parameters. In order to understand the degeneracy between the parameters, a brute force search can be done over a given range of parameters and a colourmap of the $chi^2$ value can be produced. This yields the shape and size of the minimum.
 
 Interpolation can be used to improve the resolution of this method. Using linear interpolation to search the parameter space in finer detail is much faster than exhaustively simulating spectra with parameter resolutions of $#sym.tilde #qty("10", "K")$ and $#sym.tilde #num("0.01")$ dex.
 
@@ -121,7 +121,7 @@ Interpolation can be used to improve the resolution of this method. Using linear
 Bayesian inference is a common method to produce posterior distributions of fitting parameters, and has seen recent use to analyse stellar contamination within systems such as LHS 1440b @Cadieux2024. A likelihood is defined which, similar to the $chi^2$ method, describes the error between a fitted spectrum and ground truth. Markov-chain Monte Carlo (MCMC) provides a way to efficiently search the parameter space without the need for brute force.
 
 // maybe ref a conrer plot fig here when we say "corner plots concisely..."
-One major advantage of this method is that it naturally produces a way to visualise the degeneracies between all of the varied parameters. Corner plots concisely show the shape and size of the global minimum, as well as the presence of any other nearby minima. The posteriors are visualised using histograms, and the uncertainty for each parameter is generated. These visualisations are of course possible with other minimisation methods, but Bayesian inference doesn't require a brute force search.
+One major advantage of this method is that it naturally produces a way to visualise the degeneracies between all of the varied parameters. Corner plots concisely show the shape and size of the global minimum, as well as the presence of any other nearby minima. The posteriors are visualised using histograms, and the uncertainty for each parameter is generated. Whilst these visualisations are possible with other minimisation methods, Bayesian inference doesn't require a brute force search.
 // : itprovides an accepted way to explore the search space efficiently instead.
 
 === Line Depths
@@ -133,16 +133,20 @@ Empirical relations have been determined that link the line depth ratio (LDR) be
 
 // === ML
 
+// PINEAPPLE
+
 == The Transit Light Source Effect <TransitLightSourceEffect>
 
 // define photosphere
 // This work provides a method that does not strictly require an assumption of homogeneity, and provides a step towards a more accurate way of parameterising M dwarf spectra.
 // (maybe say: see TRAPPIST 1 [ref paper that says how TRAPPIST-1 water features are consistent with stellar variability])
 // diagrams!
+// 
+// // PINEAPPLE - create diagram(s) for the transit light source effect
 
 Within the context of exoplanet transmission spectroscopy, stellar heterogeneities can cause significant problems. The section of the stellar surface which illuminates the exoplanet's atmosphere in the direction of our line of sight is only a circular region behind the planet. Over the course of a transit, the planet sweeps out a region called the transit chord, and it is only this region which affects the measured spectra. Therefore, if spots or faculae are present, the true illuminating spectrum will differ from the disc-integrated spectrum. This effect is called the transit light source effect.
 
-This effect can cause stellar contamination. This is where features from the stellar spectrum are not removed from the total transit signal, leading to spectral features from the star being attributed to the exoplanet. This is known as false spectral features. This contamination can be confused with biosignatures, such as water features in the TRAPPIST-1 system @Zhang-2018. This highlights how important it is to understand and account for these effects if we want to understand planetary conditions, and potential habitability, in extrasolar systems.
+This effect can cause stellar contamination. This is where features from the stellar spectrum are not removed from the total transit signal, land are instead attributed to the exoplanet. These are known as false spectral features. This contamination can be confused with biosignatures, such as water features in the TRAPPIST-1 system @Zhang-2018. This highlights how important it is to understand and account for these effects if we want to understand planetary conditions, and potential habitability, in extrasolar systems.
 
 There are two broad cases of heterogeneities - occulted and unocculted spots - which affect the transit curve & spectrum differently, and are hence dealt with in different ways.
 
@@ -151,7 +155,7 @@ There are two broad cases of heterogeneities - occulted and unocculted spots - w
 // [what size? if its smaller than this can it still affect the spectrum or at that point will it not affect it much?]
 Spots which are contained within the transit chord directly contribute to the illuminating spectrum are typically easier to address @Rackham-2018. This is because, if the heterogeneity is of sufficient size, the transit curve will appear asymmetrical. This provides a clear sign that a heterogeneity is present and must be removed, which differs from the case of unocculted spots. #cite(<Rackham-2018>, form:"prose") note that this variation in the transit curve can be used to determine the $T_"eff"$ and area covering fraction of the spot or facula.
 
-Furthermore, there is already a Python package, starry, that can be used to infer properties of a heterogeneous stellar surface using spherical harmonics @Luger_2019. This has been used in the literature to directly model starspots @Tamburo2025. As such, the work presented here does not address occulted heterogeneities, but instead focuses on unocculted ones.
+Furthermore, there is already a Python package, `starry`, that can be used to infer properties of a heterogeneous stellar surface using spherical harmonics @Luger_2019. This has been used in the literature to directly model starspots @Tamburo2025. As such, the work presented here does not address occulted heterogeneities, but instead focuses on unocculted ones.
 
 === Unocculted Heterogeneities
 
@@ -159,9 +163,9 @@ Unocculted heterogeneities are usually harder to detect and more challenging to 
 
 $ lambda_"peak" = b / T $
 
-the peak wavelength of a spectrum is inversely correlated with temperature. Therefore, in this example, using the disc-integrated spectrum would over-subtract at lower wavelengths, and under-subtract at higher wavelengths. Furthermore, the depth and presence of molecular features varies with $T_"eff"$. Both of these effects lead to stellar spectral features that are not removed from the total signal, which contaminates the derived exoplanet signal. But most importantly, there is no simple method to determine if this is occurring, unlike with occulted spots.
+the peak wavelength of a spectrum is inversely correlated with temperature. In this example, using the disc-integrated spectrum would over-subtract at lower wavelengths, and under-subtract at higher wavelengths. Furthermore, the depth and presence of molecular features varies with $T_"eff"$. Both of these effects lead to stellar spectral features that are not removed from the total signal, which contaminates the derived exoplanet signal. Most importantly, there is no simple warning sign that an unocculted spot is present.
 
-To add to the difficulty, even if stellar variability is suspected of contaminating a stellar spectrum, the features may be consistent with a large range of spot configurations. More specifically, there is likely to be multiple sets of parameters $T_"eff"$, [Fe/H], $log g$ and area-covering fractions which match the observed stellar spectrum. This makes constraining unocculted heterogeneities in active stars, such as M dwarfs, quite complex.
+To add to the difficulty, even if stellar variability is suspected of contaminating a stellar spectrum, the features may be consistent with a large range of spot configurations. More specifically, there is likely to be multiple sets of parameters $T_"eff"$, [Fe/H], $log g$ and area-covering fraction which match the observed stellar spectrum. This makes constraining unocculted heterogeneities in active stars, such as M dwarfs, complex.
 
 // [ref papers which say "stellar variability is consistent with lots of range of parameters" - the rackham one about trappist 1 (above) and maybe some others]. 
 // 
@@ -186,7 +190,7 @@ Variations in one stellar parameter can affect the spectrum in a way similar to 
 Degeneracies can lead to large, over-inflated minima which contain non-physical or nonsensical parameter values, which is a major problem for any form of minimisation method. The most common ways to prevent this can all be classified as attempts to constrain some of the parameters to physical values.
 
 // need to add ranges of these parameters to contextualise how big/small these dex and T changes are
-The metallicity [Fe/H] has been shown to vary by only $#sym.tilde 0.05$ dex within stellar spots @MetallicityVariations. Furthermore, we can expect the $log g$ to not change significantly within spots and faculae. Compare this to reasonable spot temperatures for M dwarfs, which could vary by $#sym.tilde #qty("500", "K")$ from the photospheric temperature and significantly modify the shape and structure of the spectrum. Hence one of the easiest ways to reduce degeneracies, and hence prevent non-physical minima, is to enforce a constant $log g$ and [Fe/H] between the photospheric background and all spots or faculae. This allows us to focus on the most important variations and keep our results physical. This is the approach used in this work.
+The metallicity [Fe/H] has been shown to vary by only $#sym.tilde 0.05$ dex within stellar spots @MetallicityVariations. Furthermore, we can expect the $log g$ to not change significantly within spots and faculae. Compare this to reasonable spot temperatures for M dwarfs, which could vary by up to $#sym.tilde #qty("500", "K")$ from the photospheric temperature and significantly modify the shape and structure of the spectrum. Hence one of the easiest ways to reduce degeneracies, and hence prevent non-physical minima, is to enforce a constant $log g$ and [Fe/H] between the photospheric background and all spots or faculae. This allows us to focus on the most important variations and keep our results physical. This is the approach used in this work.
 
 // I don't have a reference for that statement about log g variation but I feel that I need to justify why were are keeping log g constant.
 
