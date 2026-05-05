@@ -99,11 +99,25 @@ This shows that the success of this method is highly dependent on the resolution
 
 == Data Quality
 
+// [washes out at high wavelengths, both move towards the average value and their uncertainties increase.]
+// [not monotically better though: why? idk]
+
+Using the same fake star as in @fig-2-component-corner, we vary the resolution of the spectrum in @fig-resolution-variation. At low resolutions, near $#qty(0.01, "um")$, the $f_i$ both tend towards $0.5$, and the temperatures become less accurate. Over this SNR and wavelength range, only when we reach near #qty(0.1, "nm") do the uncertainties decrease and the fit becomes much more accurate.
+
 // maybe should add resolution of space based and ground based instruments as vertical lines to this graph
-#figure(
-  image("../figures/2/correctness_as_a_function_of_resolution.svg", width: 50%),
-  caption: [The effect of resolution on fitting quality of $T_"eff"$ and the area covering fraction $f$ for a 2-component star. The first plot shows the difference between the true and fitted temperatures, and the bottom between the true and fitted weights, both as a function of resolution. Assumes an SNR of 20, and uses a wavelength range of $#qty(0.8, "um") - #qty(5.3, "um")$ at a uniform resolution of $#qty(0.01, "um")$. Resolutions better $#sym.tilde #qty("e-3", "um")$ perform significantly better than lower resolutions.],
-) <fig-label>
+
+
+#place(
+  top,
+  float: true,
+  scope: "parent",
+  [
+    #figure(
+      image("../figures/2/correctness_as_a_function_of_resolution.svg", width: 50%),
+      caption: [The effect of resolution on fitting quality of $T_"eff"$ and the area covering fraction $f$ for a 2-component star. The first plot shows the difference between the true and fitted temperatures, and the bottom between the true and fitted weights, both as a function of resolution. Assumes an SNR of 20, and uses a wavelength range of $#qty(0.8, "um") - #qty(5.3, "um")$ at a uniform resolution of $#qty(0.01, "um")$. Resolutions better $#sym.tilde #qty("e-3", "um")$ perform significantly better than lower resolutions.],
+    ) <fig-resolution-variation>
+  ]
+)
 
 == Physical Interpretation
 
