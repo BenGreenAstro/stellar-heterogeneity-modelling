@@ -36,7 +36,7 @@ The spectrum with residuals in @fig-1-component-spectrum show that the largest a
 
 Building on this, we next decompose a 2-component simulated star. @fig-2-component-corner shows that the posteriors are not neat circles any more, and the degeneracies are more complex.
 
-Our normalisation procedure explains the linear degeneracy between $f_1$ and $f_2$. The simulated star and PHOENIX spectra are all mean normalised to #num(1) Jy, and share the same uniformly spaced wavelength points over a #qty(4.5, "um") range. This is equivalent to constraining the area under the curves to be the same constant, $#num(1) "Jy" dot #qty(4.5, "um")$. Therefore, our fitted spectrum must satisfy:
+Our normalisation procedure explains the linear degeneracy between $f_1$ and $f_2$. The simulated star and PHOENIX spectra are all mean normalised to #num(1) Jy. This is equivalent to constraining the area under the curves to be the same constant, $#num(1) "Jy" dot #qty(4.5, "um")$. Therefore, our fitted spectrum must satisfy:
 
 $
 integral f_1 F_1(lambda) + f_2 F_2(lambda) "d"lambda &= 4.5 "Jy" #unit("um") \
