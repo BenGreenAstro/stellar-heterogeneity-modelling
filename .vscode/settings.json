@@ -4,5 +4,6 @@
   },
   "python.analysis.extraPaths": [
     "./stellar_heterogeneity_modelling/**"
-  ]
+  ],
+  "tinymist.rootPath": "project_report/main.typ"
 }
