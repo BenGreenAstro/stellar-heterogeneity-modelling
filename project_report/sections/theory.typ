@@ -1,3 +1,3 @@
-= Theoretical Background
+= Background
 
 #include "theory/overview.typ"

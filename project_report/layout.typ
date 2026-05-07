@@ -6,12 +6,6 @@
   )
 
   set math.equation(numbering: "(1)")
-  
-  // set text(
-  //     font: "STIX Two Text", 
-  //     size: 11pt,
-  //     lang: "en"
-  //   )
 
   // set heading(numbering: "1.")
 
@@ -74,6 +68,11 @@
     par(text(size: 0pt, ""))
   }
   
+	show figure.caption: it => [
+  	#strong(it.supplement)
+  	#strong(context it.counter.display(it.numbering))#it.separator#it.body
+	]
+
   // show cite: it => {
   //     show "& others": "et al."
   //     it

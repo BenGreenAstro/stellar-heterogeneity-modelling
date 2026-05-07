@@ -8,7 +8,7 @@
 
 === 1 Component
 
-The simplest case we can validate is a simulated star made from 1 component, whose corner plot is shown inn @fig-1-component-corner. We begin with a fake star with parameters $T_"eff" = #qty(3800, "K")$, [Fe/H] = 0 and $log g = 4.5$, and use an SNR and wavelength range representative of JWST data. All of the parameters are well resolved by the model. The largest degeneracy is between [Fe/H] and $log g$, but their posterior distribution still closely reflects their true values. The plots for the other parameters form circular shapes, indicating little degeneracy. The worst-determined parameter is $T$, whose true value lies just outside of the $1 sigma$ range.
+The simplest case we can validate is a simulated star made from 1 component, whose corner plot is shown in @fig-1-component-corner. We begin with a fake star with parameters $T_"eff" = #qty(3800, "K")$, [Fe/H] = 0 and $log g = 4.5$, and use an SNR and wavelength range representative of JWST data. All of the parameters are well resolved by the model. The largest degeneracy is between [Fe/H] and $log g$, but their posterior distribution still closely reflects their true values. The plots for the other parameters form circular shapes, indicating little degeneracy. The worst-determined parameter is $T$, whose true value lies just outside of the $1 sigma$ range.
 
 The spectrum with residuals in @fig-1-component-spectrum show that the largest amount of noise is found at higher wavelengths. This is expected, as the noise amplitude is defined relative to the peak spectrum height. Less intense areas of the spectrum therefore have a lower SNR, which is also true of real-life instruments such as JWST. Despite this, the overall shape of the spectrum and its large-scale features are determined well, and the fitted spectrum is normalised correctly.
 
@@ -21,13 +21,13 @@ The spectrum with residuals in @fig-1-component-spectrum show that the largest a
     #figure(
       image("../figures/1/a/corner_plot_1_component.svg", width: 70%),
       caption: [
-        Posterior for the parameters of a 1-component star. Assumes an SNR of 20, and uses a wavelength range of $#qty(0.8, "um") - #qty(5.3, "um")$ at a uniform resolution of $#qty(0.01, "um")$. The light, medium and dark orange levels represent $1,2$ and $3 sigma$ respectively. In the histograms, the solid line represents the mean fit and the dotted lines represent $1 sigma$ of the fitted distribution. The true values are given in black.
+        Posterior for the parameters of a 1-component star. Assumes an SNR of 20, and uses a wavelength range of $#qty(0.8, "um") - #qty(5.3, "um")$ at a uniform resolution of $#qty(0.01, "um")$. The light, medium and dark orange levels represent $1,2$ and $3 sigma$ respectively. In the histograms, the solid line represents the mean fit and the dotted lines represent $1 sigma$ of the fitted distribution. The true values are given in black. The value of $T_"eff"$ is underestimated by $#sym.tilde #qty(50, "K")$, and the uncertainty is slighty underreported. The same is true for $log g$, whilst the [Fe/H] has been is found accurately. 
       ],
     ) <fig-1-component-corner>
 
     #figure(
       image("../figures/1/a/spectrum_decomposition_1_component.svg", width: 60%),
-      caption: [The fitted spectrum for the 1-component star. The fitted spectrum is defined by the parameters in @fig-1-component-corner. All spectra in this report use intensities dimensionally equivalent to Janskys, and their mean value is normalised to 1.],
+      caption: [The fitted spectrum for the 1-component star. The fitted spectrum is defined by the parameters in @fig-1-component-corner. All spectra in this report use intensities dimensionally equivalent to Janskys, and their mean value is normalised to 1. The residual error is strongest (sometimes $gt #sym.tilde 0.5$) at the higher end of the spectrum, above $#qty(4, "um")$.],
     ) <fig-1-component-spectrum>
   ]
 )
@@ -57,13 +57,13 @@ The globally shared parameters [Fe/H] and $log g$ are found very accurately, but
   scope: "parent",
   [
     #figure(
-      image("../figures/1/b/corner_plot_2_components.svg", width: 60%),
-      caption: [Everything is as in @fig-1-component-corner, except with 2 stellar components - one being a large photospheric region, and the other being a smaller, cool facula. At this low resolution, only [Fe/H] and $log g$ are well-determined.],
+      image("../figures/1/b/corner_plot_2_components.svg", width: 55%),
+      caption: [Everything is as in @fig-1-component-corner, except with 2 stellar components - one being a large photospheric region, and the other being a smaller, cool facula. At this low resolution, only [Fe/H] and $log g$ are well-determined. Significantly more degeneracy is observed: most of the plots are no longer circular, but elongated over a large parameter range. $f_1$ and $f_2$ are poorly found, with uncertainties $#sym.tilde 75%$. Both $T_1$ and $T_2$ are underestimated by $100 - 200$ K],
     ) <fig-2-component-corner>
 
     #figure(
-      image("../figures/1/c/corner_plot_2_components.svg", width:60%),
-      caption: [Everything is as in @fig-1-component-corner, except with a 100x higher wavelength resolution of $#qty("e-4", "um") = #qty(0.1, "nm")$. All parameters are well-determined.],
+      image("../figures/1/c/corner_plot_2_components.svg", width:55%),
+      caption: [Everything is as in @fig-1-component-corner, except with a 100x higher wavelength resolution of $#qty("e-4", "um") = #qty(0.1, "nm")$. All parameters are well-determined and their true values lie within $1 sigma$ of the fitted mean. The uncertainties have all significantly decreased. The uncertainty in $T_1$ and $T_2$ has dropped to $lt 3%$ and their means lie only $#sym.tilde #qty(10, "K")$ away from their true values. The magnitude of degeneracy between the parameters has also decreased.],
     ) <fig-2-component-corner-high-res>
   ]
 )
@@ -76,11 +76,9 @@ The globally shared parameters [Fe/H] and $log g$ are found very accurately, but
 //   caption: [A descriptive caption for your image.],
 // ) <fig-2-component-spectrum>
 
-Improving the resolution by a factor of $100$ to #qty(0.1, "nm") significantly improves the fit, as shown in @fig-2-component-corner-high-res. A higher resolution means many more spectral features from the PHOENIX data are preserved. The model has more lines to optimise against, and a better understanding of the shape and depth of those absorption features. All parameters are determined extremely well: the temperatures only have a $#sym.tilde #qty(10, "K")$ error, and the other 4 parameters are determined effectively exactly.
+Improving the resolution by a factor of $100$ to #qty(0.1, "nm") significantly improves the fit, as shown in @fig-2-component-corner-high-res. A higher resolution means many more spectral features from the PHOENIX data are preserved. The model has more lines to optimise against, and a better understanding of the shape and depth of those absorption features. We have moved from a regime where the model was trying to fit the overall shape of the spectrum and a few lines (low resolution) to one where the model can identify small scale features. There are much fewer combinations of parameters which can sum to describe all of these small scale, sensitive features simultaneously, which has reduced the degeneracy of the fit greatly.
 
-This shows that the success of this method is highly dependent on the resolution of the data used.
-
-
+All parameters are determined extremely well: the temperatures only have a $#sym.tilde #qty(50, "K")$ error, and the other 4 parameters are determined effectively exactly. The histograms also have a much more Gaussian shape, illustrating the reduced degeneracy. @fig-2-component-corner and @fig-2-component-corner-high-res show that the accuracy of our model is highly dependent on the resolution of the data used.
 
 // === Convergence
 
@@ -114,7 +112,7 @@ Using the same fake star as in @fig-2-component-corner, we vary the resolution o
   [
     #figure(
       image("../figures/2/correctness_as_a_function_of_resolution.svg", width: 50%),
-      caption: [The effect of resolution on fitting quality of $T_"eff"$ and the area covering fraction $f$ for a 2-component star. The first plot shows the difference between the true and fitted temperatures, and the bottom between the true and fitted weights, both as a function of resolution. Assumes an SNR of 20, and uses a wavelength range of $#qty(0.8, "um") - #qty(5.3, "um")$ at a uniform resolution of $#qty(0.01, "um")$. Resolutions better $#sym.tilde #qty("e-3", "um")$ perform significantly better than lower resolutions.],
+      caption: [The effect of resolution on fitting quality of $T_"eff"$ and the area covering fraction $f$ for a 2-component star. The first plot shows the difference between the true and fitted temperatures, and the bottom between the true and fitted weights, both as a function of resolution. Assumes an SNR of 20, and uses a wavelength range of $#qty(0.8, "um") - #qty(5.3, "um")$ at a uniform resolution of $#qty(0.01, "um")$. Resolutions better $#sym.tilde #qty("e-3", "um")$ perform significantly better than lower resolutions. At $qty(0.01, "um")$ resolution, the temperature uncertainty is nearly $#sym.tilde 10%$. At much higher resolutions near $qty(0.1, "nm")$, it drops to $#sym.tilde 3%$. The area covering fractions begin to converge to their true values with resolutions below $#sym.tilde qty(1.3, "nm")$.],
     ) <fig-resolution-variation>
   ]
 )

@@ -6,7 +6,7 @@ Heterogeneities on the stellar surface, or photosphere, can be grouped into 2 ca
 
 The most obvious candidate for observing spots and faculae is our own sun, and a significant amount of research has been carried out in this field over the last two centuries. However, spot distributions on other stars have also been measured, both directly through interferometry, and indirectly through transit curves.
 
-The majority of M dwarfs have been found to exhibit surface activity, often being variable over both long and short timescales @MDwarfActivity. This presents an extra challenge for transit spectroscopy in M dwarf systems, as significant activity can cause stellar contamination when analysing exoplanets (see @TransitLightSourceEffect).
+The majority of M dwarfs have been found to exhibit surface activity, often being variable over both long and short timescales @MDwarfTemperatures. This presents an extra challenge for transit spectroscopy in M dwarf systems, as significant activity can cause stellar contamination when analysing exoplanets (see @TransitLightSourceEffect).
 
 // maybe ref this interferometry & direct imaging & transit curve observation fact
 // Sunspots consist of a cool central region called the umbra, surrounded by a larger and hotter region called the penumbra.
@@ -19,7 +19,7 @@ For simplicity, this report uses the term "spot" to mean any region of temperatu
 
 === Transit Depth
 
-If an exoplanet crosses the line of sight between its host star and Earth, it will block part of the starlight from reaching us, which we measure as a temporary drop in intensity. This is called a transit, and the fractional drop in flux recieved is called the transit depth. The transit depth is given by @LauraExoplanetReview
+If an exoplanet crosses the line of sight between its host star and Earth, it will block part of the starlight from reaching us, which we measure as a temporary drop in intensity. This is called a transit, and the fractional drop in flux received is called the transit depth. The transit depth is given by @LauraExoplanetReview
 
 $ Delta = (R_p / R_ast)^2 $
 
@@ -124,6 +124,8 @@ Bayesian inference is a common method to produce posterior distributions of fitt
 One major advantage of this method is that it naturally produces a way to visualise the degeneracies between all of the varied parameters. Corner plots concisely show the shape and size of the global minimum, as well as the presence of any other nearby minima. The posteriors are visualised using histograms, and the uncertainty for each parameter is generated. Whilst these visualisations are possible with other minimisation methods, Bayesian inference doesn't require a brute force search.
 // : itprovides an accepted way to explore the search space efficiently instead.
 
+// PINEAPPLE: say that a non-degenerate fit will have circular plots & WHY
+
 === Line Depths
 
 Empirical relations have been determined that link the line depth ratio (LDR) between a given pair of absorption lines and the stellar parameters $T_"eff"$ and $log g$. For example, #cite(<Matsunaga_2021>, form: "prose") describe Fe i–Fe ii, Ca i–Ca ii and Fe i–Fe i line pairs which can be used to determine $T_"eff"$ and $log g$ to a resolution of #qty("50","K") and #num("0.2") dex respectively. The downside of this approach is that it requires spectra of a much higher resolution than space-based telescopes, making it not suitable for analysing space-based data, such as spectra produced by HST or JWST. 
@@ -146,7 +148,7 @@ Empirical relations have been determined that link the line depth ratio (LDR) be
 
 Within the context of exoplanet transmission spectroscopy, stellar heterogeneities can cause significant problems. The section of the stellar surface which illuminates the exoplanet's atmosphere in the direction of our line of sight is only a circular region behind the planet. Over the course of a transit, the planet sweeps out a region called the transit chord, and it is only this region which affects the measured spectra. Therefore, if spots or faculae are present, the true illuminating spectrum will differ from the disc-integrated spectrum. This effect is called the transit light source effect.
 
-This effect can cause stellar contamination. This is where features from the stellar spectrum are not removed from the total transit signal, land are instead attributed to the exoplanet. These are known as false spectral features. This contamination can be confused with biosignatures, such as water features in the TRAPPIST-1 system @Zhang-2018. This highlights how important it is to understand and account for these effects if we want to understand planetary conditions, and potential habitability, in extrasolar systems.
+This effect can cause stellar contamination. This is where features from the stellar spectrum are not removed from the total transit signal, and are instead attributed to the exoplanet. These are known as false spectral features. This contamination can be confused with biosignatures, such as water features in the TRAPPIST-1 system @Zhang-2018. This highlights how important it is to understand and account for these effects if we want to understand planetary conditions, and potential habitability, in extrasolar systems.
 
 There are two broad cases of heterogeneities - occulted and unocculted spots - which affect the transit curve & spectrum differently, and are hence dealt with in different ways.
 
@@ -183,6 +185,8 @@ Variations in one stellar parameter can affect the spectrum in a way similar to 
 
 // PINEAPPLE
 
+// show some plots of PHOENIX that show clearly how the parameters can change a low res spectrum in ways similar or identical to changes in other parameters 
+
 === Reducing Fitting Degeneracies <ReducingDegeneracies>
 
 // [maybe move some / the bulk of the discussion of this to methodology? idk. also this should maybe be above the previous section as the previous section refs degeneracies implicitly]
@@ -190,9 +194,13 @@ Variations in one stellar parameter can affect the spectrum in a way similar to 
 Degeneracies can lead to large, over-inflated minima which contain non-physical or nonsensical parameter values, which is a major problem for any form of minimisation method. The most common ways to prevent this can all be classified as attempts to constrain some of the parameters to physical values.
 
 // need to add ranges of these parameters to contextualise how big/small these dex and T changes are
-The metallicity [Fe/H] has been shown to vary by only $#sym.tilde 0.05$ dex within stellar spots @MetallicityVariations. Furthermore, we can expect the $log g$ to not change significantly within spots and faculae. Compare this to reasonable spot temperatures for M dwarfs, which could vary by up to $#sym.tilde #qty("500", "K")$ from the photospheric temperature and significantly modify the shape and structure of the spectrum. Hence one of the easiest ways to reduce degeneracies, and hence prevent non-physical minima, is to enforce a constant $log g$ and [Fe/H] between the photospheric background and all spots or faculae. This allows us to focus on the most important variations and keep our results physical. This is the approach used in this work.
+The metallicity [Fe/H] has been shown to vary by only $#sym.tilde 0.05$ dex within stellar spots @MetallicityVariations. Since our targets are main-sequence M dwarfs, $log g$ is also likely to lie within a narrow range. For example, #cite(<MDwarfTemperatures>, form: "prose")'s sample of 177 M dwarfs mostly contained stars with masses between $0.3 - 0.7 M_dot.o$, which corresponds to a dex shift of $log(0.7 / 0.3) = 0.36$ dex.
 
-// I don't have a reference for that statement about log g variation but I feel that I need to justify why were are keeping log g constant.
+Compare this to reasonable spot temperatures for M dwarfs, which could vary by up to $#sym.tilde #qty("500", "K")$ from the photospheric temperature and significantly modify the shape and structure of the spectrum.
+
+// Therefore, it is reasonable to expect that [Fe/H] and $log g$ will not change significantly within the spots and faculae of a star. This constraint offers us a simple and effective way to address the spectroscopic degeneracy between $T_"eff"$, [Fe/H] and $log g$. 
+
+Hence one of the easiest ways to reduce degeneracies, and hence prevent non-physical minima, is to enforce a constant $log g$ and [Fe/H] between the photospheric background and all spots or faculae. This allows us to focus on the most important variations and keep our results physical. This is the approach used in this work.
 
 Another method to alleviate degeneracies is to determine some of the parameters using a method independent from our minimisation procedure. For example, the stellar $log g$ can be approximated using the photometric $log g$, as is done by #cite(<PasseggerCARMENES>, form: "prose").
 
