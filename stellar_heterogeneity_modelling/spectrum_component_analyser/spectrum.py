@@ -80,10 +80,54 @@ class spectrum:
 		
 		self.Normalised_Point = normalised_point
 
-	def regrid_flux(self, observational_wavelengths : np.ndarray) -> None:
-		# spectres.spectres(new_wavs, spec_wavs, spec_fluxes, spec_errs=None, fill=None, verbose=True)
-		self.Fluxes = spectres.spectres(observational_wavelengths.value, self.Wavelengths.to(observational_wavelengths.unit).value, self.Fluxes.value) * self.Fluxes.unit
-		self.Wavelengths = observational_wavelengths
+	# this isnt correct: but ill leave this spectres logic here for any non-uniform wavelength grid resampling (see report for explanation)
+	# def regrid_flux(self, observational_wavelengths : np.ndarray) -> None:
+	# 	# spectres.spectres(new_wavs, spec_wavs, spec_fluxes, spec_errs=None, fill=None, verbose=True)
+	# 	self.Fluxes = spectres.spectres(observational_wavelengths.value, self.Wavelengths.to(observational_wavelengths.unit).value, self.Fluxes.value) * self.Fluxes.unit
+	# 	self.Wavelengths = observational_wavelengths
+
+	def regrid_flux(self, desired_resolution : Quantity, extra_downsample : bool = True) -> np.array:
+		"""
+		Regrid the spectrum onto a uniform wavelength array of the input resolution. Uses a gaussian to simulate how real data would be recorded.
+
+		This method assumes that the desired resolution >> the current resolution of the spectrum when this function is called.
+		"""
+
+		if (u.get_physical_type(self.Fluxes[0].unit) != u.get_physical_type(u.Jy)):
+			raise ValueError(f"fluxes are in units of {self.Fluxes.unit}. this is not in a unit convertible to janskys. no normalisation will be carried out.")
+		
+		# interpolate onto a uniform wavelength grid - self.Wavelengths & self.Fluxes are assumed to currently be very high res
+		wave_uniform = np.linspace(self.Wavelengths.min(), self.Wavelengths.max(), len(self.Wavelengths))
+		flux_uniform = np.interp(wave_uniform, self.Wavelengths, self.Fluxes)
+
+		# convert resolution to sigma (in array indices)
+		delta_lambda = wave_uniform[1] - wave_uniform[0]
+		sigma = desired_resolution / (2 * np.sqrt(2 * np.log(2)) * delta_lambda) # in pixel units
+
+		# downsample as we only need a few points per standard deviation to be accurate (i.e. remove details smaller than 1/5th of the standard deviation)
+		if extra_downsample:
+			points_per_standard_deviation : int = 5
+			downsample_factor = int(sigma / points_per_standard_deviation)
+
+			if downsample_factor > 1:
+				wave_uniform = wave_uniform[::downsample_factor]
+				flux_uniform = flux_uniform[::downsample_factor]
+
+				sigma /= downsample_factor # sigma is in pixels, not a physical dimensional value. so we need to divide it by the downsample factor for it to still represent the physical FWHM / resolution length
+		
+		# remove units
+		convolved_flux = gaussian_filter1d(flux_uniform.value, sigma.to(u.dimensionless_unscaled).value, mode="nearest")
+
+		# resample onto desired wavelengths
+		desired_number_of_wavelength_points = (self.Wavelengths.max() - self.Wavelengths.min()) / desired_resolution
+		desired_number_of_wavelength_points = int(desired_number_of_wavelength_points.to(u.dimensionless_unscaled).value) # otherwise it prints as e.g. [number] angstrom / um. also need to convert it to an integer value for python
+		wave_desired_resolution = np.linspace(self.Wavelengths.min(), self.Wavelengths.max(), desired_number_of_wavelength_points)
+
+		new_flux = np.interp(wave_desired_resolution, wave_uniform, convolved_flux)
+		new_flux *= DEFAULT_FLUX_UNIT # units get removed (probably by np.interp or gaussian_filter1d); add them back in
+
+		self.Wavelengths = wave_desired_resolution
+		self.Fluxes = new_flux
 	
 	def normalise_flux(self) -> None:
 		"""
