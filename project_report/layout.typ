@@ -72,6 +72,7 @@
   	#strong(it.supplement)
   	#strong(context it.counter.display(it.numbering))#it.separator#it.body
 	]
+  set figure(gap: 20pt)
 
   // show cite: it => {
   //     show "& others": "et al."

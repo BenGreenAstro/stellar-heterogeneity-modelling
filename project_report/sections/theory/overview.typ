@@ -1,4 +1,5 @@
 #import "@preview/unify:0.8.0": qty, unit, num
+#import "@preview/cetz:0.5.2": canvas, draw
 
 == M Dwarf Activity - Spots and Faculae
 
@@ -151,6 +152,137 @@ Within the context of exoplanet transmission spectroscopy, stellar heterogeneiti
 This effect can cause stellar contamination. This is where features from the stellar spectrum are not removed from the total transit signal, and are instead attributed to the exoplanet. These are known as false spectral features. This contamination can be confused with biosignatures, such as water features in the TRAPPIST-1 system @Zhang-2018. This highlights how important it is to understand and account for these effects if we want to understand planetary conditions, and potential habitability, in extrasolar systems.
 
 There are two broad cases of heterogeneities - occulted and unocculted spots - which affect the transit curve & spectrum differently, and are hence dealt with in different ways.
+
+#figure(
+  align(center)[
+  #canvas({
+    import draw: *
+    scale(x:85%, y: 85%)
+
+    let star_radius = 5.0
+    let planet_radius = 1.0
+    let spot_1_radius = 0.5
+    let spot_2_radius = 0.4
+    let spot_3_radius = 0.8
+    let spot_1_angle = .7
+    let spot_2_angle = 2.85
+    let spot_3_angle = 1.6
+    let atmosphere_radius = planet_radius * 1.4
+
+    rotate(10deg)
+    let a = star_radius * 1.7
+    let b = star_radius / 4
+    // circle((0, 0), radius: (a, b))
+    
+    arc((0,0), start: 0deg, stop: 180deg, radius: (a, b), name: "back", anchor: "origin")
+    circle((0.0, 0.0), radius: star_radius, fill: rgb("#EF8E38").lighten(20%), name: "star", stroke: 0pt)
+    arc((0,0), start: 180deg, stop: 360deg, radius: (a, b), name: "front", anchor: "origin")
+    // manually adjust :( idk how to work out these delta theta shifts from moving the arc up/down
+
+    circle("front.50%", radius: planet_radius, fill: white.transparentize(100%), name: "planet", stroke:0pt)
+
+    circle((rel: (calc.cos(spot_1_angle) * planet_radius * 1.2, calc.sin(spot_1_angle) * planet_radius * 1.2), to: "planet"), radius: spot_1_radius, fill: red.darken(20%).transparentize(30%), name: "spot_1", stroke:0pt)
+    circle((rel: (calc.cos(spot_2_angle) * planet_radius * 3, calc.sin(spot_2_angle) * planet_radius * 3), to: "planet"), radius: spot_2_radius, fill: red.transparentize(30%), name: "spot_2", stroke:0pt)
+    
+    circle((rel: (calc.cos(spot_3_angle) * planet_radius * 4, calc.sin(spot_3_angle) * planet_radius * 4), to: "planet"), radius: spot_3_radius, fill: red.lighten(10%).transparentize(30%), name: "spot_3", stroke:0pt)
+
+    rotate(-10deg)
+    line(
+      "spot_2",
+      (-5.1,1),
+      stroke: (dash: "dotted", paint: black, thickness: 1pt),
+      name: "label_line_2"
+    )
+    content(
+      "label_line_2.end",
+      align(center)[Spot \ occulted earlier in the transit],
+      anchor: "east",
+      padding: .1
+    )
+    line(
+      "spot_1",
+      (4.5,-3.5),
+      stroke: (dash: "dotted", paint: black, thickness: 1pt),
+      name: "label_line_1"
+    )
+    content(
+      "label_line_1.end",
+      [Occulted spot],
+      anchor: "west",
+      padding: .1
+    )
+    line(
+      "spot_3",
+      (
+        horizontal: (5,0),
+        vertical: "spot_3"
+      ),
+      stroke: (dash: "dotted", paint: black, thickness: 1pt),
+      name: "label_line_3"
+    )
+    content(
+      "label_line_3.end",
+      [Unocculted facula],
+      anchor: "west",
+      padding: .1
+    )
+    rotate(10deg)
+
+
+    circle("front.50%", radius: atmosphere_radius, fill: white.transparentize(60%), name: "atmosphere", stroke:0pt)
+    circle("front.50%", radius: planet_radius, fill: gray.darken(50%).transparentize(0%), name: "planet", stroke:0pt)
+
+    arc((0, atmosphere_radius), start: 180deg + calc.acos(star_radius/a) + .3deg, stop: 360deg - calc.acos(star_radius/a) - .3deg, radius: (a, b), name: "transit_chord_top", anchor: "origin", stroke: (dash: "dashed", paint: black, thickness: 1pt))
+    arc((0, -atmosphere_radius), start: 180deg + calc.acos(star_radius/a) + 5.4deg, stop: 360deg - calc.acos(star_radius/a) - 5.4deg, radius: (a, b), name: "transit_chord_bottom", anchor: "origin", stroke: (dash: "dashed", paint: black, thickness: 1pt))
+
+    // rotate(-10deg)
+    // let gy = -8.0
+    // line((-5, gy), (5, gy), stroke: 0.5pt, name: "x_axis")
+    // content((rel: (0.2, 0), to: "x_axis.end"), [Time], anchor: "west")
+
+    // line((-5, gy), (-5, gy + 2.5), stroke: 0.5pt, name: "y_axis")
+    // content((rel: (-0.8, 0), to: "y_axis.50%"), [Flux], anchor: "south")
+
+    // let pts = (
+    //   "y_axis.80%",
+    //   (
+    //     rel: (1, 0),
+    //     to: "y_axis.80%"
+    //   ),
+    //   (
+    //     rel: (-spot_2_radius, 0),
+    //     to: (
+    //       horizontal: "spot_2", 
+    //       vertical: "y_axis.20%"
+    //     )
+    //   ),
+    //   (
+    //     rel: (-spot_2_radius/2, .2),
+    //     to: (
+    //       horizontal: "spot_2", 
+    //       vertical: "y_axis.20%"
+    //     )
+    //   ),
+    //   (
+    //     rel: (spot_2_radius/2, .2),
+    //     to: (
+    //       horizontal: "spot_2", 
+    //       vertical: "y_axis.20%"
+    //     )
+    //   ),
+    //   (
+    //     rel: (spot_2_radius, 0),
+    //     to: (
+    //       horizontal: "spot_2", 
+    //       vertical: "y_axis.20%"
+    //     )
+    //   )
+    // )
+    // catmull(..pts, stroke: black + 1pt, tension: .6)
+  })
+  ],
+  caption: [Illustration of the transit light source effect. An exoplanet is currently transiting its host star, and its atmosphere is partially covering a spot. If not accounted for, all 3 spots will cause stellar contamination in the exoplanet's transmission spectrum. The band between the dotted lines is the transit chord. Spots which overlap the transit chord will directly affect the measured light curve. At this moment, a cooler - and hence dimmer - spot is being covered, which would temporarily increase the received flux and decrease the transit depth. The unocculted spot doesn't cause any time-dependent features in the transit curve.],// Orbit, planet and atmosphere not to scale.],
+)
 
 === Occulted Heterogeneities
 
