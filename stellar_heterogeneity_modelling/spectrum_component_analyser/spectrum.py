@@ -115,7 +115,7 @@ class spectrum:
 
 				sigma /= downsample_factor # sigma is in pixels, not a physical dimensional value. so we need to divide it by the downsample factor for it to still represent the physical FWHM / resolution length
 		
-		# remove units
+		# remove units & convolve
 		convolved_flux = gaussian_filter1d(flux_uniform.value, sigma.to(u.dimensionless_unscaled).value, mode="nearest")
 
 		# resample onto desired wavelengths
