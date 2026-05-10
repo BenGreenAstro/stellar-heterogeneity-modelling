@@ -58,7 +58,13 @@ def get_random_simulated_spectrum(number_of_components : int, spec_grid : spectr
     for s in component_spectra:
         total_flux += s.Fluxes
 
-    combined_spectrum : spectrum = spectrum(component_spectra[0].Wavelengths, total_flux, None, None, None, None, name="Combined")
+    combined_spectrum : spectrum = spectrum(
+        wavelengths=component_spectra[0].Wavelengths,
+        fluxes=total_flux,
+        normalised_point=None,
+        observational_wavelengths=None,
+        temperature=None,
+        name="Combined")
 
     # add noise
     snr = 20
@@ -103,7 +109,13 @@ def get_simulated_spectra(spec_grid : spectral_grid, components : list[spectral_
     for s in component_spectra:
         total_flux += s.Fluxes
 
-    combined_spectrum : spectrum = spectrum(component_spectra[0].Wavelengths, total_flux, None, None, None, None, name="Combined")
+    combined_spectrum : spectrum = spectrum(
+        wavelengths=component_spectra[0].Wavelengths,
+        fluxes=total_flux,
+        normalised_point=None,
+        observational_wavelengths=None,
+        temperature=None,
+        name="Combined")
 
     # add noise
     snr = 20

@@ -32,8 +32,6 @@ nearby_phoenix_spectrum : phoenix_spectrum = download_spectrum(
     alphaM=0,
     phoenix_wavelengths=phoenix_wavelengths,
     normalising_point= JWST_NORMALISING_POINT,
-    observational_resolution= JWST_RESOLUTION,
-    # observational_resolution= JWST_RESOLUTION / 10,
     observational_wavelengths = None,
     name="nearby phoenix spectrum"
 )

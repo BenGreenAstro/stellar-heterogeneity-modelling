@@ -29,7 +29,6 @@ class spectral_list():
 	def from_internet(cls,
 				   spectral_components : list[spectral_component],
 				   normalising_point : Quantity,
-				   observational_resolution : Quantity,
 				   observational_wavelengths : np.ndarray,
 				   name : str = "spectral_list",
 				   alphaM = 0,
@@ -53,7 +52,6 @@ class spectral_list():
 				alphaM=alphaM,
 				phoenix_wavelengths=phoenix_wavelengths,
 				normalising_point=normalising_point,
-				observational_resolution=observational_resolution,
 				observational_wavelengths=observational_wavelengths,
 				name=name
 			)

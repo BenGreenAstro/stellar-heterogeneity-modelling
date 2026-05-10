@@ -109,7 +109,6 @@ class ChiHelper():
             wavelengths = self.observed_spectrum.Wavelengths,
             fluxes=total_flux,
             normalised_point=None,
-            observational_resolution=None,
             observational_wavelengths=None,
             temperature=None,
             name="my result",

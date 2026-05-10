@@ -35,7 +35,6 @@ def get_fake_spectrum(file_path : Path) -> spectrum:
         wavelengths=wave.to_numpy() * u.um,
         fluxes=flux.to_numpy() * u.erg * u.s**-1 * u.cm**-2 * u.Angstrom**-1,
         normalised_point=None,
-        observational_resolution=None,
         observational_wavelengths=None,
         temperature=None,
         normalise=True,

@@ -1,0 +1,3 @@
+- this currently gives intuitiion for degen between T, F, L well
+- what about T and f?
+- maybe ref to a later plot where we show the "band" within which the degeneracies lie - or some other method to mathematically show that these degeneracies exist (rather than just the intuition provided by the above 2 points)

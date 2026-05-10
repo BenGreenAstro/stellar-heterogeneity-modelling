@@ -47,7 +47,7 @@ $
 
 Both @fig-2-component-corner and @fig-2-component-corner-high-res show that the best-fit weights satisfy this condition, which validates that our normalisation is working correctly. In future, this condition could be enforced by defining $f_2 = 1 - f_1$ (or, more generally, $f_n = 1 - f_(n-1)$ for an $n$-component fit) to reduce the dimensionality of the problem.
 
-The globally shared parameters [Fe/H] and $log g$ are found very accurately, but the other 4 parameters less so. The true values of the weights and temperatures all lie $#sym.tilde 1 sigma$ away from their true values. There is a significant amount of degeneracy between most of the other parameters, showing that the model has found a very large range of values that are consistent with this low-resolution spectrum. This leads to a very high uncertainty in the fit. For example, the temperatures have an uncertainty of $#sym.tilde 10 %$, and the weights $gt 50 %$.
+The globally shared parameters [Fe/H] and $log g$ are found very accurately, but the other 4 parameters less so. The fitted values of the weights and temperatures all lie $#sym.tilde 1 sigma$ away from their true values. There is a significant amount of degeneracy between most of the other parameters, showing that the model has found a very large range of values that are consistent with this low-resolution spectrum. This leads to a very high uncertainty in the fit. For example, the temperatures have an uncertainty of $#sym.tilde 10 %$, and the weights $gt 50 %$.
 
 // At this resolution (#qty(0.01, "um")), the model does not perform very well.
 

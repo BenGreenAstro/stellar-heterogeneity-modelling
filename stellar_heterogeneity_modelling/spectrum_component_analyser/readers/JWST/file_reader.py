@@ -34,8 +34,7 @@ class JWSTFileReader():
 					name=name,
 					normalised_point = JWST_NORMALISING_POINT,
 					temperature=None,
-					observational_resolution=None, # this is an observational spectrum (as we are reading in a JWST fits file) - so no convolution or resampling is necessary
-					observational_wavelengths=None)
+					observational_wavelengths=None) # this is an observational spectrum (as we are reading in a JWST fits file) - so no convolution or resampling is necessar
 
 		
 		return spec
@@ -76,7 +75,6 @@ class JWSTFileReader():
 						fluxes = data["FLUX"][integration_index] * instrument.FluxUnits,
 						normalised_point=JWST_NORMALISING_POINT, # this is an observational spectrum: no normalising or interpolation should be done on it
 						temperature=None,
-						observational_resolution=None,
 						observational_wavelengths=None,
 						name=name,
 						normalise=False)

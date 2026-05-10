@@ -49,8 +49,7 @@ def get_interpolated_phoenix_spectrum(
         feh=FeH,
         log_g=Log_g,
         normalising_point=JWST_NORMALISING_POINT, 
-        observational_resolution=None, # no convolution / regridding - as the spectrum should already be convoluted to JWST
-        observational_wavelengths=None,
+        observational_wavelengths=None, # no convolution / regridding - as the spectrum should already be convoluted to JWST
         name=star_name
     )
 
@@ -92,8 +91,7 @@ def old_get_interpolated_phoenix_spectrum(
         feh=FeH,
         log_g=Log_g,
         normalising_point=JWST_NORMALISING_POINT, 
-        observational_resolution=None, # no convolution / regridding - as the spectrum should already be convoluted to JWST
-        observational_wavelengths=None,
+        observational_wavelengths=None, # no convolution / regridding - as the spectrum should already be convoluted to JWST
         name=star_name
     )
 

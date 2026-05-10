@@ -102,7 +102,6 @@ def download_spectrum(T_eff : Quantity[u.K],
 					  alphaM : float,
 					  phoenix_wavelengths : np.array,
 					  normalising_point : Quantity,
-					  observational_resolution : Quantity,
 					  observational_wavelengths : np.ndarray,
 					  name : str) -> phoenix_spectrum:
 	"""
@@ -144,7 +143,6 @@ def download_spectrum(T_eff : Quantity[u.K],
 					feh=FeH,
 					log_g=log_g,
 					normalising_point=normalising_point,
-					observational_resolution=observational_resolution,
 					observational_wavelengths=observational_wavelengths,
 					name=name)
 
@@ -236,7 +234,6 @@ class spectral_grid():
 	def from_local_raw(
 					cls,
 					files : list[Path],
-					resolution : Quantity[u.um],
 					parallelise : bool = True,
 					observational_wavelengths : np.ndarray[Quantity[u.um]] = None) -> Self:
 		"""
@@ -250,11 +247,10 @@ class spectral_grid():
 		
 		def fetch_spectra_and_indices(i, j, k, T_eff, FeH, log_g) -> Tuple[int, int, int, Quantity[u.K], Quantity[u.dex], Quantity[u.dex]]:
 			spec : phoenix_spectrum = phoenix_spectrum.from_fits(T_eff, FeH, log_g, phoenix_wavelengths)
-			spec.regrid_flux(resolution)
 			mask = (0.8 * u.um < spec.Wavelengths) & (spec.Wavelengths < 5.3 * u.um)
 			spec = spec[mask]
 			if observational_wavelengths != None:
-				spec.regrid_flux_onto(observational_wavelengths=observational_wavelengths)
+				spec.regrid_flux(observational_wavelengths)
 			return i, j, k, spec
 			
 		tasks = [
@@ -296,7 +292,6 @@ class spectral_grid():
 				   FeHs,
 				   log_gs,
 				   normalising_point : Quantity["length"],
-				   observational_resolution : Quantity["length"],
 				   observational_wavelengths : np.ndarray,
 				   name : str,
 				   alphaM = 0,
@@ -324,7 +319,6 @@ class spectral_grid():
 											   alphaM,
 											   phoenix_wavelengths,
 											   normalising_point=normalising_point,
-											   observational_resolution=observational_resolution,
 											   observational_wavelengths=observational_wavelengths,
 											   name=f"{name}_Teff-{T_eff}_FeH-{FeH}_logg-{log_g}"
 											   )
@@ -508,7 +502,6 @@ if __name__ == "__main__":
 		FeH=1.0 * u.dex,
 		log_g=1.0 * u.dex,
 		normalising_point=1.0 * u.um,
-		observational_resolution= .01 * u.um,
 		observational_wavelengths=np.linspace(1 * u.um, 2 * u.um, 1000),
 		name="test",
 		lte=True,
