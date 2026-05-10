@@ -313,11 +313,27 @@ To add to the difficulty, even if stellar variability is suspected of contaminat
 // Degeneracies occur both in single-component models and in models which account for spots or faculae. 
 Variations in one stellar parameter can affect the spectrum in a way similar to variations in another parameter. Multi-component models, such as the one proposed in this work, inherently include more dimensions and hence are more vulnerable to degeneracies. However, these degeneracies are still present within simpler 1 component models and must be addressed in order to achieve high resolution, low uncertainty fitting.
 
-=== Physical Basis
+=== Source of Degeneracy
 
 // PINEAPPLE
 
-// show some plots of PHOENIX that show clearly how the parameters can change a low res spectrum in ways similar or identical to changes in other parameters 
+// show some plots of PHOENIX that show clearly how the parameters can change a low res spectrum in ways similar or identical to changes in other parameters
+
+The primary cause of degeneracy in fitting procuedures is resolution. The LSF of a space based telescope effectively "smoothes out" flux over a wide wavelength range, removing features on scales less than the resolution of the instrument. JWST has a resolution of $R approx 100 - 1000$, meaning many high resolution lines will not appear in the observed spectrum.
+
+@diagram-basis_for_degeneracies shows PHOENIX simulated spectra downsampled to $#qty(0.01, "um")$, which is comparable to the resolution of JWST instruments. At this resolution, the spectra for many different combinations appear similar. For example, all 3 plots in the right column of the top plot have no significant differences between them. The lack of feature variation and sensitivity to varying the 3 input parameters is the source of degeneracies within fitting pipelines.
+
+To see mathematically how similar these graphs are, see [ref figure] where the degree of this degeneracy is given numerically [or maybe "mathematically"?].
+
+#figure(
+  image("../../illustrative_diagrams/basis_for_degeneracies.svg", width: 60%),
+  caption: [
+    Simulated PHOENIX spectra specified at different points throughout the 3D parameter space. The plots show the spectrum produced by different parameter combinations of $T_"eff"$, [Fe/H] and $log g$. Each of the 3 large plots fixes 1 of the parameters: the top fixes $log g$, the middle fixes [Fe/H], and the bottom fixes $T_"eff"$. The center of each spectrum gives its corresponding values: for example, the bottom right spectrum in the bottom plot has $T_"eff" = #qty(3500, "K")$, [Fe/H]= 0 dex and $log g = 1$ dex.
+
+    All spectra are downsampled to $#qty(0.01, "um")$ and given over the range $#qty(0.8, "um") - #qty(5.3, "um")$. The low resolution has removed many of the features which would be able to distinguish the spectra, leading to a degeneracy.
+  ],
+  placement: top,
+) <diagram-basis_for_degeneracies>
 
 === Reducing Fitting Degeneracies <ReducingDegeneracies>
 
