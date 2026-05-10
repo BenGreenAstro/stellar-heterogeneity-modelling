@@ -81,7 +81,9 @@ def get_random_simulated_spectrum(number_of_components : int, spec_grid : spectr
 
     return components, component_spectra, combined_spectrum
 
-def get_simulated_spectra(spec_grid : spectral_grid, components : list[spectral_component]) -> Tuple[list[spectral_component], list[phoenix_spectrum], spectrum]:
+def get_simulated_spectra(spec_grid : spectral_grid,
+                          components : list[spectral_component],
+                          snr : int = 20) -> Tuple[list[spectral_component], list[phoenix_spectrum], spectrum]:
     component_spectra : list[phoenix_spectrum] = []
     total_weight_left = 1
 
@@ -118,7 +120,6 @@ def get_simulated_spectra(spec_grid : spectral_grid, components : list[spectral_
         name="Combined")
 
     # add noise
-    snr = 20
     noise_sigma = np.max(combined_spectrum.Fluxes.value) / snr
     noise = np.random.normal(0, noise_sigma, combined_spectrum.Fluxes.shape) * combined_spectrum.Fluxes.unit
     combined_spectrum.Fluxes += noise
