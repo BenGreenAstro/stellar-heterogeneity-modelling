@@ -85,13 +85,35 @@ class spectrum:
 	# 	# spectres.spectres(new_wavs, spec_wavs, spec_fluxes, spec_errs=None, fill=None, verbose=True)
 	# 	self.Fluxes = spectres.spectres(observational_wavelengths.value, self.Wavelengths.to(observational_wavelengths.unit).value, self.Fluxes.value) * self.Fluxes.unit
 	# 	self.Wavelengths = observational_wavelengths
+	
+	def new_regrid_flux(self, observational_wavelengths : np.ndarray) -> np.array:
+		desired_resolution = observational_wavelengths[1] - observational_wavelengths[0] # assume constant dlambda
+		safe_downsample_resolution = desired_resolution / 5
 
-	def regrid_flux(self, desired_resolution : Quantity, extra_downsample : bool = True) -> np.array:
+		# sample onto safe uniform wavelengths (this is the extra downsample step)
+		n_pts = ((self.Wavelengths.max() - self.Wavelengths.min()) / safe_downsample_resolution).to(u.dimensionless_unscaled).value
+		wave_safe_downsample = np.linspace(self.Wavelengths.min(), self.Wavelengths.max(), int(np.ceil(n_pts)))
+		flux_safe_downsample = spectres.spectres(wave_safe_downsample.value, self.Wavelengths.value, self.Fluxes.value) * self.Fluxes.unit
+
+		# convolve
+		fwhm_pix = (desired_resolution / safe_downsample_resolution).to(u.dimensionless_unscaled).value
+		sigma = fwhm_pix / (2 * np.sqrt(2 * np.log(2)))
+		convolved_flux = gaussian_filter1d(flux_safe_downsample.value, sigma, mode="nearest") * flux_safe_downsample.unit
+
+		# sample onto final wavelength array (with resolution of desired_resolution)
+		new_flux = spectres.spectres(observational_wavelengths.value, wave_safe_downsample.value, convolved_flux.value) * convolved_flux.unit
+		
+		self.Wavelengths = observational_wavelengths
+		self.Fluxes = new_flux
+	
+	# new_regrid and regrid are equivalent, but the former uses spectres to correctly resample. but its much much slower. in the case of constant wavelength resolution, they both seem to produce basically the same output. so I'll use the old faster one when testing and use the new_regrid_flux once the code works :) that makes sure its correct without just running loads of unnecessary slow code
+	def regrid_flux(self, observational_wavelengths : np.ndarray, extra_downsample : bool = True) -> np.array:
 		"""
 		Regrid the spectrum onto a uniform wavelength array of the input resolution. Uses a gaussian to simulate how real data would be recorded.
 
 		This method assumes that the desired resolution >> the current resolution of the spectrum when this function is called.
 		"""
+		desired_resolution = observational_wavelengths[1] - observational_wavelengths[0] # assume constant dlambda
 
 		if (u.get_physical_type(self.Fluxes[0].unit) != u.get_physical_type(u.Jy)):
 			raise ValueError(f"fluxes are in units of {self.Fluxes.unit}. this is not in a unit convertible to janskys. no normalisation will be carried out.")
@@ -121,12 +143,11 @@ class spectrum:
 		# resample onto desired wavelengths
 		desired_number_of_wavelength_points = (self.Wavelengths.max() - self.Wavelengths.min()) / desired_resolution
 		desired_number_of_wavelength_points = int(desired_number_of_wavelength_points.to(u.dimensionless_unscaled).value) # otherwise it prints as e.g. [number] angstrom / um. also need to convert it to an integer value for python
-		wave_desired_resolution = np.linspace(self.Wavelengths.min(), self.Wavelengths.max(), desired_number_of_wavelength_points)
 
-		new_flux = np.interp(wave_desired_resolution, wave_uniform, convolved_flux)
+		new_flux = np.interp(observational_wavelengths, wave_uniform, convolved_flux)
 		new_flux *= DEFAULT_FLUX_UNIT # units get removed (probably by np.interp or gaussian_filter1d); add them back in
 
-		self.Wavelengths = wave_desired_resolution
+		self.Wavelengths = observational_wavelengths
 		self.Fluxes = new_flux
 	
 	def normalise_flux(self) -> None:

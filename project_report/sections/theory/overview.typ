@@ -281,7 +281,7 @@ There are two broad cases of heterogeneities - occulted and unocculted spots - w
     // catmull(..pts, stroke: black + 1pt, tension: .6)
   })
   ],
-  caption: [Illustration of the transit light source effect. An exoplanet is currently transiting its host star, and its atmosphere is partially covering a spot. If not accounted for, all 3 spots will cause stellar contamination in the exoplanet's transmission spectrum. The band between the dotted lines is the transit chord. Spots which overlap the transit chord will directly affect the measured light curve. At this moment, a cooler - and hence dimmer - spot is being covered, which would temporarily increase the received flux and decrease the transit depth. The unocculted spot doesn't cause any time-dependent features in the transit curve.],// Orbit, planet and atmosphere not to scale.],
+  caption: [Illustration of the transit light source effect. An exoplanet is currently transiting its host star, and its atmosphere is partially covering a spot. If not accounted for, all 3 spots will cause stellar contamination in the exoplanet's transmission spectrum. The band between the dashed lines is the transit chord. Spots which overlap the transit chord will directly affect the measured light curve. At this moment, a cooler - and hence dimmer - spot is being covered, which would temporarily increase the received flux and decrease the transit depth. The unocculted spot doesn't cause any time-dependent features in the transit curve.#footnote[This assumes the transit time is much less than the rotational period of the star, which is usually the case for observed exoplanets around M dwarfs.]],// Orbit, planet and atmosphere not to scale.],
 )
 
 === Occulted Heterogeneities
