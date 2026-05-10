@@ -132,6 +132,12 @@ Using the same fake star as in @fig-2-component-corner, we vary the resolution o
 
 // [using closer-in-temperature components]
 
+=== Better Simulation of Instrument Data
+
+// [use actual LSF]
+// [use wavelength dependent resolution]
+// [what could this change / improve about your results? does this mean your results are a lower or upper bound for how good your model is?]
+
 === Effects of Limb Reddening & Darkening <LimbDarkening>
 
 Photons originating from different positions within a star travel on different paths through the stellar material to reach us. Since the effective temperature of the photosphere decreases with radius, the edges of a star appear redder than the center @LimbReddeningGraphPaper. Furthermore, optical depth decreases when viewing the star further from its center, so the brightness at the edge of a star is lower @LimbDarkeningReview. 

@@ -134,3 +134,23 @@ class ChiHelper():
         plt.show()
 
         print(np.sum(np.abs(my_residuals)))
+
+def get_chi_r(input_number_of_components : int, input_number_of_parameters : int, input_combined_spectrum, spec_grid):
+
+    parameter_bounds = [
+            (.0, 2.),
+            (np.min(spec_grid.T_effs.value), np.max(spec_grid.T_effs.value)),
+            (np.min(spec_grid.FeHs.value), np.max(spec_grid.FeHs.value)),
+            (np.min(spec_grid.Log_gs.value), np.max(spec_grid.Log_gs.value)),
+        ]
+    
+    print(parameter_bounds)
+    
+    chi : ChiHelper = ChiHelper(
+        spec_grid=spec_grid,
+        number_of_components=input_number_of_components,
+        number_of_parameters=input_number_of_parameters,
+        observed_spectrum=input_combined_spectrum
+    )
+
+    return chi.get_r(parameter_bounds)
