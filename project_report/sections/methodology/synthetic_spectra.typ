@@ -19,7 +19,7 @@ There are multiple databases of synthetic spectra produced using the PHOENIX cod
 
 // [at some point we need to reason why we only care about T F L / only T & f]
 
-Specifically, it covers $T_"eff"$ from 2300 to 12000 K, [Fe/H] from -4 to 1 dex, and $log g$ from 0.0 to 6.0 dex. The creators of this library note that a few spectra were unable to be computed, and were interpolated (along the $T_"eff"$ axis only).
+Specifically, it covers $T_"eff"$ from 2300 to 12000 K, [Fe/H] from -4 to 1 dex, and $log g$ from 0.0 to 6.0 dex. The creators of this library note that a few spectra could not be computed, and were interpolated (along the $T_"eff"$ axis only).
 
 === Parameter Space
 
@@ -64,7 +64,7 @@ As much of the parameter space of the Göttingen library is outside our M dwarf 
 // maybe give range for these instruments
 The wavelength range of the provided PHOENIX spectra spans $qty("0.05", "um")$ to $qty("5.5", "um")$, which overlaps with many of the spectroscopic instruments found on JWST, such as NIRISS, NIRSPEC and MIRI. The synthetic spectra have a resolution orders of magnitude larger than these instruments. This allows us to use a wavelength range and resolution relevant to modern astronomy when fitting stellar components.
 
-In order to simulate an instruments line spread function (LSF), we need to convolve the data with a normalised Gaussian. This Gaussian's standard deviation acts as the effective resolution of the simulated instrument.  However, JWST instruments have wavelength resolutions $R #sym.tilde 100 - 1000$ in the IR @JWSTNIRSpecResolution, which is orders of magnitude less than PHOENIX's $R = 100,000$. This makes directly convolving the original data very computationally heavy and slow, as there are $#sym.tilde 100,000$ convolutions needed, which all span $#sym.tilde 1000$ data points. This method was found to take #sym.tilde 1 second per spectrum, which would be infeasible for analysing $1000$s of spectra. 
+In order to simulate an instruments LSF, we need to convolve the data with a normalised Gaussian. This Gaussian's standard deviation acts as the effective resolution of the simulated instrument.  However, JWST instruments have wavelength resolutions $R #sym.tilde 100 - 1000$ in the IR @JWSTNIRSpecResolution, which is orders of magnitude less than PHOENIX's $R = 100,000$. This makes directly convolving the original data very computationally heavy and slow, as there are $#sym.tilde 100,000$ convolutions needed, which all span $#sym.tilde 1000$ data points. This method was found to take #sym.tilde 1 second per spectrum, which would be infeasible for analysing $1000$s of spectra. 
 
 To speed this up, we use the method shown in @diagram-wavelength-downsampling-procedure. This takes advantage of Nyquist's theorem. We first directly downsample (without using a convolution) the original PHOENIX spectra to a wavelength grid which has ~5 points per resolution width. We _then_ convolve this with the Gaussian LSF. Finally, we linearly interpolate this data onto the desired wavelength points.
 

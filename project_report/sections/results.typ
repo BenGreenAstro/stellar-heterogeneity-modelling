@@ -84,9 +84,9 @@ All parameters are determined extremely well: the temperatures only have a $#sym
 
 @fig-multiple-solutions directly illustrates how degenerate our fitting procedure is. 2 sets of parameters are shown, which both have log likelihoods which lie within 10% of the maximum log likelihood. The resolution of the spectra is $#qty(0.01, "um")$. Despite the significant difference in their $T_"eff"$ and $f$ values, they both sum to almost exactly the same total spectrum. The middle plot shows they have exactly the same shape, and the bottom residual shows the differ by a maximum of $1.5 %$.
 
-Above $#qty(3, "um")$, the spectra differ even less. This implies that this wavelength range is less sensitive to temperature changes. Only using certain wavelength bands that are known to be sensitive to the 3 parameters $T_"eff"$, [Fe/H] and $log g$ could therefore reduce the degeneracies within the model.
+Above $#qty(3, "um")$, the spectra differ by $<< 1%$. This implies that this wavelength region is less sensitive to temperature changes. Only using certain wavelength bands that are known to be sensitive to the 3 parameters $T_"eff"$, [Fe/H] and $log g$ could therefore reduce the degeneracies within the model.
 
-Both of the parameter sets in @fig-multiple-solutions have similar [Fe/H] and $log g$ values: both are within $0.1$ dex of each other, and within 0.15 dex of the true values. We also note that in @fig-2-component-corner and @fig-2-component-corner-high-res, the width of the [Fe/H] and $log g$ histograms is typically very small compared to the other parameters' uncertainties. This implies that our constraint of using a global [Fe/H] and $log g$ has indeed helped reduce the amount of degeneracy.
+Both of the parameter sets in @fig-multiple-solutions have similar [Fe/H] and $log g$ values: both vary by only $0.1$ dex between the two components, and are within 0.15 dex of the true values. We also note that in @fig-2-component-corner and @fig-2-component-corner-high-res, the width of the [Fe/H] and $log g$ histograms is typically very small compared to the other parameters' uncertainties. This implies that our constraint of using a global [Fe/H] and $log g$ has helped reduce the amount of degeneracy.
 
 // near the tail end, much similar -> more degenerate, future work could explore constraining the minimisation to certain wavelength bands
 
@@ -118,9 +118,9 @@ Both of the parameter sets in @fig-multiple-solutions have similar [Fe/H] and $l
 
 === Resolution
 
-Using the same fake star as in @fig-2-component-corner, we vary the resolution of the spectrum in @fig-resolution-variation. At low resolutions, near $#qty(0.01, "um")$, the $f_i$ both tend towards $0.5$, and the temperatures become less accurate. Over this SNR and wavelength range, only when we reach near #qty(0.1, "nm") do the uncertainties decrease and the fit becomes much more accurate.
+@fig-resolution-variation shows how fitting quality is affected by resolution. We use the same fake star as in @fig-2-component-corner. At low resolutions of $#sym.tilde #qty(0.01, "um")$, the $f_i$ both tend towards $0.5$, and the temperatures become less accurate. Only when we reach #qty(0.1, "nm") do the uncertainties decrease and the fit becomes much more accurate.
 
-This resolution is much higher than what's currently achievable with space-based infrared telescopes. In the low resolution regime, this method cannot fully determine the input parameters into our simulated stars. However, it can determine which sets of parameters are consistent with the observed spectrum, which is still useful for identifying possible false spectral features.
+A resolution of #qty(0.1, "nm") is higher than what's currently achievable with JWST. In the low resolution regime, this method cannot fully determine the input parameters into our simulated stars. However, it can determine which sets of parameters are consistent with the observed spectrum, which is still useful for identifying possible false spectral features.
 
 === SNR
 
@@ -128,11 +128,11 @@ This resolution is much higher than what's currently achievable with space-based
 
 However, at SNRs larger than 20, the graph shows unusual behaviour within our model. Although the median values are nearer to their true values, the uncertainties massively increase. Often, the errorbars of one component overlap with the median of the other component. Furthermore, the median of the fitted distribution stays roughly constant between an SNR of 20 and 40.
 
-One explanation which could explain this is as follows: at high SNR, the noise becomes negligible, and the maximum likelihood and median parameter values converge to their correct values. However, the small scale features of both the $#qty(3800, "K")$ and $#qty(3300, "K")$ components are similar, since they share the same [Fe/H] and $log g$. This means that the model finds a possible fit where $T_1$ and $T_2$ are swapped (or equivalently, where $f_1$ and $f_2$ are swapped). This outlier creates a long tail in the distributions for the fitted parameters, and elongates the uncertainty of each component to include the median value of the other component.
+One explanation which could explain this is as follows: at high SNR, the noise becomes negligible, and the maximum likelihood and median converge to their correct values. However, the small scale features of both the $#qty(3800, "K")$ and $#qty(3300, "K")$ components are similar, since they share the same [Fe/H] and $log g$. This means that the model finds a possible fit where $T_1$ and $T_2$ are swapped (or equivalently, where $f_1$ and $f_2$ are swapped) - albeit with lower $log$ likelihood. This outlier creates a long tail in the distributions for the fitted parameters, and elongates the uncertainty of each component to include the median value of the other component.
 
 This implies that using the maximum likelihood value, instead of the median (which may be biased towards other components' values) may be more reliable. Furthermore, only looking at the effective $1 sigma$ width of the values found by the MCMC model might be misleading, especially in cases where there the distribution has a long tail. It's important to take into account the shape of the degeneracy, and analyse whether the found parameters are physical.
 
-// maybe should add resolution of space based and ground based instruments as vertical lines to this graph
+// maybe should add resolution of space-based and ground based instruments as vertical lines to this graph
 
 #place(
   top,
@@ -187,17 +187,17 @@ This implies that using the maximum likelihood value, instead of the median (whi
 
 // [using closer-in-temperature components]
 
-=== Explore SNR Graph
-
-Further exploration into the increase in degeneracy at high SNRs, shown in @fig-snr-variation, could help our understanding of the model. Determining if this effect is due to similar absorption lines between the 2 components would be of particular interest. Analysis into how to accurately represent the uncertainty and best fit in such cases would also be useful: for example, a median together with an effective 1 $sigma$ range might not be appropriate if the parameter distribution has a long tail.
-
 === Better Simulation of Instrument Data
 
-One simplifying assumption used in this work is that the LSF is a Gaussian. Real telescopes' LSF are more complicated, and may be a different shape to a Gaussian. Furthermore, the resolution of the observed spectra is not a constant width, and instead is a wavelength-dependent quantity. Using the true wavelength-dependent LSF for a range of different telescopes would offer greater insight into what is observable with current instrumentation.
+One simplifying assumption used in this work is that the LSF is a Gaussian. Real telescopes' LSF are more complicated, and may be a different shape to a Gaussian. Furthermore, the resolution of the observed spectra is not a constant width, and instead a wavelength-dependent quantity. Using the true wavelength-dependent LSF for a range of different telescopes would offer greater insight into what is observable with current instrumentation.
 
 // [use actual LSF]
 // [use wavelength dependent resolution]
 // [what could this change / improve about your results? does this mean your results are a lower or upper bound for how good your model is?]
+
+=== Explore SNR Graph Further
+
+Further exploration into the increase in degeneracy at high SNRs, shown in @fig-snr-variation, could help our understanding of the model. Determining if this effect is due to similar absorption lines between the 2 components would be of particular interest. Analysis into how to accurately represent the uncertainty and best fit in such cases would also be useful: for example, a median together with an effective $1 sigma$ range might not be appropriate if the parameter distribution has a long tail.
 
 === Effects of Limb Reddening & Darkening <LimbDarkening>
 

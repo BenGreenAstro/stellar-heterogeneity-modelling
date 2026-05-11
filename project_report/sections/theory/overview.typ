@@ -5,7 +5,7 @@
 
 Heterogeneities on the stellar surface, or photosphere, can be grouped into 2 categories. Spots are cooler regions, and faculae are hotter regions. These heterogeneities occur due to magnetic activity at the stellar surface @GouldingVariabilityThesis.
 
-The most obvious candidate for observing spots and faculae is our own sun, and a significant amount of research has been carried out in this field over the last two centuries. However, spot distributions on other stars have also been measured, both directly through interferometry, and indirectly through transit curves.
+The most obvious candidate for observing spots and faculae is our own Sun, and a significant amount of research has been carried out in this field over the last two centuries. However, spot distributions on other stars have also been measured, both directly through interferometry, and indirectly through transit curves.
 
 The majority of M dwarfs have been found to exhibit surface activity, often being variable over both long and short timescales @MDwarfTemperatures. This presents an extra challenge for transit spectroscopy in M dwarf systems, as significant activity can cause stellar contamination when analysing exoplanets (see @TransitLightSourceEffect).
 
@@ -32,7 +32,7 @@ Plotting the transit depth as a function of time produces a transit curve or a l
 
 // [maybe mention upcoming transit missions or one or two famous transit measurements - prove this field is relevant. maybe add the date of the first exoplanet transmission spectrum and the first jwst spectrum and evidence that this field is evolving rapidly]
 
-A key component of habitability research is analysis of extrasolar planets, including their atmospheres. Transmission spectra are one method of determining the species present within an exoplanet's atmosphere, which gives valuable hints to signs of life through biosignatures, as well as the planet's evolutionary history and climate @LauraExoplanetReview.
+A key component of habitability research is analysis of extrasolar planets, including their atmospheres. Transmission spectra are one method of determining the species present within an exoplanet's atmosphere, which give valuable hints to signs of life through biosignatures, as well as the planet's evolutionary history and climate @LauraExoplanetReview.
 
 During an exoplanet's transit, starlight will pass through its atmosphere (if one is present). Any species present within the atmosphere will cause a wavelength-dependent absorption or amplification of this starlight, imprinting an exoplanetary signal on top of the stellar signal. Assuming $R_p << R_*$, the total intensity shift is given by @LauraExoplanetReview
 
@@ -46,7 +46,7 @@ Atmospheric retrievals can be used on the extracted exoplanet signal to determin
 
 === Why study M dwarfs?
 
-Measuring an Earth-like planet around a sun-like star is of key interest to exoplanetary research @SunlikeAroundEarth. However, if such a system were detected, its transit signal would likely be below the minimum needed by space-based observations for detection or analysis. If we wish to measure an Earth-like planet, one approach is to look for hosts with a small $R_*$, increasing our measured $delta$ and signal-to-noise ratio (SNR). This corresponds to smaller stars, such as M dwarfs. This is one of the primary reasons why M dwarfs feature heavily in exoplanet surveys: small planets around small stars are easier to detect and analyse @SHIELDS20161.
+Measuring an Earth-like planet around a Sun-like star is of key interest to exoplanetary research @SunlikeAroundEarth. However, if such a system were detected, its transit signal would likely be below the minimum needed by space-based observations for detection or analysis. If we wish to measure an Earth-like planet, one approach is to look for hosts with a small $R_*$, increasing our measured $delta$ and signal-to-noise ratio (SNR). This corresponds to smaller stars, such as M dwarfs. This is one of the primary reasons why M dwarfs feature heavily in exoplanet surveys: small planets around small stars are easier to detect and analyse @SHIELDS20161.
 
 Furthermore, M dwarfs are the most numerous main-sequence stars in the Milky Way. Due to their low luminosity, their habitable zones (HZ) are closer in, meaning that any exoplanets in the HZ would have a more favourable orbit geometry and be more convenient to analyse with transit spectroscopy @ExoplanetMDwarfStatistics.
 
@@ -113,7 +113,7 @@ $ chi^2 = (|bold(F_"model") - bold(F_"observed")|^2) / bold(sigma)^2 $ <ChiSquar
 
 where $bold(F)$ is a vector containing the spectrum's intensity across the chosen wavelength range, and $bold(sigma)$ contains the noise intensities.
 
-Specific bands or lines are chosen to be used in the minimisation, and then the parameter space is searched to find the global minimum of $chi^2$. The parameters at this minimum, for example $T_"eff"$ $["Fe"\/"H"]$, and $log g$, are interpreted as the best fitting stellar parameters. In order to understand the degeneracy between the parameters, a brute force search can be done over a given range of parameters and a colourmap of the $chi^2$ value can be produced. This yields the shape and size of the minimum.
+Specific bands or lines are chosen to be used in the minimisation, and then the parameter space is searched to find the global minimum of $chi^2$. The parameters at this minimum, for example $T_"eff"$, [Fe/H], and $log g$, are interpreted as the best fitting stellar parameters. In order to understand the degeneracy between the parameters, a brute force search can be done over a given range of parameters and a colourmap of the $chi^2$ value can be produced. This yields the shape and size of the minimum.
 
 Interpolation can be used to improve the resolution of this method. Using linear interpolation to search the parameter space in finer detail is much faster than exhaustively simulating spectra with parameter resolutions of $#sym.tilde #qty("10", "K")$ and $#sym.tilde #num("0.01")$ dex.
 
@@ -294,13 +294,13 @@ Furthermore, there is already a Python package, `starry`, that can be used to in
 
 === Unocculted Heterogeneities
 
-Unocculted heterogeneities are usually harder to detect and more challenging to remove from the measured spectrum. For example, an unocculted faculae (hotter region) increases the average surface temperature to be higher than the true illuminating spectrum of the exoplanet. According to Wein's law
+Unocculted heterogeneities are usually harder to detect and more challenging to remove from the measured spectrum. For example, an unocculted facula (hotter region) increases the average surface temperature to be higher than the true illuminating spectrum of the exoplanet. According to Wien's law
 
 $ lambda_"peak" = b / T $
 
 the peak wavelength of a spectrum is inversely correlated with temperature. In this example, using the disc-integrated spectrum would over-subtract at lower wavelengths, and under-subtract at higher wavelengths. Furthermore, the depth and presence of molecular features varies with $T_"eff"$. Both of these effects lead to stellar spectral features that are not removed from the total signal, which contaminates the derived exoplanet signal. Most importantly, there is no simple warning sign that an unocculted spot is present.
 
-To add to the difficulty, even if stellar variability is suspected of contaminating a stellar spectrum, the features may be consistent with a large range of spot configurations. More specifically, there is likely to be multiple sets of parameters $T_"eff"$, [Fe/H], $log g$ and area-covering fraction which match the observed stellar spectrum. This makes constraining unocculted heterogeneities in active stars, such as M dwarfs, complex.
+To add to the difficulty, even if stellar variability is suspected of contaminating a stellar spectrum, the features may be consistent with a large range of spot configurations. More specifically, there are likely to be multiple sets of parameters $T_"eff"$, [Fe/H], $log g$ and area-covering fraction which match the observed stellar spectrum. This makes constraining unocculted heterogeneities in active stars, such as M dwarfs, complex.
 
 // [ref papers which say "stellar variability is consistent with lots of range of parameters" - the rackham one about trappist 1 (above) and maybe some others]. 
 // 
@@ -320,11 +320,11 @@ Variations in one stellar parameter can affect the spectrum in a way similar to 
 
 // show some plots of PHOENIX that show clearly how the parameters can change a low res spectrum in ways similar or identical to changes in other parameters
 
-The primary cause of degeneracy in fitting procuedures is resolution. The LSF of a space based telescope effectively "smoothes out" flux over a wide wavelength range, removing features on scales less than the resolution of the instrument. JWST has a resolution of $R approx 100 - 1000$, meaning many high resolution lines will not appear in the observed spectrum.
+The primary cause of degeneracy in fitting procedures is resolution. The line spread function (LSF) of a space-based telescope effectively "smoothes out" flux over a wide wavelength range, removing features on scales less than the resolution of the instrument. JWST has a resolution of $R approx 100 - 1000$, meaning many high resolution lines will not appear in the observed spectrum.
 
-@diagram-basis_for_degeneracies shows PHOENIX simulated spectra downsampled to $#qty(0.01, "um")$, which is comparable to the resolution of JWST instruments. At this resolution, the spectra for many different combinations appear similar. For example, all 3 plots in the right column of the top plot have no significant differences between them. The lack of feature variation and sensitivity to varying the 3 input parameters is the source of degeneracies within fitting pipelines.
+@diagram-basis_for_degeneracies shows PHOENIX simulated spectra downsampled to $#qty(0.01, "um")$, which is comparable to the resolution of JWST instruments. At this resolution, the spectra for many different combinations appear similar. For example, all 3 plots in the right column of the top plot have no significant differences between them. The lack of sensitivity to varying the 3 input parameters is the source of degeneracies within fitting pipelines.
 
-To see mathematically how similar these graphs are, see [ref figure] where the degree of this degeneracy is given numerically [or maybe "mathematically"?].
+// To see mathematically how similar these graphs are, see [ref figure] where the degree of this degeneracy is given numerically [or maybe "mathematically"?].
 
 #figure(
   image("../../illustrative_diagrams/basis_for_degeneracies.svg", width: 60%),
@@ -343,13 +343,15 @@ To see mathematically how similar these graphs are, see [ref figure] where the d
 Degeneracies can lead to large, over-inflated minima which contain non-physical or nonsensical parameter values, which is a major problem for any form of minimisation method. The most common ways to prevent this can all be classified as attempts to constrain some of the parameters to physical values.
 
 // need to add ranges of these parameters to contextualise how big/small these dex and T changes are
-The metallicity [Fe/H] has been shown to vary by only $#sym.tilde 0.05$ dex within stellar spots @MetallicityVariations. Since our targets are main-sequence M dwarfs, $log g$ is also likely to lie within a narrow range. For example, #cite(<MDwarfTemperatures>, form: "prose")'s sample of 177 M dwarfs mostly contained stars with masses between $0.3 - 0.7 M_dot.o$, which corresponds to a dex shift of $log(0.7 / 0.3) = 0.36$ dex.
+The metallicity [Fe/H] has been shown to vary by only $#sym.tilde 0.05$ dex within stellar spots @MetallicityVariations. Since our targets are main-sequence M dwarfs, $log g$ is also likely to lie within a narrow range. For example, #cite(<MDwarfTemperatures>, form: "prose")\'s sample 177 M dwarfs mostly contained stars with masses between $0.3 - 0.7 M_dot.o$, which corresponds to a dex shift of $log(0.7 / 0.3) = 0.36$ dex.
 
-Compare this to reasonable spot temperatures for M dwarfs, which could vary by up to $#sym.tilde #qty("500", "K")$ from the photospheric temperature and significantly modify the shape and structure of the spectrum.
+Combined with the known degeneracy between $T_"eff"$, [Fe/H] and $log g$, this motivates keeping [Fe/H] and $log g$ constant across components. This helps stabilise the fit and prevents unphysical minima.
+
+// Compare this to reasonable spot temperatures for M dwarfs, which could vary by up to $#sym.tilde #qty("500", "K")$ from the photospheric temperature and significantly modify the shape and structure of the spectrum.
 
 // Therefore, it is reasonable to expect that [Fe/H] and $log g$ will not change significantly within the spots and faculae of a star. This constraint offers us a simple and effective way to address the spectroscopic degeneracy between $T_"eff"$, [Fe/H] and $log g$. 
 
-Hence one of the easiest ways to reduce degeneracies, and hence prevent non-physical minima, is to enforce a constant $log g$ and [Fe/H] between the photospheric background and all spots or faculae. This allows us to focus on the most important variations and keep our results physical. This is the approach used in this work.
+// Hence one of the easiest ways to reduce degeneracies, and hence prevent non-physical minima, is to enforce a constant $log g$ and [Fe/H] between the photospheric background and all spots or faculae. This allows us to focus on the most important variations and keep our results physical. This is the approach used in this work.
 
 Another method to alleviate degeneracies is to determine some of the parameters using a method independent from our minimisation procedure. For example, the stellar $log g$ can be approximated using the photometric $log g$, as is done by #cite(<PasseggerCARMENES>, form: "prose").
 

@@ -3,19 +3,20 @@
 
 #let my-date(date) = nth(date.day()) + date.display(" [month repr:long] [year]")
 
-#let reporttitle = [Accurate Modelling of Stellar Variability \ in Exoplanet Hosting M Dwarf Spectra]
+#let mytitle = [Accurate Modelling of Stellar Variability \ in Exoplanet Hosting M Dwarf Spectra]
+#let officialtitle = [Accurate Modelling of Stellar Heterogeneity \ for Exoplanet Transmission Spectroscopy]
 #let reportsubtitle = ""
 #let reportauthor = "Benjamin Green"
 #let crsID = "bg462"
 #let crsID = ""
 #let supervisor = "Lalitha Sairam"
-#let uto = "Nikkhu Madhusudhan"
+#let uto = "Nikku Madhusudhan"
 #let myabstract = [
-The transit light source effect presents a significant barrier to being able to confidently and correctly analyse exoplanetary atmospheres. Stellar contamination can create false spectral features, which may appear similar to coveted biosignatures. We present a method to analyse the spot and facula coverage on the stellar surface, in order to better understand the prescence of any unocculted heterogeneities.
+The transit light source effect presents a significant barrier to accurately analysing exoplanetary atmospheres. Stellar contamination can create false spectral features, which may appear similar to biosignatures. We present a method to analyse the spot and facula coverage on the stellar surface, in order to better understand the presence of any unocculted heterogeneities.
 
-M dwarf spectra are generated using PHOENIX spectra and processed to simulate current space-based instrumentation. The star's $T_"eff"$, [Fe/H], $log g$ and area covering fractions $f$ are determined. Bayesian inference is used to determine the values of these parameters and visualise the degree of degeneracy between them. Physical constraints are placed upon [Fe/H] and $log g$ to reduce uncertainty in the fit. [Fe/H] and $log g$ are found within 0.3 dex, even at low resolutions of $R approx 100$ / $#qty(0.01, "um")$. The model is capable of determining all parameters at high resolution, with uncertainties in $T_"eff"$ being $lt 3%$.
+Using PHOENIX data, we simulate M dwarf spectra, as they would be observed by current space-based instrumentation. The simulated star's $T_"eff"$, [Fe/H], $log g$ and area covering fractions $f$ are determined and compared to their true values. We use Bayesian inference to visualise the degree of degeneracy between the 4 parameters. We place physical constraints on [Fe/H] and $log g$ to reduce uncertainty in the fit. Even at low resolutions of $R approx 100$, the model finds [Fe/H] and $log g$ to within 0.3 dex. The model is capable of determining all parameters at high spectral resolution, with uncertainties in $T_"eff"$ being $lt 3%$.
 
-Low resolution spectra with $R gt #qty(1, "nm")$ are found to display large degeneracies between $T_"eff"$ and $f$, preventing accurate determination of these two stellar parameters. Uncertainty in $f$ can be $gt 50%$, and that in $T_"eff"$ can be $gt #qty(300, "K")$. The source of this degeneracy is explored.
+Low resolution spectra with resolution $Delta lambda gt #qty(1, "nm")$ are found to display large degeneracies between $T_"eff"$ and $f$, preventing accurate determination of these two stellar parameters. Uncertainty in $f$ can be $gt 50%$, and that in $T_"eff"$ can be $gt #qty(300, "K")$. The source of this degeneracy is discussed.
 
 // problem, method, setup, key quantitative result, main limitation.
 
@@ -30,7 +31,8 @@ Low resolution spectra with $R gt #qty(1, "nm")$ are found to display large dege
   // Title Section
   // #line(length: 100%, stroke: 0.5mm)
   #v(0.4cm)
-  #text(size: 2em, weight: "bold", reporttitle) \
+  // #text(size: 2em, weight: "bold", mytitle) \
+  #text(size: 1.9em, weight: "bold", officialtitle) \
   #text(size: 1.5em, weight: "bold", reportsubtitle)
   #v(0.4cm)
 
