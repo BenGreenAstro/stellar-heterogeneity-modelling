@@ -10,7 +10,7 @@ These parameters are then used as the initial guess for all stellar components, 
 
 === Likelihood
 
-The Python package `emcee` maximises a given log likehood over our M dwarf parameter space. Assuming a Gaussian distribution, the log likelihood function takes the same form as @ChiSquared, except multiplied by $-1/2$. This is the likelihood used in our model.
+The Python package `emcee` maximises a given log likelihood over our M dwarf parameter space. Assuming a Gaussian distribution, the log likelihood function takes the same form as @ChiSquared, except multiplied by $-1/2$. This is the likelihood used in our model.
 
 === Interpolation
 

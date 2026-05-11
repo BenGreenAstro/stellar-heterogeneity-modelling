@@ -50,7 +50,7 @@ Measuring an Earth-like planet around a Sun-like star is of key interest to exop
 
 Furthermore, M dwarfs are the most numerous main-sequence stars in the Milky Way. Due to their low luminosity, their habitable zones (HZ) are closer in, meaning that any exoplanets in the HZ would have a more favourable orbit geometry and be more convenient to analyse with transit spectroscopy @ExoplanetMDwarfStatistics.
 
-@delta-equation places constraints on the planet-star systems which are most favourable for atmospheric analysis. Ideally, we want to search for configurations that maximise the exoplanet signal $delta$, whilst staying in a regime where any detected planet could be habitable. @table-Mdwarf-signal shows the approximate signal strength for different systems. Since M dwarf hosts are smaller, they place the atmospheric signal for an Earth-like planet within range of being detected by space-based instruments such as the James Webb Space Telescope (JWST). One example of such a planet which has been characterised by JWST is LHS 475b, discovered in early 2023 @LustigYaeger2023.
+@delta-equation places constraints on the planet-star systems which are most favourable for atmospheric analysis. Ideally, we want to search for configurations that maximise the exoplanet signal $delta$, whilst staying in a regime where any detected planet could be habitable. @table-Mdwarf-signal shows the approximate signal strength for different systems. Since M dwarf hosts are smaller, they place the atmospheric signal for an Earth-like planet within range of being detected by space-based instruments such as JWST. One example of such a planet which has been characterised by JWST is LHS 475b, discovered in early 2023 @LustigYaeger2023.
 
 #figure(
   table(
@@ -151,7 +151,7 @@ Within the context of exoplanet transmission spectroscopy, stellar heterogeneiti
 
 This effect can cause stellar contamination, where features from the stellar spectrum are not removed from the total transit signal. Features of this type are called false spectral features, as they are attributed to the exoplanet whilst actually originating from the host star. This contamination can be confused with biosignatures, such as water features in the TRAPPIST-1 system @Zhang-2018. This highlights how important it is to understand and account for these effects if we want to understand planetary conditions, and potential habitability, in extrasolar systems.
 
-As shown in @diagram-transit-light-source-effect, there are two broad cases of heterogeneities - occulted and unocculted spots. These affect the transit curve & spectrum differently, and are hence dealt with in different ways.
+As shown in @diagram-transit-light-source-effect, there are two broad cases of heterogeneities - occulted and unocculted spots. These affect the transit curve and spectrum differently, and are hence dealt with in different ways.
 
 #figure(
   align(center)[
@@ -288,7 +288,7 @@ As shown in @diagram-transit-light-source-effect, there are two broad cases of h
 === Occulted Heterogeneities
 
 // [what size? if its smaller than this can it still affect the spectrum or at that point will it not affect it much?]
-Spots which are contained within the transit chord directly contribute to the illuminating spectrum are typically easier to address @Rackham-2018. This is because, if the heterogeneity is of sufficient size, the transit curve will appear asymmetrical. This provides a clear sign that a heterogeneity is present and must be removed, which differs from the case of unocculted spots. #cite(<Rackham-2018>, form:"prose") note that this variation in the transit curve can be used to determine the $T_"eff"$ and area covering fraction of the spot or facula.
+Spots which are contained within the transit chord directly contribute to the illuminating spectrum and are typically easier to address @Rackham-2018. This is because, if the heterogeneity is of sufficient size, the transit curve will appear asymmetrical. This provides a clear sign that a heterogeneity is present and must be removed, which differs from the case of unocculted spots. #cite(<Rackham-2018>, form:"prose") note that this variation in the transit curve can be used to determine the $T_"eff"$ and area covering fraction of the spot or facula.
 
 Furthermore, there is already a Python package, `starry`, that can be used to infer properties of a heterogeneous stellar surface using spherical harmonics @Luger_2019. This has been used in the literature to directly model starspots @Tamburo2025. As such, the work presented here does not address occulted heterogeneities, but instead focuses on unocculted ones.
 
@@ -343,7 +343,7 @@ The primary cause of degeneracy in fitting procedures is resolution. The line sp
 Degeneracies can lead to large, over-inflated minima which contain non-physical or nonsensical parameter values, which is a major problem for any form of minimisation method. The most common ways to prevent this can all be classified as attempts to constrain some of the parameters to physical values.
 
 // need to add ranges of these parameters to contextualise how big/small these dex and T changes are
-The metallicity [Fe/H] has been shown to vary by only $#sym.tilde 0.05$ dex within stellar spots @MetallicityVariations. Since our targets are main-sequence M dwarfs, $log g$ is also likely to lie within a narrow range. For example, #cite(<MDwarfTemperatures>, form: "prose")\'s sample 177 M dwarfs mostly contained stars with masses between $0.3 - 0.7 M_dot.o$, which corresponds to a dex shift of $log(0.7 / 0.3) = 0.36$ dex.
+The metallicity [Fe/H] has been shown to vary by only $#sym.tilde 0.05$ dex within stellar spots @MetallicityVariations. Since our targets are main-sequence M dwarfs, $log g$ is also likely to lie within a narrow range. For example, #cite(<MDwarfTemperatures>, form: "prose")\'s sample of 177 M dwarfs mostly contained stars with masses between $0.3 - 0.7 M_dot.o$, which corresponds to a shift of $log(0.7 / 0.3) = 0.36$ dex.
 
 Combined with the known degeneracy between $T_"eff"$, [Fe/H] and $log g$, this motivates keeping [Fe/H] and $log g$ constant across components. This helps stabilise the fit and prevents unphysical minima.
 

@@ -10,7 +10,7 @@
 
 The simplest case we can validate is a simulated star made from 1 component, whose corner plot is shown in @fig-1-component-corner. We begin with a fake star with parameters $T_"eff" = #qty(3800, "K")$, [Fe/H] = 0 and $log g = 4.5$, and use an SNR and wavelength range representative of JWST data. All of the parameters are well resolved by the model. The largest degeneracy is between [Fe/H] and $log g$, but their posterior distribution still closely reflects their true values. The plots for the other parameters form circular shapes, indicating little degeneracy. The worst-determined parameter is $T$, whose true value lies just outside of the $1 sigma$ range.
 
-The spectrum with residuals in @fig-1-component-spectrum show that the largest amount of noise is found at higher wavelengths. This is expected, as the noise amplitude is defined relative to the peak spectrum height. Less intense areas of the spectrum therefore have a lower SNR, which is also true of real-life instruments such as JWST. Despite this, the overall shape of the spectrum and its large-scale features are determined well, and the fitted spectrum is normalised correctly.
+The spectrum with residuals in @fig-1-component-spectrum shows that the largest amount of noise is found at higher wavelengths. This is expected, as the noise amplitude is defined relative to the peak spectrum height. Less intense areas of the spectrum therefore have a lower SNR, which is also true of real-life instruments such as JWST. Despite this, the overall shape of the spectrum and its large-scale features are determined well, and the fitted spectrum is normalised correctly.
 
 #place(
   top,
@@ -21,7 +21,7 @@ The spectrum with residuals in @fig-1-component-spectrum show that the largest a
     #figure(
       image("../figures/1/a/corner_plot_1_component.svg", width: 70%),
       caption: [
-        Posterior for the parameters of a 1-component star. Assumes an SNR of 20, and uses a wavelength range of $#qty(0.8, "um") - #qty(5.3, "um")$ at a uniform resolution of $#qty(0.01, "um")$. The light, medium and dark orange levels represent $1,2$ and $3 sigma$ respectively. In the histograms, the solid line represents the mean fit and the dotted lines represent $1 sigma$ of the fitted distribution. The true values are given in black. The value of $T_"eff"$ is underestimated by $#sym.tilde #qty(50, "K")$, and the uncertainty is slighty underreported. The same is true for $log g$, whilst the [Fe/H] has been is found accurately. 
+        Posterior for the parameters of a 1-component star. Assumes an SNR of 20, and uses a wavelength range of $#qty(0.8, "um") - #qty(5.3, "um")$ at a uniform resolution of $#qty(0.01, "um")$. The light, medium and dark orange levels represent $1,2$ and $3 sigma$ respectively. In the histograms, the solid line represents the mean fit and the dotted lines represent $1 sigma$ of the fitted distribution. The true values are given in black. The value of $T_"eff"$ is underestimated by $#sym.tilde #qty(50, "K")$, and the uncertainty is slightly underreported. The same is true for $log g$, whilst the [Fe/H] has been found accurately. 
       ],
     ) <fig-1-component-corner>
 
@@ -45,7 +45,7 @@ integral f_1 F_1(lambda) + f_2 F_2(lambda) "d"lambda &= 4.5 "Jy" #unit("um") \
 => f_1 + f_2 &= 1
 $
 
-Both @fig-2-component-corner and @fig-2-component-corner-high-res show that the best-fit weights satisfy this condition, which validates that our normalisation is working correctly. In future, this condition could be enforced by defining $f_2 = 1 - f_1$ (or, more generally, $f_n = 1 - f_(n-1)$ for an $n$-component fit) to reduce the dimensionality of the problem.
+Both @fig-2-component-corner and @fig-2-component-corner-high-res show that the best-fit weights satisfy this condition, which validates that our normalisation is working correctly. In the future, this condition could be enforced by defining $f_2 = 1 - f_1$ (or, more generally, $f_n = 1 - f_(n-1)$ for an $n$-component fit) to reduce the dimensionality of the problem.
 
 The globally shared parameters [Fe/H] and $log g$ are found very accurately, but the other 4 parameters less so. The fitted values of the weights and temperatures all lie $#sym.tilde 1 sigma$ away from their true values. There is a significant amount of degeneracy between most of the other parameters, showing that the model has found a very large range of values that are consistent with this low-resolution spectrum. This leads to a very high uncertainty in the fit. For example, the temperatures have an uncertainty of $#sym.tilde 10 %$, and the weights $gt 50 %$.
 
@@ -82,7 +82,7 @@ All parameters are determined extremely well: the temperatures only have a $#sym
 
 == Degeneracies
 
-@fig-multiple-solutions directly illustrates how degenerate our fitting procedure is. 2 sets of parameters are shown, which both have log likelihoods which lie within 10% of the maximum log likelihood. The resolution of the spectra is $#qty(0.01, "um")$. Despite the significant difference in their $T_"eff"$ and $f$ values, they both sum to almost exactly the same total spectrum. The middle plot shows they have exactly the same shape, and the bottom residual shows the differ by a maximum of $1.5 %$.
+@fig-multiple-solutions directly illustrates how degenerate our fitting procedure is. 2 sets of parameters are shown, which both have log likelihoods which lie within 10% of the maximum log likelihood. The resolution of the spectra is $#qty(0.01, "um")$. Despite the significant difference in their $T_"eff"$ and $f$ values, they both sum to almost exactly the same total spectrum. The middle plot shows they have exactly the same shape, and the bottom residual shows they differ by a maximum of $1.5 %$.
 
 Above $#qty(3, "um")$, the spectra differ by $<< 1%$. This implies that this wavelength region is less sensitive to temperature changes. Only using certain wavelength bands that are known to be sensitive to the 3 parameters $T_"eff"$, [Fe/H] and $log g$ could therefore reduce the degeneracies within the model.
 
@@ -141,13 +141,13 @@ This implies that using the maximum likelihood value, instead of the median (whi
   [
     #figure(
       image("../figures/2/correctness_as_a_function_of_resolution.svg", width: 55%),
-      caption: [The effect of resolution on fitting quality of $T_"eff"$ and the area covering fraction $f$ for a 2-component star. The first plot shows the difference between the true and fitted temperatures, and the bottom between the true and fitted weights, both as a function of resolution. Assumes an SNR of 20, and uses a wavelength range of $#qty(0.8, "um") - #qty(5.3, "um")$ at a uniform resolution of $#qty(0.01, "um")$. Resolutions better $#sym.tilde #qty("e-3", "um")$ perform significantly better than lower resolutions. At $qty(0.01, "um")$ resolution, the temperature uncertainty is nearly $#sym.tilde 10%$. At much higher resolutions near $qty(0.1, "nm")$, it drops to $#sym.tilde 3%$. The area covering fractions begin to converge to their true values with resolutions below $#sym.tilde qty(1.3, "nm")$.],
+      caption: [The effect of resolution on fitting quality of $T_"eff"$ and the area covering fraction $f$ for a 2-component star. The first plot shows the difference between the true and fitted temperatures, and the bottom between the true and fitted weights, both as a function of resolution. Assumes an SNR of 20, and uses a wavelength range of $#qty(0.8, "um") - #qty(5.3, "um")$ at a uniform resolution of $#qty(0.01, "um")$. Resolutions better than $#sym.tilde #qty("e-3", "um")$ perform significantly better than lower resolutions. At $qty(0.01, "um")$ resolution, the temperature uncertainty is nearly $#sym.tilde 10%$. At much higher resolutions near $qty(0.1, "nm")$, it drops to $#sym.tilde 3%$. The area covering fractions begin to converge to their true values with resolutions below $#sym.tilde qty(1.3, "nm")$.],
     ) <fig-resolution-variation>,
 
     #figure(
       image("../illustrative_diagrams/snr_variation.svg", width: 55%),
       caption: [
-        The effect of SNR on fitting quality of $T_"eff"$ and the area covering fraction $f$ for a 2-component star. Fitting was done at a resolution of $#qty(0.3, "nm")$. At low SNR, noise prevents the model from being able to converge nearby to the input parameters. Above an SNR of $#sym.tilde 10$, the model can resolve enough detail to be able to accurately fit both $f$ and $T_"eff"$. Suprisingly, increasing the SNR above $#sym.tilde 25$ actually increases the amount of degeneracy present.
+        The effect of SNR on fitting quality of $T_"eff"$ and the area covering fraction $f$ for a 2-component star. Fitting was done at a resolution of $#qty(0.3, "nm")$. At low SNR, noise prevents the model from being able to converge nearby to the input parameters. Above an SNR of $#sym.tilde 10$, the model can resolve enough detail to be able to accurately fit both $f$ and $T_"eff"$. Surprisingly, increasing the SNR above $#sym.tilde 25$ actually increases the amount of degeneracy present.
       ],
     ) <fig-snr-variation>
   ]
