@@ -149,9 +149,9 @@ Empirical relations have been determined that link the line depth ratio (LDR) be
 
 Within the context of exoplanet transmission spectroscopy, stellar heterogeneities can cause significant problems. The section of the stellar surface which illuminates the exoplanet's atmosphere in the direction of our line of sight is only a circular region behind the planet. Over the course of a transit, the planet sweeps out a region called the transit chord, and it is only this region which affects the measured spectra. Therefore, if spots or faculae are present, the true illuminating spectrum will differ from the disc-integrated spectrum. This effect is called the transit light source effect.
 
-This effect can cause stellar contamination. This is where features from the stellar spectrum are not removed from the total transit signal, and are instead attributed to the exoplanet. These are known as false spectral features. This contamination can be confused with biosignatures, such as water features in the TRAPPIST-1 system @Zhang-2018. This highlights how important it is to understand and account for these effects if we want to understand planetary conditions, and potential habitability, in extrasolar systems.
+This effect can cause stellar contamination, where features from the stellar spectrum are not removed from the total transit signal. Features of this type are called false spectral features, as they are attributed to the exoplanet whilst actually originating from the host star. This contamination can be confused with biosignatures, such as water features in the TRAPPIST-1 system @Zhang-2018. This highlights how important it is to understand and account for these effects if we want to understand planetary conditions, and potential habitability, in extrasolar systems.
 
-There are two broad cases of heterogeneities - occulted and unocculted spots - which affect the transit curve & spectrum differently, and are hence dealt with in different ways.
+As shown in @diagram-transit-light-source-effect, there are two broad cases of heterogeneities - occulted and unocculted spots. These affect the transit curve & spectrum differently, and are hence dealt with in different ways.
 
 #figure(
   align(center)[
@@ -282,7 +282,7 @@ There are two broad cases of heterogeneities - occulted and unocculted spots - w
   })
   ],
   caption: [Illustration of the transit light source effect. An exoplanet is currently transiting its host star, and its atmosphere is partially covering a spot. If not accounted for, all 3 spots will cause stellar contamination in the exoplanet's transmission spectrum. The band between the dashed lines is the transit chord. Spots which overlap the transit chord will directly affect the measured light curve. At this moment, a cooler - and hence dimmer - spot is being covered, which would temporarily increase the received flux and decrease the transit depth. The unocculted spot doesn't cause any time-dependent features in the transit curve.#footnote[This assumes the transit time is much less than the rotational period of the star, which is usually the case for observed exoplanets around M dwarfs.]],// Orbit, planet and atmosphere not to scale.],
-)
+) <diagram-transit-light-source-effect>
 
 === Occulted Heterogeneities
 
