@@ -14,10 +14,8 @@ def get_fake_spectrum(file_path : Path) -> spectrum:
     # usecols=[0,1,2] ignores that extra trailing comma/empty column if it exists
     df = pd.read_csv(constants.package_path / file_path, usecols=[0, 1, 2])
 
-    # Clean up column names (removes any accidental whitespace)
     df.columns = df.columns.str.strip()
 
-    # Access your data
     wave = df['wavelength_micron_vacuum']
     flux = df['flux_obs']
     err  = df['flux_err']

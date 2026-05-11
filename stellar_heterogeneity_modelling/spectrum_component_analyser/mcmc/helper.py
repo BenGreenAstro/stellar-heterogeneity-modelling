@@ -81,12 +81,11 @@ class MCMCHelper():
 
             true_params = np.array(true_params, dtype=float)
 
-            # 2. Create the corner plot
             fig = corner.corner(
                 samples, 
                 labels=labels, 
-                truths=true_params,            # Overplot the true params
-                quantiles=[0.16, 0.5, 0.84], # Show median and 1-sigma uncertainties
+                truths=true_params,            
+                quantiles=[0.16, 0.5, 0.84], 
                 show_titles=True, 
                 title_kwargs={"fontsize": 12}
             )
@@ -94,16 +93,14 @@ class MCMCHelper():
             fig = corner.corner(
                 samples, 
                 labels=labels, 
-                truths=None,            # Overplot the true params
-                quantiles=[0.16, 0.5, 0.84], # Show median and 1-sigma uncertainties
+                truths=None,           
+                quantiles=[0.16, 0.5, 0.84], 
                 show_titles=True, 
                 title_kwargs={"fontsize": 12}
             )
 
         plt.show()
 
-        # 3. Bonus: Diagnostic Check (The "Trace Plot")
-        # This ensures your walkers didn't get stuck or haven't finished "climbing the hill"
         fig, axes = plt.subplots(self.ndim, figsize=(10, 7), sharex=True)
         chain = sampler.get_chain()
         for i in range(self.ndim):
@@ -122,11 +119,8 @@ class MCMCHelper():
         import rich
         from astropy.units import Quantity
 
-        # 1. Calculate the 16th, 50th, and 84th percentiles for all parameters
         # axis=0 calculates these across the flattened samples
         percentiles = np.percentile(samples, [16, 50, 84], axis=0)
-
-        # 2. Prepare the table structure
         results_table = spectral_component.return_default_table()
 
         teffs = [percentiles[1, 1 + i * self.number_of_parameters] for i in range(self.number_of_components)]
@@ -134,29 +128,20 @@ class MCMCHelper():
         # Get indices for descending order (highest weight first)
         sorted_indices = np.argsort(teffs)[::-1]
         print(teffs)
-        # 3. Process each component
+
         for i in sorted_indices:
             index_offset = i * self.number_of_parameters
             
-            # We create a little helper to get (median, lower_err, upper_err)
             def get_stats(idx):
                 low, med, high = percentiles[:, idx]
-                # Average the lower and upper bounds for a symmetric plus-minus
-                # or use (high-med) if you prefer reporting the upper bound
                 err = (high - low) / 2
                 return med, err
 
-            # Extract median and uncertainty
             weight_med, weight_err = get_stats(index_offset)
             teff_med, teff_err     = get_stats(index_offset + 1)
             feh_med, feh_err       = get_stats(index_offset + 2)
             logg_med, logg_err     = get_stats(index_offset + 3)
-
-            # 4. Format strings with rounding to 2 decimal places and plus-minus
-            # We store these in a way that respects your object's structure 
-            # but provides the visual "plus-minus" clarity
             
-            # Example format: "5780.12 ± 15.43"
             display_weight = f"{weight_med:.2f} ± {weight_err:.2f}"
             display_teff   = f"{teff_med:.2f} ± {teff_err:.2f} K"
             display_feh    = f"{feh_med:.2f} ± {feh_err:.2f} dex"
@@ -169,30 +154,25 @@ class MCMCHelper():
                 weight_med
             )
 
-            # Use your class's existing method to add to the table
             recovered_component.pretty_print(results_table)
             
-            # Hack to overwrite the last row's cells with our +/- strings 
-            # (Assuming the table is a rich.table.Table)
             last_row_idx = len(results_table.rows) - 1
             results_table.columns[0]._cells[last_row_idx] = display_weight
             results_table.columns[1]._cells[last_row_idx] = display_teff
             results_table.columns[2]._cells[last_row_idx] = display_feh
             results_table.columns[3]._cells[last_row_idx] = display_logg
 
-        # 5. Display
         print("\n[MCMC RECOVERED PARAMETERS WITH 1-SIGMA ERRORS]")
         rich.print(results_table)
 
     def log_prior(self, params):
         """Checks if parameters are within the physical bounds of your grid."""
-        # Expand bounds to match the full parameter vector
         full_bounds = self.parameter_bounds * self.number_of_components
         
         for i in range(self.ndim):
             low, high = full_bounds[i]
             if not (low <= params[i] <= high):
-                return -np.inf  # Probability is zero outside bounds
+                return -np.inf  # probability is zero outside bounds
         return 0.0
 
     def log_likelihood(self, params):
@@ -200,7 +180,7 @@ class MCMCHelper():
         Equivalent to -0.5 * chi_square.
         Assumes constant noise (sigma). If you have flux errors, replace 1.0 with errPsors.
         """
-        observed = self.ObservedSpectrum.Fluxes.value # Work in raw values for speed
+        observed = self.ObservedSpectrum.Fluxes.value
         simulated = np.zeros_like(observed)
         
         for i in range(self.number_of_components):
@@ -213,8 +193,7 @@ class MCMCHelper():
             spec = get_interpolated_phoenix_spectrum(t, f, l, star_name="sim", spec_grid=self.spec_grid)
             simulated += weight * spec.Fluxes.value
 
-        # Gaussian log-likelihood formula
-        sigma = np.std(observed) * 0.2 # 5% noise estimate, # Or use actual observational uncertainties if available
+        sigma = np.std(observed) * 0.2
         chi2 = np.sum(((observed - simulated) ** 2) / sigma**2)
         return -0.5 * chi2
 
@@ -231,24 +210,19 @@ class MCMCHelper():
         return lp + self.log_likelihood(params)
     
     def plot_spectrum(self, samples : np.ndarray) -> None:
-        # 1. Extract Median Parameters
         best_params : np.ndarray = np.median(samples, axis=0)
 
-        # 2. Setup Plotting Environment
         fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(30, 16), sharex=True, 
                                     gridspec_kw={'height_ratios': [3, 1]})
         plt.subplots_adjust(hspace=0.05)
 
-        # Initialize total flux with correct units
         total_flux : u.Quantity = np.zeros(len(self.ObservedSpectrum.Wavelengths)) * u.Jy
 
-        # 3. Component Generation
         colors = ["#3498db", "#e74c3c", "#2ecc71"]
 
         for i in range(self.number_of_components):
             idx = i * self.number_of_parameters
             
-            # Extracting with explicit units from your style
             w = best_params[idx]
             t = best_params[idx + 1] * u.K
             f = best_params[idx + 2] * u.dex
@@ -260,13 +234,11 @@ class MCMCHelper():
                 spec_grid=self.spec_grid
             )
 
-            # Scale flux by the weight
             weighted_flux = mcmc_component.Fluxes * w
             total_flux += weighted_flux
 
             # weighted_flux /= np.sum(weighted_flux.value)
 
-            # Plot individual component
             ax1.plot(
                 self.ObservedSpectrum.Wavelengths, 
                 weighted_flux.to(u.Jy), 
@@ -276,7 +248,6 @@ class MCMCHelper():
                 linestyle='--'
             )
 
-        # 4. Create Result Spectrum Object (matching your style)
         my_result : spectrum = spectrum(
             wavelengths=self.ObservedSpectrum.Wavelengths,
             fluxes=total_flux,
@@ -287,7 +258,6 @@ class MCMCHelper():
             temperature=None
         )
 
-        # 5. Normalization & Comparison. Assuming we normalise to the mean for a stable residual
         obs_flux_norm = self.ObservedSpectrum.Fluxes
         fit_flux_norm = my_result.Fluxes
 

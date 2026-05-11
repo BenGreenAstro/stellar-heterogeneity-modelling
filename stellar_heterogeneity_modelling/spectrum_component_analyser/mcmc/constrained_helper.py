@@ -25,7 +25,7 @@ class ConstrainedMCMCHelper():
             n_steps = 1000
             ):
         self.number_of_components = number_of_components
-        # Vector structure: [W1, T1, W2, T2, ..., Wn, Tn, shared_FeH, shared_logg]
+        # [W1, T1, W2, T2, ..., Wn, Tn, shared_FeH, shared_logg]
         self.ndim = (2 * number_of_components) + 2
         self.ObservedSpectrum = observed_spectrum
         self.spec_grid = spec_grid
@@ -166,13 +166,11 @@ class ConstrainedMCMCHelper():
         plt.show()
 
     def print_parameters(self, samples: np.ndarray):
-        # 1. Calculate the 16th, 50th, and 84th percentiles
         percentiles = np.percentile(samples, [16, 50, 84], axis=0)
 
-        # 2. Prepare the table
         results_table = spectral_component.return_default_table()
 
-        # 3. Extract the SHARED parameters (the last two columns)
+        # Extract the SHARED parameters (the last two columns)
         def get_stats(idx):
             low, med, high = percentiles[:, idx]
             err = (high - low) / 2
@@ -184,12 +182,10 @@ class ConstrainedMCMCHelper():
         display_feh  = f"{feh_med:.2f} ± {feh_err:.2f} dex"
         display_logg = f"{logg_med:.2f} ± {logg_err:.2f} dex"
 
-        # 4. Extract per-component Teffs for sorting
         teff_indices = [i * 2 + 1 for i in range(self.number_of_components)]
         teff_medians = [percentiles[1, idx] for idx in teff_indices]
         sorted_indices = np.argsort(teff_medians)[::-1]
 
-        # 5. Process each component
         for i in sorted_indices:
             w_idx = i * 2
             t_idx = i * 2 + 1
@@ -200,7 +196,6 @@ class ConstrainedMCMCHelper():
             display_weight = f"{weight_med:.2f} ± {weight_err:.2f}"
             display_teff   = f"{teff_med:.2f} ± {teff_err:.2f} K"
 
-            # Instantiate component for the logic/table structure
             recovered_component = spectral_component(
                 teff_med * u.K, 
                 feh_med * u.dex, 
@@ -208,7 +203,6 @@ class ConstrainedMCMCHelper():
                 weight_med
             )
 
-            # Add to table
             recovered_component.pretty_print(results_table)
             
             # Overwrite the row with our uncertainty strings
