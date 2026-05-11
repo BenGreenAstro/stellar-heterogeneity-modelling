@@ -281,6 +281,7 @@ As shown in @diagram-transit-light-source-effect, there are two broad cases of h
     // catmull(..pts, stroke: black + 1pt, tension: .6)
   })
   ],
+  placement: top,
   caption: [Illustration of the transit light source effect. An exoplanet is currently transiting its host star, and its atmosphere is partially covering a spot. If not accounted for, all 3 spots will cause stellar contamination in the exoplanet's transmission spectrum. The band between the dashed lines is the transit chord. Spots which overlap the transit chord will directly affect the measured light curve. At this moment, a cooler - and hence dimmer - spot is being covered, which would temporarily increase the received flux and decrease the transit depth. The unocculted spot doesn't cause any time-dependent features in the transit curve.#footnote[This assumes the transit time is much less than the rotational period of the star, which is usually the case for observed exoplanets around M dwarfs.]],// Orbit, planet and atmosphere not to scale.],
 ) <diagram-transit-light-source-effect>
 
@@ -328,7 +329,7 @@ To see mathematically how similar these graphs are, see [ref figure] where the d
 #figure(
   image("../../illustrative_diagrams/basis_for_degeneracies.svg", width: 60%),
   caption: [
-    Simulated PHOENIX spectra specified at different points throughout the 3D parameter space. The plots show the spectrum produced by different parameter combinations of $T_"eff"$, [Fe/H] and $log g$. Each of the 3 large plots fixes 1 of the parameters: the top fixes $log g$, the middle fixes [Fe/H], and the bottom fixes $T_"eff"$. The center of each spectrum gives its corresponding values: for example, the bottom right spectrum in the bottom plot has $T_"eff" = #qty(3500, "K")$, [Fe/H]= 0 dex and $log g = 1$ dex.
+    Simulated PHOENIX spectra specified at different points throughout the 3D parameter space. The plots show the spectrum produced by different parameter combinations of $T_"eff"$, [Fe/H] and $log g$. Each of the 3 large plots fixes 1 of the parameters: the top fixes $log g$, the middle fixes [Fe/H], and the bottom fixes $T_"eff"$. The center of each spectrum gives its corresponding values: for example, the bottom right spectrum in the bottom plot has $T_"eff" = #qty(3500, "K")$, [Fe/H] = 0 dex and $log g = 1$ dex.
 
     All spectra are downsampled to $#qty(0.01, "um")$ and given over the range $#qty(0.8, "um") - #qty(5.3, "um")$. The low resolution has removed many of the features which would be able to distinguish the spectra, leading to a degeneracy.
   ],

@@ -1,6 +1,6 @@
 #import "layout.typ": report_layout
 
-#set page(paper: "a4", margin: (x: 2cm, y: 2cm))
+#set page(paper: "a4", margin: (x: 2.5cm, y: 2.5cm))
 #set text(font: "STIX Two Text", size: 11pt, lang: "en")
 
 #include("sections/title_page.typ")

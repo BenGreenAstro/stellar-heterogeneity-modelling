@@ -82,6 +82,21 @@ All parameters are determined extremely well: the temperatures only have a $#sym
 
 == Degeneracies
 
+@fig-multiple-solutions directly illustrates how degenerate our fitting procedure is. 2 sets of parameters are shown, which both have log likelihoods which lie within 10% of the maximum log likelihood. The resolution of the spectra is $#qty(0.01, "um")$. Despite the significant difference in their $T_"eff"$ and $f$ values, they both sum to almost exactly the same total spectrum. The middle plot shows they have exactly the same shape, and the bottom residual shows the differ by a maximum of $1.5 %$.
+
+Above $#qty(3, "um")$, the spectra differ even less. This implies that this wavelength range is less sensitive to temperature changes. Only using certain wavelength bands that are known to be sensitive to the 3 parameters $T_"eff"$, [Fe/H] and $log g$ could therefore reduce the degeneracies within the model.
+
+Both of the parameter sets in @fig-multiple-solutions have similar [Fe/H] and $log g$ values: both are within $0.1$ dex of each other, and within 0.15 dex of the true values. We also note that in @fig-2-component-corner and @fig-2-component-corner-high-res, the width of the [Fe/H] and $log g$ histograms is typically very small compared to the other parameters' uncertainties. This implies that our constraint of using a global [Fe/H] and $log g$ has indeed helped reduce the amount of degeneracy.
+
+// near the tail end, much similar -> more degenerate, future work could explore constraining the minimisation to certain wavelength bands
+
+// two solutions that are within 10% of the max log likelihood, but far apart in param space
+
+// when multiple components are involved, a much longer MCMC run (more steps) are needed, increasing the run time by 1 order of magnitude or so
+
+// both solutions had similar feh, logg (within 0.1 dex of each other, and within 0.15 dex of the maximum likelihood solution)
+// maybe should clarify that best fit means maximum likelihood, but we take the median + std dev to show the degenerate region best
+
 #place(
   top,
   float: true,
@@ -90,6 +105,7 @@ All parameters are determined extremely well: the temperatures only have a $#sym
     #figure(
       image("../illustrative_diagrams/multiple_solutions.svg", width: 100%),
       caption: [
+        A demonstration of the cause of degeneracy within the model. For the same 2 component star as in @fig-2-component-corner, two different fits, together with their sum, are shown in the top left and right. The $T_"eff"$ values differ by $#sym.tilde #qty(100, "K")$, and the $f$ values differ by $#sym.tilde 0.2$. The middle plot compares their total spectra (note that one of the spectra is shifted down in order to visible). Both of these parameter sets are found by our model as a good fit.
       ],
     ) <fig-multiple-solutions>
   ]
@@ -104,6 +120,18 @@ All parameters are determined extremely well: the temperatures only have a $#sym
 
 Using the same fake star as in @fig-2-component-corner, we vary the resolution of the spectrum in @fig-resolution-variation. At low resolutions, near $#qty(0.01, "um")$, the $f_i$ both tend towards $0.5$, and the temperatures become less accurate. Over this SNR and wavelength range, only when we reach near #qty(0.1, "nm") do the uncertainties decrease and the fit becomes much more accurate.
 
+This resolution is much higher than what's currently achievable with space-based infrared telescopes. In the low resolution regime, this method cannot fully determine the input parameters into our simulated stars. However, it can determine which sets of parameters are consistent with the observed spectrum, which is still useful for identifying possible false spectral features.
+
+=== SNR
+
+@fig-snr-variation shows how SNR affects the fit for $T_"eff"$ and $f$. A resolution of $#qty(0.3, "nm")$ was chosen, as this is the resolution at which convergence improved in @fig-resolution-variation. Between an SNR of 0 and 20 the graph is as expected: at very low SNR, even the overall shape of the spectrum is distorted, and the model cannot find any meaningful information to fit against. This leads to uncertainties of $gt #qty(500, "K")$ and $gt #num(.4)$ in $T_"eff"$ and $f$ respectively. A medium SNR of $#sym.tilde 20$ produces graphs where the overall shape of the spectrum is preserved, and so the model is able to minimise the degeneracy better.
+
+However, at SNRs larger than 20, the graph shows unusual behaviour within our model. Although the median values are nearer to their true values, the uncertainties massively increase. Often, the errorbars of one component overlap with the median of the other component. Furthermore, the median of the fitted distribution stays roughly constant between an SNR of 20 and 40.
+
+One explanation which could explain this is as follows: at high SNR, the noise becomes negligible, and the maximum likelihood and median parameter values converge to their correct values. However, the small scale features of both the $#qty(3800, "K")$ and $#qty(3300, "K")$ components are similar, since they share the same [Fe/H] and $log g$. This means that the model finds a possible fit where $T_1$ and $T_2$ are swapped (or equivalently, where $f_1$ and $f_2$ are swapped). This outlier creates a long tail in the distributions for the fitted parameters, and elongates the uncertainty of each component to include the median value of the other component.
+
+This implies that using the maximum likelihood value, instead of the median (which may be biased towards other components' values) may be more reliable. Furthermore, only looking at the effective $1 sigma$ width of the values found by the MCMC model might be misleading, especially in cases where there the distribution has a long tail. It's important to take into account the shape of the degeneracy, and analyse whether the found parameters are physical.
+
 // maybe should add resolution of space based and ground based instruments as vertical lines to this graph
 
 #place(
@@ -112,31 +140,41 @@ Using the same fake star as in @fig-2-component-corner, we vary the resolution o
   scope: "parent",
   [
     #figure(
-      image("../figures/2/correctness_as_a_function_of_resolution.svg", width: 100%),
+      image("../figures/2/correctness_as_a_function_of_resolution.svg", width: 55%),
       caption: [The effect of resolution on fitting quality of $T_"eff"$ and the area covering fraction $f$ for a 2-component star. The first plot shows the difference between the true and fitted temperatures, and the bottom between the true and fitted weights, both as a function of resolution. Assumes an SNR of 20, and uses a wavelength range of $#qty(0.8, "um") - #qty(5.3, "um")$ at a uniform resolution of $#qty(0.01, "um")$. Resolutions better $#sym.tilde #qty("e-3", "um")$ perform significantly better than lower resolutions. At $qty(0.01, "um")$ resolution, the temperature uncertainty is nearly $#sym.tilde 10%$. At much higher resolutions near $qty(0.1, "nm")$, it drops to $#sym.tilde 3%$. The area covering fractions begin to converge to their true values with resolutions below $#sym.tilde qty(1.3, "nm")$.],
-    ) <fig-resolution-variation>
-  ]
-)
+    ) <fig-resolution-variation>,
 
-=== SNR
-
-#place(
-  top,
-  float: true,
-  scope: "parent",
-  [
     #figure(
-      image("../illustrative_diagrams/snr_variation.svg", width: 100%),
+      image("../illustrative_diagrams/snr_variation.svg", width: 55%),
       caption: [
-        // state the resolution
+        The effect of SNR on fitting quality of $T_"eff"$ and the area covering fraction $f$ for a 2-component star. Fitting was done at a resolution of $#qty(0.3, "nm")$. At low SNR, noise prevents the model from being able to converge nearby to the input parameters. Above an SNR of $#sym.tilde 10$, the model can resolve enough detail to be able to accurately fit both $f$ and $T_"eff"$. Suprisingly, increasing the SNR above $#sym.tilde 25$ actually increases the amount of degeneracy present.
       ],
     ) <fig-snr-variation>
   ]
 )
 
-== Physical Interpretation
+// == Real M dwarfs
 
-// What does this mean for M dwarfs?
+// The method was applied to the M dwarf GJ486, as observed by JWST's NIRSpec instrument. The PHOENIX data was downsampled to NIRSpec's resolution, and the MCMC model was run with both 1 component and 2 components.
+
+// The 1 component fit is shown in @fig-GJ486-1-component. The fitted parameters agree very strongly with accepted values, and little to no degeneracy is shown.
+
+// #place(
+//   top,
+//   float: true,
+//   scope: "parent",
+//   [
+//     #figure(
+//       image("../illustrative_diagrams/GJ486_NIRSPECLower_1_component.svg", width: 100%),
+//       caption: [
+//       ],
+//     ) <fig-GJ486-1-component>
+//   ]
+// )
+
+// This target was chosen as a recent review by #cite(<GJ486>, form: "prose") carried out a similar analysis as the one presented here, and determined the best fitting 2 component model for the observed spectrum. A comparison between their and our fitted parameters is shown in table @....
+
+
 
 == Limitations & Improvements
 
@@ -149,7 +187,13 @@ Using the same fake star as in @fig-2-component-corner, we vary the resolution o
 
 // [using closer-in-temperature components]
 
+=== Explore SNR Graph
+
+Further exploration into the increase in degeneracy at high SNRs, shown in @fig-snr-variation, could help our understanding of the model. Determining if this effect is due to similar absorption lines between the 2 components would be of particular interest. Analysis into how to accurately represent the uncertainty and best fit in such cases would also be useful: for example, a median together with an effective 1 $sigma$ range might not be appropriate if the parameter distribution has a long tail.
+
 === Better Simulation of Instrument Data
+
+One simplifying assumption used in this work is that the LSF is a Gaussian. Real telescopes' LSF are more complicated, and may be a different shape to a Gaussian. Furthermore, the resolution of the observed spectra is not a constant width, and instead is a wavelength-dependent quantity. Using the true wavelength-dependent LSF for a range of different telescopes would offer greater insight into what is observable with current instrumentation.
 
 // [use actual LSF]
 // [use wavelength dependent resolution]
@@ -162,8 +206,6 @@ Photons originating from different positions within a star travel on different p
 // and is of order ??? in the IR [ref - maybe the diagram from pettinis notes (might be able to find a link in our chat with dylan) or the source of that diagram if its from a paper etc].
 
 When analysing real spectra, this dimming would mean that the weights in @ComponentEquation are not precisely the actual area covering fractions. A spot or facula at the edge of a disc will appear dimmer than one of the same size at the center of the disc. Since we ignore this effect, our optimised weights will underestimate the size of any spots near the edge of the star, as they would need to be larger to produce the same intensity. Furthermore, heterogeneities at the edge of a star will appear redder, which will shift their spectral energy distribution towards higher wavelengths. This may change the fitted value of $T_"eff"$, as spectra with lower $T_"eff"$ also peak at higher wavelengths.
-
-== Real Spectra
 
 // GJ 486, etc
 // [1 component: v good]
