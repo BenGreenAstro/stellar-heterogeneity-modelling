@@ -80,30 +80,7 @@ Improving the resolution by a factor of $100$ to #qty(0.1, "nm") significantly i
 
 All parameters are determined extremely well: the temperatures only have a $#sym.tilde #qty(50, "K")$ error, and the other 4 parameters are determined effectively exactly. The histograms also have a much more Gaussian shape, illustrating the reduced degeneracy. @fig-2-component-corner and @fig-2-component-corner-high-res show that the accuracy of our model is highly dependent on the resolution of the data used.
 
-// === Convergence
-
-// [probably unnecessary]
-
-// #figure(
-//   image("../figures/1/a/trace_plot_1_component.svg", width: 100%),
-//   caption: [A descriptive caption for your image.],
-// ) <fig-label>
-
 == Degeneracies
-
-// [Discuss the degeneracies seen in the figures. Reference back to the physical reasoning behind the degeneracies]
-
-// [maybe unnecessary as we've already talked about it?]
-
-== Data Quality
-
-// [washes out at high wavelengths, both move towards the average value and their uncertainties increase.]
-// [not monotically better though: why? idk]
-
-Using the same fake star as in @fig-2-component-corner, we vary the resolution of the spectrum in @fig-resolution-variation. At low resolutions, near $#qty(0.01, "um")$, the $f_i$ both tend towards $0.5$, and the temperatures become less accurate. Over this SNR and wavelength range, only when we reach near #qty(0.1, "nm") do the uncertainties decrease and the fit becomes much more accurate.
-
-// maybe should add resolution of space based and ground based instruments as vertical lines to this graph
-
 
 #place(
   top,
@@ -111,9 +88,49 @@ Using the same fake star as in @fig-2-component-corner, we vary the resolution o
   scope: "parent",
   [
     #figure(
-      image("../figures/2/correctness_as_a_function_of_resolution.svg", width: 50%),
+      image("../illustrative_diagrams/multiple_solutions.svg", width: 100%),
+      caption: [
+      ],
+    ) <fig-multiple-solutions>
+  ]
+)
+
+== Data Quality
+
+// [washes out at high wavelengths, both move towards the average value and their uncertainties increase.]
+// [not monotically better though: why? idk]
+
+=== Resolution
+
+Using the same fake star as in @fig-2-component-corner, we vary the resolution of the spectrum in @fig-resolution-variation. At low resolutions, near $#qty(0.01, "um")$, the $f_i$ both tend towards $0.5$, and the temperatures become less accurate. Over this SNR and wavelength range, only when we reach near #qty(0.1, "nm") do the uncertainties decrease and the fit becomes much more accurate.
+
+// maybe should add resolution of space based and ground based instruments as vertical lines to this graph
+
+#place(
+  top,
+  float: true,
+  scope: "parent",
+  [
+    #figure(
+      image("../figures/2/correctness_as_a_function_of_resolution.svg", width: 100%),
       caption: [The effect of resolution on fitting quality of $T_"eff"$ and the area covering fraction $f$ for a 2-component star. The first plot shows the difference between the true and fitted temperatures, and the bottom between the true and fitted weights, both as a function of resolution. Assumes an SNR of 20, and uses a wavelength range of $#qty(0.8, "um") - #qty(5.3, "um")$ at a uniform resolution of $#qty(0.01, "um")$. Resolutions better $#sym.tilde #qty("e-3", "um")$ perform significantly better than lower resolutions. At $qty(0.01, "um")$ resolution, the temperature uncertainty is nearly $#sym.tilde 10%$. At much higher resolutions near $qty(0.1, "nm")$, it drops to $#sym.tilde 3%$. The area covering fractions begin to converge to their true values with resolutions below $#sym.tilde qty(1.3, "nm")$.],
     ) <fig-resolution-variation>
+  ]
+)
+
+=== SNR
+
+#place(
+  top,
+  float: true,
+  scope: "parent",
+  [
+    #figure(
+      image("../illustrative_diagrams/snr_variation.svg", width: 100%),
+      caption: [
+        // state the resolution
+      ],
+    ) <fig-snr-variation>
   ]
 )
 
